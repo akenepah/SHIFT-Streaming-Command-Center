@@ -1,26 +1,64 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Design tokens, following the Weekly Streaming Planner Figma foundations. */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --color-canvas: #f4f5f7;
+  --color-surface: #ffffff;
+  --color-line: #e3e6eb;
+  --color-line-strong: #cfd4dc;
+  --color-ink: #111827;
+  --color-ink-2: #4b5563;
+  --color-ink-3: #8a93a1;
+  --color-nav: #0f172a;
+  --color-nav-2: #1e293b;
+
+  --color-brand: #2f6fe4;
+  --color-brand-strong: #1f57c3;
+  --color-brand-soft: #eaf1fe;
+
+  --color-warn: #b45309;
+  --color-warn-strong: #92400e;
+  --color-warn-soft: #fff7e6;
+  --color-warn-line: #f5c979;
+
+  --color-danger: #c2262b;
+  --color-danger-soft: #fdecec;
+
+  --color-ok: #15803d;
+  --color-ok-soft: #e8f6ec;
+
+  /* Slot / position tints */
+  --color-pos-c: #2f6fe4;
+  --color-pos-c-soft: #eaf1fe;
+  --color-pos-lw: #1f8a4c;
+  --color-pos-lw-soft: #e7f5ec;
+  --color-pos-rw: #b7791f;
+  --color-pos-rw-soft: #fdf3e1;
+  --color-pos-d: #c2415b;
+  --color-pos-d-soft: #fcebee;
+  --color-pos-util: #7a4fd6;
+  --color-pos-util-soft: #f1ebfd;
+  --color-pos-g: #0e7c86;
+  --color-pos-g-soft: #e3f4f5;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+dialog::backdrop {
+  background: rgb(15 23 42 / 0.45);
+}
+
+dialog {
+  margin: auto;
 }
