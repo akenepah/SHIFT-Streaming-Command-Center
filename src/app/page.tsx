@@ -121,7 +121,7 @@ export default function WeeklyPlannerPage() {
         </dl>
       </div>
 
-      <div className="grid grid-cols-[260px_minmax(0,1fr)] gap-4">
+      <div className="grid grid-cols-[236px_minmax(0,1fr)] gap-4 2xl:grid-cols-[280px_minmax(0,1fr)]">
         <WeeklyMovesPanel
           weekStart={weekStart}
           summary={summary}
@@ -135,7 +135,7 @@ export default function WeeklyPlannerPage() {
           }}
         />
         <div className="overflow-x-auto pb-2">
-          <div className="grid min-w-[1050px] grid-cols-7 gap-2">
+          <div className="grid min-w-[900px] grid-cols-7 gap-2">
             {plan.days.map((day) => (
               <DayCard
                 key={day.date}

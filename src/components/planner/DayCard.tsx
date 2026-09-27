@@ -88,7 +88,9 @@ export function DayCard({ day, isToday, isPast, movesToday, onMovePlayer }: Prop
                       aria-label={`${p.name}, ${a.slot.type}, ${a.game ? matchupText(a.game) : ""}${a.overridden ? ", set manually" : ""}. Change lineup spot`}
                     >
                       <SlotBadge type={a.slot.type} />
-                      <Avatar src={p.headshot} name={p.name} size={22} />
+                      <span className="hidden 2xl:contents">
+                        <Avatar src={p.headshot} name={p.name} size={22} />
+                      </span>
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-[12px] font-medium leading-tight">{shortName(p.name)}</span>
                         <span className="block truncate text-[11px] leading-tight text-ink-3">

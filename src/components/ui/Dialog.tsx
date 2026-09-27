@@ -25,9 +25,15 @@ export function Dialog({ open, onClose, title, description, children, footer, wi
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
-    if (open && !el.open) el.showModal();
-    if (!open && el.open) el.close();
+    if (!el || !open) return;
+    // Remember the opener ourselves: callers often unmount the dialog on close,
+    // which skips the browser's own focus restore.
+    const opener = document.activeElement as HTMLElement | null;
+    if (!el.open) el.showModal();
+    return () => {
+      if (el.open) el.close();
+      if (opener?.isConnected) opener.focus();
+    };
   }, [open]);
 
   return (
