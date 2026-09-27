@@ -14,7 +14,7 @@ const POS_STYLE: Record<SlotType, string> = {
 export function SlotBadge({ type, className = "" }: { type: SlotType; className?: string }) {
   return (
     <span
-      className={`inline-flex h-5 min-w-8 items-center justify-center rounded px-1 text-[10px] font-bold tracking-wide ${POS_STYLE[type]} ${className}`}
+      className={`inline-flex h-5 min-w-7 shrink-0 items-center justify-center rounded px-1 text-[10px] font-bold tracking-wide ${POS_STYLE[type]} ${className}`}
     >
       {type}
     </span>
