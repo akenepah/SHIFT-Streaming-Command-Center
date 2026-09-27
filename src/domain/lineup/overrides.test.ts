@@ -102,4 +102,10 @@ describe("daily lineup overrides", () => {
     expect(targets[0].occupantId).toBe("mcdavid");
     expect(legalTargets(day, players.off)).toEqual([]);
   });
+
+  it("offers one target per slot type that has an open slot", () => {
+    const day = generateDailyLineup({ ...base, roster: [rostered("malkin")], rosterConfiguration: slotsConfig({ C: 1, LW: 3 }) });
+    // malkin sits in C1; LW1–LW3 are open → a single LW target.
+    expect(legalTargets(day, players.malkin).map((t) => t.targetSlotId)).toEqual(["LW1", BENCH_TARGET]);
+  });
 });
