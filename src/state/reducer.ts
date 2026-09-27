@@ -12,6 +12,7 @@ export type Action =
   | { type: "roster/add"; playerId: string; status?: RosterStatus }
   | { type: "roster/drop"; playerId: string }
   | { type: "roster/setStatus"; playerId: string; status: RosterStatus }
+  | { type: "roster/clear" }
   | { type: "tx/create"; id: string; draft: TransactionDraft; now?: string }
   | { type: "tx/update"; id: string; draft: TransactionDraft }
   | { type: "tx/cancel"; id: string }
@@ -44,6 +45,8 @@ export function reducer(state: AppState, action: Action): AppState {
         ...state,
         roster: state.roster.map((r) => (r.playerId === action.playerId ? { ...r, rosterStatus: action.status } : r)),
       };
+    case "roster/clear":
+      return { ...state, roster: [], transactions: [], overrides: [] };
     case "tx/create":
       return {
         ...state,

@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, type ReactNode } from "react";
 import { useStore } from "@/state/store";
 
 const NAV = [
@@ -12,9 +12,16 @@ const NAV = [
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { hydrated, loadStatus } = useStore();
+  const { state, hydrated, loadStatus } = useStore();
   const pathname = usePathname();
+  const router = useRouter();
   const inSetup = pathname.startsWith("/setup");
+  const needsSetup = hydrated && !state.setupComplete && !inSetup;
+
+  // First run (or after a reset): walk through setup before the planner.
+  useEffect(() => {
+    if (needsSetup) router.replace("/setup");
+  }, [needsSetup, router]);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -57,7 +64,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       )}
       <main className="mx-auto w-full max-w-[1920px] flex-1 px-6 py-6">
-        {hydrated ? children : <p className="text-ink-3">Loading…</p>}
+        {hydrated && !needsSetup ? children : <p className="text-ink-3">Loading…</p>}
       </main>
     </div>
   );
