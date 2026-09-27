@@ -144,6 +144,14 @@ describe("reducer", () => {
     expect(s.overrides).toEqual([{ date: "2026-10-14", playerId: "seed-malkin", targetSlotId: "C1" }]);
   });
 
+  it("clears the roster along with its planned moves and overrides", () => {
+    let s = reducer(base, { type: "override/set", override: { date: "2026-10-13", playerId: "seed-malkin", targetSlotId: "LW1" } });
+    s = reducer(s, { type: "roster/clear" });
+    expect(s.roster).toEqual([]);
+    expect(s.overrides).toEqual([]);
+    expect(Object.keys(s.players).length).toBe(Object.keys(base.players).length);
+  });
+
   it("resets to sample or empty data", () => {
     const edited = reducer(base, { type: "setup/complete" });
     expect(reducer(edited, { type: "data/reset", mode: "sample" })).toEqual(createSeedState());
