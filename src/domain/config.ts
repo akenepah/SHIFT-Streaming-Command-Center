@@ -11,6 +11,8 @@ export const DEFAULT_LEAGUE_SETTINGS: LeagueSettings = {
   leagueName: "My League",
   teamName: "My Team",
   season: "2026-27",
+  numberOfTeams: 12,
+  defaultMoveTiming: "NEXT_DAY",
   roster: DEFAULT_ROSTER_CONFIGURATION,
   weeklyAcquisitionLimit: 6,
   weekStartsOn: 1,

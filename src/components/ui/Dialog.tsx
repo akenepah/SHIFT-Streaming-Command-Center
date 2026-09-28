@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import { useEffect, useId, useRef, type ReactNode } from "react";
 
 type DialogProps = {
@@ -12,7 +13,7 @@ type DialogProps = {
   width?: "sm" | "md" | "lg";
 };
 
-const WIDTH = { sm: "w-[420px]", md: "w-[560px]", lg: "w-[760px]" };
+const WIDTH = { sm: "w-[440px]", md: "w-[560px]", lg: "w-[760px]" };
 
 /**
  * Modal built on the native <dialog>: focus is trapped, Escape closes it,
@@ -48,17 +49,17 @@ export function Dialog({ open, onClose, title, description, children, footer, wi
       onClick={(e) => {
         if (e.target === ref.current) onClose();
       }}
-      className={`${WIDTH[width]} max-h-[85vh] max-w-[calc(100vw-32px)] rounded-xl border border-line bg-surface p-0 text-ink shadow-2xl`}
+      className={`${WIDTH[width]} max-h-[88vh] max-w-[calc(100vw-32px)] rounded-panel border border-line bg-surface-raised p-0 text-ink shadow-overlay`}
     >
       {open && (
-        <div className="flex max-h-[85vh] flex-col">
-          <div className="flex items-start gap-4 border-b border-line px-5 py-4">
+        <div className="flex max-h-[88vh] flex-col">
+          <div className="flex items-start gap-4 px-6 pb-4 pt-5">
             <div className="min-w-0 flex-1">
-              <h2 id={titleId} className="text-base font-semibold">
+              <h2 id={titleId} className="text-card-title">
                 {title}
               </h2>
               {description && (
-                <div id={descId} className="mt-0.5 text-[13px] text-ink-2">
+                <div id={descId} className="mt-1 text-body-sm text-ink-2">
                   {description}
                 </div>
               )}
@@ -67,15 +68,13 @@ export function Dialog({ open, onClose, title, description, children, footer, wi
               type="button"
               onClick={onClose}
               aria-label="Close dialog"
-              className="-mr-1 rounded-md p-1 text-ink-3 hover:bg-canvas hover:text-ink"
+              className="-mr-2 -mt-1 inline-flex size-8 items-center justify-center rounded-control text-ink-3 hover:bg-surface-muted hover:text-ink"
             >
-              <svg aria-hidden viewBox="0 0 20 20" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
-                <path d="M5 5l10 10M15 5L5 15" strokeLinecap="round" />
-              </svg>
+              <X aria-hidden className="size-4" />
             </button>
           </div>
-          <div className="overflow-y-auto px-5 py-4">{children}</div>
-          {footer && <div className="flex justify-end gap-2 border-t border-line px-5 py-3">{footer}</div>}
+          <div className="overflow-y-auto px-6 pb-5">{children}</div>
+          {footer && <div className="flex justify-end gap-3 border-t border-line px-6 py-4">{footer}</div>}
         </div>
       )}
     </dialog>

@@ -30,6 +30,8 @@ function parseSettings(v: unknown): LeagueSettings {
     leagueName: str(v.leagueName, d.leagueName),
     teamName: str(v.teamName, d.teamName),
     season: str(v.season, d.season),
+    numberOfTeams: int(v.numberOfTeams, d.numberOfTeams, 2, 32),
+    defaultMoveTiming: v.defaultMoveTiming === "TODAY" ? "TODAY" : d.defaultMoveTiming,
     roster: {
       slots: Object.fromEntries(SLOT_TYPES.map((t) => [t, int(slots[t], d.roster.slots[t], 0, 10)])) as LeagueSettings["roster"]["slots"],
       benchSlots: int(roster.benchSlots, d.roster.benchSlots, 0, 20),
