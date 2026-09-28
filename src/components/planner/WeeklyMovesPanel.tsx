@@ -5,7 +5,7 @@ import { formatDayShort, formatMonthDay, weekdayName } from "@/domain/dates";
 import type { WeekSummary } from "@/domain/lineup/generateWeek";
 import { acquisitionCost, acquisitionsUsed, movesForWeek } from "@/domain/transactions/transactions";
 import type { ISODate, PlannedTransaction } from "@/domain/types";
-import { rosterCapacity, rosterCounts } from "@/state/selectors";
+import { rosterSummary } from "@/state/selectors";
 import { useStore } from "@/state/store";
 
 export function WeeklyMovesPanel({
@@ -24,8 +24,7 @@ export function WeeklyMovesPanel({
   const used = acquisitionsUsed(state.transactions, weekStart);
   const limit = settings.weeklyAcquisitionLimit;
   const moves = movesForWeek(state.transactions, weekStart);
-  const counts = rosterCounts(state.roster);
-  const capacity = rosterCapacity(settings);
+  const inventory = rosterSummary(state.roster, settings);
   const goalieMin = settings.minGoalieAppearances;
   const goalieMet = summary.goalieStarts >= goalieMin;
   const name = (id?: string) => (id ? state.players[id]?.name ?? "Unknown player" : "");
@@ -103,16 +102,23 @@ export function WeeklyMovesPanel({
       </section>
 
       <section className="rounded-xl border border-line bg-surface p-4 text-[13px]">
-        <h2 className="text-[13px] font-semibold">Current roster</h2>
+        <h2 className="text-[13px] font-semibold">Fantasy roster</h2>
         <p className="mt-1 text-ink-2 tabular-nums">
-          {counts.ACTIVE} active · {counts.BENCH} bench · IR+ {counts.IR_PLUS}/{capacity.IR_PLUS}
+          {inventory.rostered} rostered · IR+ {inventory.irPlus}/{inventory.irPlusCapacity}
         </p>
-        <p className="mt-0.5 text-[12px] text-ink-3">
-          Room for {capacity.ACTIVE + capacity.BENCH} (active + bench). Planned moves apply from their effective day.
+        <p className="mt-0.5 text-[12px] text-ink-3 tabular-nums">
+          {inventory.regular} of {inventory.regularCapacity} roster spots used. Daily starters are set automatically
+          from each day&apos;s games.
         </p>
+        {inventory.regular > inventory.regularCapacity && (
+          <p className="mt-1 text-[12px] font-medium text-warn">
+            Over by {inventory.regular - inventory.regularCapacity}. Check your lineup and bench slots in League
+            Settings.
+          </p>
+        )}
       </section>
 
-      {goalieMin > 0 && (
+      {goalieMin > 0 && state.roster.length > 0 && (
         <section
           className={`rounded-xl border p-4 text-[13px] ${goalieMet ? "border-line bg-surface" : "border-brand/30 bg-brand-soft"}`}
         >
