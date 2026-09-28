@@ -1,4 +1,5 @@
 import { canPlaySlot } from "../config";
+import { generateDailyLineup, type DailyLineupInput } from "./generateDailyLineup";
 import { BENCH_TARGET, type DailyLineup, type DailyLineupOverride, type ISODate, type Player, type Slot } from "../types";
 
 /** Set (or replace) a player's override for one date. */
@@ -60,4 +61,25 @@ export function legalTargets(day: DailyLineup, player: Player): OverrideTarget[]
 
 export function slotLabel(slot: Slot): string {
   return slot.type;
+}
+
+/**
+ * What an override would actually do, simulated through the real engine (the
+ * engine re-optimizes, so the displaced player isn't necessarily the slot's
+ * current occupant). `displaced` lists players who start now but wouldn't.
+ */
+export function overrideOutcome(
+  input: Omit<DailyLineupInput, "overrides" | "date">,
+  day: DailyLineup,
+  overrides: readonly DailyLineupOverride[],
+  override: DailyLineupOverride,
+): { delta: number; displaced: string[] } {
+  const next = generateDailyLineup({ ...input, date: day.date, overrides: setOverride(overrides, override) });
+  const starts = (d: DailyLineup) => d.activeSlots.filter((a) => a.playerId).length;
+  return {
+    delta: starts(next) - starts(day),
+    displaced: day.activeSlots
+      .filter((a) => a.playerId && a.playerId !== override.playerId && !next.activeSlots.some((b) => b.playerId === a.playerId))
+      .map((a) => a.playerId!),
+  };
 }

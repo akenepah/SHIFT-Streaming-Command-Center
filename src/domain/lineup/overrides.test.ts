@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { game, player, playerMap, rostered, schedule, slotsConfig, tx } from "../testing/fixtures";
 import { BENCH_TARGET, type DailyLineup, type DailyLineupOverride } from "../types";
 import { generateDailyLineup } from "./generateDailyLineup";
-import { legalTargets, resetDay, setOverride } from "./overrides";
+import { legalTargets, overrideOutcome, resetDay, setOverride } from "./overrides";
 
 const DATE = "2026-10-13";
 const sched = schedule([game(DATE, "PIT", "BOS"), game(DATE, "EDM", "TOR")]);
@@ -113,5 +113,28 @@ describe("daily lineup overrides", () => {
     const day = generateDailyLineup({ ...base, roster: [rostered("malkin")], rosterConfiguration: slotsConfig({ C: 1, LW: 3 }) });
     // malkin sits in C1; LW1–LW3 are open → a single LW target.
     expect(legalTargets(day, players.malkin).map((t) => t.targetSlotId)).toEqual(["LW1", BENCH_TARGET]);
+  });
+});
+
+describe("overrideOutcome (what the popover promises)", () => {
+  // QA regression: "Move to UTIL · Replaces Auston Matthews" actually benched McDavid,
+  // because the engine re-optimizes and ACTIVE-status players get first pick.
+  const qaPlayers = playerMap(player("mcdavid", "EDM", "C"), player("matthews", "TOR", "C"), player("bedard", "EDM", "C"));
+  const qa = {
+    roster: [rostered("mcdavid", "BENCH"), rostered("matthews"), rostered("bedard", "BENCH")],
+    players: qaPlayers,
+    scheduleProvider: sched,
+    rosterConfiguration: slotsConfig({ C: 1, UTIL: 1 }),
+  };
+
+  it("names the player the engine really displaces, not the target slot's current occupant", () => {
+    const day = generateDailyLineup({ ...qa, date: DATE });
+    const util = day.activeSlots.find((a) => a.slot.type === "UTIL")!;
+    expect(new Set(day.activeSlots.map((a) => a.playerId))).toEqual(new Set(["mcdavid", "matthews"]));
+    const outcome = overrideOutcome(qa, day, [], { date: DATE, playerId: "bedard", targetSlotId: util.slot.id });
+    const after = generateDailyLineup({ ...qa, date: DATE, overrides: [{ date: DATE, playerId: "bedard", targetSlotId: util.slot.id }] });
+    const benched = day.activeSlots.map((a) => a.playerId!).filter((id) => !after.activeSlots.some((b) => b.playerId === id));
+    expect(outcome).toEqual({ delta: 0, displaced: benched });
+    expect(outcome.displaced).toEqual(["mcdavid"]);
   });
 });

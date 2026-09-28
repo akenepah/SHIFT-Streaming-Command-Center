@@ -6,13 +6,10 @@ import { PositionBadge } from "@/components/ui/Badges";
 import { AnchoredPopover, MenuDivider, MenuItem } from "@/components/ui/Popover";
 import { useToast } from "@/components/ui/Toast";
 import { formatDayShort, formatMonthDay } from "@/domain/dates";
-import { generateDailyLineup } from "@/domain/lineup/generateDailyLineup";
 import type { WeekInput } from "@/domain/lineup/generateWeek";
-import { legalTargets, setOverride } from "@/domain/lineup/overrides";
+import { legalTargets, overrideOutcome } from "@/domain/lineup/overrides";
 import { BENCH_TARGET, type DailyLineup, type Player } from "@/domain/types";
 import { useStore } from "@/state/store";
-
-const startsOf = (d: DailyLineup) => d.activeSlots.filter((a) => a.playerId).length;
 
 export type MoveTarget = { player: Player; day: DailyLineup; anchor: HTMLElement };
 
@@ -38,12 +35,8 @@ export function MovePlayerPopover({
   const dateLabel = `${formatDayShort(day.date)} ${formatMonthDay(day.date)}`;
 
   const delta = (targetSlotId: string) => {
-    const next = generateDailyLineup({
-      ...weekInput,
-      date: day.date,
-      overrides: setOverride(state.overrides, { date: day.date, playerId: player.id, targetSlotId }),
-    });
-    return { delta: startsOf(next) - startsOf(day), displaced: day.activeSlots.filter(a => a.playerId && a.playerId !== player.id && !next.activeSlots.some(b => b.playerId === a.playerId)).map(a => weekInput.players[a.playerId!]?.name).filter(Boolean) };
+    const outcome = overrideOutcome(weekInput, day, state.overrides, { date: day.date, playerId: player.id, targetSlotId });
+    return { delta: outcome.delta, displaced: outcome.displaced.map((id) => weekInput.players[id]?.name ?? "Unknown player") };
   };
 
   const choose = (targetSlotId: string) => {
