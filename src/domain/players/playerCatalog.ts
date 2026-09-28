@@ -1,3 +1,6 @@
+import yahooEligibilityData from "@/data/players/yahoo-eligibility.json";
+import listEligibilityData from "@/data/players/eligibility-2026-27.json";
+import type { Position } from "../types";
 import catalogData from "@/data/players/2026-27.json";
 import { NHL_TEAM_IDS, type NHLTeamId } from "../nhl/teamIds";
 import { SCHEDULE_DATASET } from "../schedule/staticProvider";
@@ -68,15 +71,49 @@ export function catalogPlayerId(nhlPlayerId: number): string {
  */
 export function playerFromCatalogEntry(e: PlayerCatalogEntry): Player | null {
   if (!e.teamAbbrev) return null;
+  const { eligiblePositions, eligibilitySource, yahooPlayerId } = catalogEligibility(e);
   return {
     id: catalogPlayerId(e.nhlPlayerId),
     name: e.fullName,
     nhlTeamId: e.teamAbbrev,
-    eligiblePositions: [e.primaryPosition],
+    eligiblePositions,
+    primaryPosition: e.primaryPosition,
+    firstName: e.firstName,
+    lastName: e.lastName,
+    yahooPlayerId,
+    eligibilitySource,
+    eligibilitySeason: "2026-27",
+    active: e.active,
     ...(e.headshotUrl ? { headshot: e.headshotUrl } : {}),
     nhlPlayerId: e.nhlPlayerId,
     source: "NHL",
   };
+}
+
+type EligibilityRow = { nhlPlayerId: number; eligiblePositions: Position[]; yahooPlayerId?: string | null; season?: string; eligibilitySeason?: string };
+const YAHOO_ELIGIBILITY = new Map(
+  (yahooEligibilityData as EligibilityRow[]).filter((r) => r.season === "2026-27").map((r) => [r.nhlPlayerId, r]),
+);
+const LIST_ELIGIBILITY = new Map(
+  (listEligibilityData as { players: EligibilityRow[] }).players.filter((r) => r.eligibilitySeason === "2026-27").map((r) => [r.nhlPlayerId, r]),
+);
+
+/**
+ * 2026-27 fantasy eligibility, most authoritative first: a verified Yahoo
+ * import, then the curated requested-player list (MANUAL), then the NHL
+ * primary position as a labeled fallback. Never inferred from the NHL position
+ * when a source exists.
+ */
+export function catalogEligibility(e: Pick<PlayerCatalogEntry, "nhlPlayerId" | "primaryPosition">): {
+  eligiblePositions: Position[];
+  eligibilitySource: NonNullable<Player["eligibilitySource"]>;
+  yahooPlayerId: string | null;
+} {
+  const yahoo = YAHOO_ELIGIBILITY.get(e.nhlPlayerId);
+  if (yahoo) return { eligiblePositions: yahoo.eligiblePositions, eligibilitySource: "YAHOO", yahooPlayerId: yahoo.yahooPlayerId ?? null };
+  const listed = LIST_ELIGIBILITY.get(e.nhlPlayerId);
+  if (listed) return { eligiblePositions: listed.eligiblePositions, eligibilitySource: "MANUAL", yahooPlayerId: listed.yahooPlayerId ?? null };
+  return { eligiblePositions: [e.primaryPosition], eligibilitySource: "NHL_PRIMARY_FALLBACK", yahooPlayerId: null };
 }
 
 /** Catalog players as app Players, keyed by internal id. */

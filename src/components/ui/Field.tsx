@@ -1,5 +1,5 @@
 import { ChevronDown, Minus, Plus } from "lucide-react";
-import { forwardRef, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from "react";
+import { Children, cloneElement, isValidElement, forwardRef, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from "react";
 
 export const controlClass =
   "h-11 w-full rounded-control border border-line bg-surface px-3.5 text-body text-ink placeholder:text-ink-3 hover:border-line-strong disabled:bg-surface-muted disabled:text-ink-3";
@@ -24,11 +24,11 @@ export function Field({
       <label htmlFor={id} className="mb-2 block text-label text-ink">
         {label}
       </label>
-      {children}
+      {Children.map(children, child => isValidElement<{"aria-invalid"?: boolean; "aria-describedby"?: string}>(child) ? cloneElement(child, {"aria-invalid": !!error, "aria-describedby": error || help ? `${id}-description` : undefined}) : child)}
       {error ? (
-        <p className="mt-1.5 text-caption text-danger">{error}</p>
+        <p id={`${id}-description`} className="mt-1.5 text-caption text-danger">{error}</p>
       ) : (
-        help && <p className="mt-1.5 text-caption text-ink-3">{help}</p>
+        help && <p id={`${id}-description`} className="mt-1.5 text-caption text-ink-3">{help}</p>
       )}
     </div>
   );
@@ -91,7 +91,7 @@ export function Stepper({
         max={max}
         step={1}
         value={Number.isFinite(value) ? value : ""}
-        onChange={(e) => onChange(e.target.value === "" ? NaN : Number(e.target.value))}
+        onChange={(e) => onChange(e.target.value === "" ? min : Math.max(min, Math.min(max, Math.trunc(Number(e.target.value)))))}
         className="h-full min-w-0 flex-1 bg-transparent text-center text-body tabular-nums text-ink [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
       />
       <button

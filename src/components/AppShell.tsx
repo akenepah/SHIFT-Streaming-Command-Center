@@ -1,5 +1,6 @@
 "use client";
 
+import { AccountControl } from "@/components/auth/AccountControl";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
@@ -21,18 +22,19 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   // First run (or after a reset): walk through setup before the planner.
   useEffect(() => {
-    if (needsSetup) router.replace("/setup");
-  }, [needsSetup, router]);
+    if (needsSetup) router.replace("/setup?step=1");
+    else if (hydrated && state.setupComplete && inSetup) router.replace("/");
+  }, [needsSetup, router, hydrated, state.setupComplete, inSetup]);
 
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-30 bg-nav text-nav-ink">
-        <div className="flex h-14 items-center gap-16 px-6">
-          <Link href={inSetup ? "/setup" : "/"} aria-label="SHIFT, Weekly Planner" className="shrink-0">
+        <div className="flex min-h-14 flex-wrap items-center gap-2 px-4 sm:gap-8 sm:px-6">
+          <Link href={state.setupComplete ? "/" : "/setup?step=1"} aria-label="SHIFT, Weekly Planner" className="shrink-0">
             <ShiftWordmark />
           </Link>
           {!inSetup && (
-            <nav aria-label="Main" className="flex h-full items-center gap-2">
+            <nav aria-label="Main" className="flex max-w-full items-center gap-0 overflow-x-auto sm:gap-2">
               {NAV.map((item) => {
                 const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
                 return (
@@ -40,7 +42,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                     key={item.href}
                     href={item.href}
                     aria-current={active ? "page" : undefined}
-                    className={`flex h-10 items-center rounded-control px-4 text-body ${
+                    className={`flex h-10 items-center rounded-control px-2 text-body-sm sm:px-4 sm:text-body ${
                       active ? "font-semibold text-nav-ink" : "font-medium text-nav-ink-muted hover:bg-nav-hover hover:text-nav-ink"
                     }`}
                   >
@@ -50,6 +52,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               })}
             </nav>
           )}
+          <AccountControl />
         </div>
       </header>
       {loadStatus === "corrupt" && (

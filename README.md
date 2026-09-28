@@ -142,22 +142,33 @@ roster summary reports inventory ("24 rostered · IR+ 1/4"), not starters.
 ## Player Catalog
 
 Every "pick a player" flow (Add Player on the Roster and in setup, and Plan a Move) searches one bundled
-**Player Catalog** of 250 fantasy-relevant NHL players (`src/data/players/2026-27.json`), plus the user's own
-saved and manually created players. Selecting a player brings their NHL id, current team, primary position and
-official headshot. Fantasy eligibility starts as the primary position and stays user-editable. On the Weekly
+**Player Catalog** of 884 NHL players (`src/data/players/2026-27.json`: every active NHL roster player plus the
+670-player requested list), plus the user's own saved and manually created players. Selecting a player brings their
+NHL id, current team, primary position, official headshot and 2026-27 fantasy eligibility (dual/tri positions such
+as C · RW). Eligibility precedence: a verified Yahoo import, then the requested list (MANUAL), then the NHL primary
+position as a labeled fallback; it stays user-editable. On the Weekly
 Planner, Add Player is a planned move: Add when the roster has room, Add + Drop when it's full. Manual creation
 is the fallback, with a check that points to an existing catalog or custom player first.
 
-Membership comes from NHL.com's 2026-27 fantasy Top 250; the ranking itself is never stored or shown. Data is
-resolved against the NHL player API at development time only: `npm run catalog:refresh`
-(`scripts/refresh-player-catalog.mjs`). See `src/data/players/README.md` and `docs/player-catalog/`.
+Membership: NHL active rosters (`npm run catalog:refresh`), then the requested list reconciled by NHL id with
+`node --no-warnings scripts/reconcile-requested-players.mjs` (report: `docs/player-catalog/requested-reconciliation.md`).
+Yahoo eligibility imports via `npm run catalog:eligibility <verified-export.json>`. Data is resolved at development
+time only; nothing is fetched at runtime.
+
+**Schedule Targets** (Weekly Planner rail) ranks NHL teams by usable lineup opportunity for this roster: real slot
+matching through the lineup engine, then remaining games, low-volume nights, back-to-backs and a small timing
+tiebreak. Past games and games before a move could take effect count zero; skaters only.
 
 ## Local data
 
-Everything is stored in this browser's `localStorage` under `shift.streaming.v2`: settings, player registry,
+Signed out, everything is stored in this browser's `localStorage` under `shift.streaming.v2`: settings, player registry,
 roster, planned moves, overrides, and any players that need repair. A fresh browser starts **empty**: league
 defaults, no players, no roster. Setup (League & Lineup → Add Roster → Weekly Planner) can be finished with any
 number of players, even zero.
+
+Signed in (Supabase Auth: email link, or Google when enabled), the Postgres database with Row Level Security is
+the source of truth (`supabase/migrations/`); a local setup can be saved to the account once, idempotently. Other
+tabs stay in sync (storage events locally, refetch on focus in the cloud). Configure `.env.example` values to enable.
 
 - **Legacy demo data (v1).** The first alpha build seeded a sample roster under `shift.streaming.v1`. On first
   load that payload is migrated once. Sample players whose records are exactly the original seed are removed,

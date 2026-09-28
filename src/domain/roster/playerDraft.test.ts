@@ -16,6 +16,7 @@ describe("player drafts", () => {
       eligiblePositions: ["RW"],
       nhlPlayerId: null,
       source: "CUSTOM",
+      eligibilitySource: "USER",
     });
   });
 

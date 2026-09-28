@@ -57,7 +57,7 @@ export function Dialog({ open, onClose, title, description, children, footer, wi
         <div className="flex max-h-[88vh] flex-col">
           <div className="flex items-start gap-4 px-6 pb-4 pt-5">
             <div className="min-w-0 flex-1">
-              <h2 id={titleId} className="text-card-title">
+              <h2 id={titleId} className="font-display text-card-title">
                 {title}
               </h2>
               {description && (
@@ -76,7 +76,7 @@ export function Dialog({ open, onClose, title, description, children, footer, wi
             </button>
           </div>
           <div className="overflow-y-auto px-6 pb-5">{children}</div>
-          {footer && <div className="flex justify-end gap-3 border-t border-line px-6 py-4">{footer}</div>}
+          {footer && <div className="flex flex-wrap justify-end gap-3 border-t border-line px-6 py-4">{footer}</div>}
         </div>
       )}
     </dialog>

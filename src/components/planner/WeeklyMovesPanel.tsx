@@ -78,7 +78,7 @@ export function WeeklyMovesPanel({
                       type="button"
                       onClick={() => {
                         dispatch({ type: "tx/cancel", id: t.id });
-                        toast("Planned move cancelled.", "info");
+                        toast("Planned move cancelled.", "info", { label: "Undo", onClick: () => dispatch({ type: "tx/restore", id: t.id }) });
                       }}
                       aria-label="Cancel planned move"
                       className="inline-flex size-7 items-center justify-center rounded-control text-ink-3 hover:bg-danger-soft hover:text-danger"
@@ -108,10 +108,7 @@ export function WeeklyMovesPanel({
 
       <h3 className="font-display text-body font-semibold text-ink">Opening roster</h3>
       <p className="mt-1.5 text-body-sm text-ink-2 tabular-nums">
-        {inventory.rostered} rostered · IR+ {inventory.irPlus} / {inventory.irPlusCapacity}
-      </p>
-      <p className="text-body-sm text-ink-3 tabular-nums">
-        {inventory.regular} of {inventory.regularCapacity} roster spots used
+        {inventory.regular} / {inventory.regularCapacity} roster · {inventory.irPlus} / {inventory.irPlusCapacity} IR+
       </p>
       {inventory.regular > inventory.regularCapacity && (
         <p className="mt-1.5 flex items-start gap-1.5 text-caption font-medium text-warn">
@@ -122,7 +119,7 @@ export function WeeklyMovesPanel({
 
       {goalieMin > 0 && state.roster.length > 0 && (
         <div className="mt-4 border-t border-line pt-4">
-          <p className="text-body-sm font-semibold text-primary-strong">Goalie appearances</p>
+          <p className="text-body-sm font-semibold text-ink">Goalie appearances</p>
           <p className="mt-1 text-body-sm font-medium text-ink">Minimum {goalieMin} per week</p>
           <p className="mt-1 text-body-sm text-ink-2 tabular-nums">
             {summary.goalieStarts} goalie {summary.goalieStarts === 1 ? "game" : "games"} available this week
@@ -137,7 +134,7 @@ export function WeeklyMovesPanel({
             )}
           </p>
           <p className="mt-2 text-caption text-ink-3">
-            Goalie games show team availability only. Goalie starts are not confirmed.
+            Goalie games show team availability only. Goalie games are not confirmed.
           </p>
         </div>
       )}

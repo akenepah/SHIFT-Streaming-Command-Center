@@ -379,11 +379,11 @@ describe("roster summary", () => {
     });
   });
 
-  it("reports an all-bench roster as rostered players, not as zero active", () => {
+  it("reports legacy all-bench roster without discarding overflow", () => {
     let s = createInitialState();
     for (let i = 0; i < 24; i++) {
       s = reducer(s, { type: "player/upsert", player: skater(`b${i}`, `Bench ${i}`) });
-      s = reducer(s, { type: "roster/add", playerId: `b${i}`, status: "BENCH" });
+      s = { ...s, roster: [...s.roster, { playerId: `b${i}`, rosterStatus: "BENCH" }] };
     }
     expect(rosterSummary(s.roster, s.settings)).toMatchObject({ rostered: 24, irPlus: 0 });
   });

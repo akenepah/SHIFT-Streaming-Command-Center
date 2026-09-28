@@ -2,7 +2,7 @@ import type { DailyLineup, PlayerGame } from "../types";
 
 export type ReserveRow =
   /** A rostered player shown in the section (game = today's game, if any). */
-  | { kind: "player"; playerId: string; game: PlayerGame | null; benchedGame: boolean }
+  | { kind: "player"; playerId: string; game: PlayerGame | null; benchedGame: boolean; starting?: boolean }
   /** A passive placeholder: capacity not used today (or vacated by an auto-started bench player). */
   | { kind: "open" };
 
@@ -21,7 +21,7 @@ export function benchRows(day: DailyLineup, benchSlots: number): ReserveRow[] {
   const rows: ReserveRow[] = [];
   for (const r of day.roster) {
     if (r.rosterStatus !== "BENCH") continue;
-    if (starting.has(r.playerId)) rows.push({ kind: "open" });
+    if (starting.has(r.playerId)) rows.push({ kind: "player", playerId: r.playerId, game: null, benchedGame: false, starting: true });
     else if (benched.has(r.playerId)) rows.push({ kind: "player", playerId: r.playerId, game: benched.get(r.playerId) ?? null, benchedGame: true });
     else rows.push({ kind: "player", playerId: r.playerId, game: null, benchedGame: false });
   }

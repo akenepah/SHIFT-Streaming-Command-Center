@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   LeagueTeamFields,
   LineupSlotFields,
@@ -15,29 +15,64 @@ import { PageHeader, SectionCard } from "@/components/ui/Page";
 import { useToast } from "@/components/ui/Toast";
 import { SCHEDULE_META } from "@/domain/schedule/staticProvider";
 import { validateSettings } from "@/domain/settings";
+import { rosterCapacity } from "@/domain/roster/capacity";
 import { rosterCounts } from "@/state/selectors";
 import { useStore } from "@/state/store";
 
 export default function SettingsPage() {
-  const { state, dispatch } = useStore();
+  const { state, dispatch, user, externalRevision } = useStore();
   const router = useRouter();
   const toast = useToast();
   const [draft, setDraft] = useState(state.settings);
   const [errors, setErrors] = useState<string[]>([]);
   const [confirmReset, setConfirmReset] = useState(false);
   const dirty = JSON.stringify(draft) !== JSON.stringify(state.settings);
+  // Another tab changed settings: follow it when this form is clean; warn (never clobber) when dirty.
+  const [base, setBase] = useState(state.settings);
+  const [seenRevision, setSeenRevision] = useState(externalRevision);
+  const [externalChange, setExternalChange] = useState(false);
+  if (seenRevision !== externalRevision) {
+    setSeenRevision(externalRevision);
+    if (JSON.stringify(draft) === JSON.stringify(base)) setDraft(state.settings);
+    else setExternalChange(true);
+    setBase(state.settings);
+  }
   const s = state.settings;
+  const [confirmShrink, setConfirmShrink] = useState(false);
+  const capacity = rosterCapacity(state.roster, draft.roster);
+  useEffect(() => {
+    if (!dirty) return;
+    const unload = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    const navigate = (e: MouseEvent) => {
+      const link = (e.target as HTMLElement).closest("a[href]");
+      if (link && !window.confirm("Discard unsaved settings?")) { e.preventDefault(); e.stopPropagation(); }
+    };
+    window.addEventListener("beforeunload", unload);
+    document.addEventListener("click", navigate, true);
+    return () => { window.removeEventListener("beforeunload", unload); document.removeEventListener("click", navigate, true); };
+  }, [dirty]);
+  const commit = () => {
+    dispatch({ type: "settings/update", settings: draft });
+    const saved = { ...draft, leagueName: draft.leagueName.trim(), teamName: draft.teamName.trim() };
+    setDraft(saved);
+    setBase(saved);
+    setExternalChange(false);
+    setConfirmShrink(false);
+    toast("Settings saved. The planner has been updated.");
+  };
 
   const save = () => {
     const errs = validateSettings(draft);
     setErrors(errs);
-    if (errs.length) return;
-    dispatch({ type: "settings/update", settings: draft });
-    toast("Settings saved. The planner has been updated.");
+    if (errs.length) { requestAnimationFrame(() => (document.querySelector("[aria-invalid=true]") as HTMLElement | null)?.focus()); return; }
+    if (capacity.regularOver || capacity.irOver) { setConfirmShrink(true); return; }
+    commit();
   };
 
   const cancel = () => {
     setDraft(state.settings);
+    setBase(state.settings);
+    setExternalChange(false);
     setErrors([]);
   };
 
@@ -49,7 +84,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="mx-auto max-w-page px-10 py-10">
+    <div className="mx-auto max-w-page px-4 py-6 sm:px-10 sm:py-10">
       <PageHeader
         eyebrow={`${s.leagueName} · ${s.season.replace("-", "–")}`}
         title="League Settings"
@@ -59,7 +94,7 @@ export default function SettingsPage() {
       <div className="mt-8 layout-form-rail">
         <div className="grid gap-6">
           <SectionCard title="League & team">
-            <LeagueTeamFields value={draft} onChange={setDraft} />
+            <LeagueTeamFields showErrors={errors.length > 0} value={draft} onChange={setDraft} withSeason />
           </SectionCard>
 
           <SectionCard title="Daily lineup slots" description="One roster generates Monday–Sunday lineups using these limits.">
@@ -67,8 +102,17 @@ export default function SettingsPage() {
           </SectionCard>
 
           <SectionCard title="Acquisitions & league rules">
-            <RulesFields value={draft} onChange={setDraft} />
+            <RulesFields showErrors={errors.length > 0} value={draft} onChange={setDraft} />
           </SectionCard>
+
+          {externalChange && (
+            <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-control border border-warn-line bg-warn-soft px-4 py-3 text-body-sm text-ink">
+              <span>
+                <strong className="font-semibold">Updated in another tab.</strong> Your unsaved edits here are kept; saving will replace those changes.
+              </span>
+              <Button onClick={cancel}>Load latest</Button>
+            </div>
+          )}
 
           <ErrorList errors={errors} />
 
@@ -81,12 +125,11 @@ export default function SettingsPage() {
             </Button>
           </div>
 
-          <SectionCard title="Reset local data" className="mt-4 border-danger-line">
+          <SectionCard title={user ? "Account storage" : "Reset local data"} className="mt-4 border-danger-line">
             <p className="text-body text-ink-2">
-              Everything lives in this browser only. Resetting erases your roster, saved players, planned moves, lineup
-              overrides and settings.
+              {user ? "Your league is saved to your account. Signing out preserves cloud data. Sign out before restarting a local setup." : "This setup lives in this browser. Resetting erases your local roster, players, moves, overrides and settings."}
             </p>
-            <Button variant="quiet-danger" className="mt-4 border border-danger-line" onClick={() => setConfirmReset(true)}>
+            <Button disabled={!!user} variant="quiet-danger" className="mt-4 border border-danger-line" onClick={() => setConfirmReset(true)}>
               Reset local data…
             </Button>
           </SectionCard>
@@ -95,7 +138,7 @@ export default function SettingsPage() {
         <LineupSummary
           value={draft}
           irOccupied={rosterCounts(state.roster).IR_PLUS}
-          title={`${draft.leagueName || "League"} lineup`}
+          title={`${draft.leagueName || "League"} lineup${dirty ? " · Unsaved" : ""}`}
           footer={
             <>
               NHL schedule: {SCHEDULE_META.season} regular season, {SCHEDULE_META.gameCount.toLocaleString()} games,
@@ -105,6 +148,7 @@ export default function SettingsPage() {
         />
       </div>
 
+      <Dialog open={confirmShrink} onClose={() => setConfirmShrink(false)} title="Save reduced capacity?" description={`This will leave your roster ${capacity.regularOver} players over capacity and IR+ ${capacity.irOver} over. No players will be removed.`} footer={<><Button onClick={() => setConfirmShrink(false)}>Cancel</Button><Button variant="primary" onClick={commit}>Save anyway</Button></>}><p>Overflow remains visible until you adjust your roster.</p></Dialog>
       <Dialog
         open={confirmReset}
         onClose={() => setConfirmReset(false)}

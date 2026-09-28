@@ -26,7 +26,7 @@ import { findExistingIdentity, isRostered, searchPlayers } from "./searchPlayers
 import { normalizeNhlPosition, normalizeSearchText, validateCatalog } from "./validation";
 
 const SCHEDULE_TEAMS = [...new Set(SCHEDULE_DATASET.games.flatMap((g) => [g.homeTeam, g.awayTeam]))];
-const OPTS = { teamIds: NHL_TEAM_IDS, scheduleTeamIds: SCHEDULE_TEAMS, expectedCount: 250 };
+const OPTS = { teamIds: NHL_TEAM_IDS, scheduleTeamIds: SCHEDULE_TEAMS, expectedCount: raw.playerCount };
 const pool = Object.values(CATALOG_PLAYERS);
 const provider = new StaticScheduleProvider();
 const MCDAVID = catalogPlayerId(8478402);
@@ -43,15 +43,15 @@ function memoryRepo() {
 }
 
 describe("bundled 2026-27 Player Catalog", () => {
-  it("loads without error and has exactly 250 entries matching its metadata", () => {
+  it("loads without error and has at least 500 entries matching its metadata", () => {
     expect(CATALOG_ERROR).toBeNull();
-    expect(raw.players).toHaveLength(250);
-    expect(raw.playerCount).toBe(250);
-    expect(CATALOG_ENTRIES).toHaveLength(250);
+    expect(raw.players.length).toBeGreaterThanOrEqual(500);
+    expect(raw.playerCount).toBe(raw.players.length);
+    expect(CATALOG_ENTRIES).toHaveLength(raw.playerCount);
     expect(raw).toMatchObject({
       season: "2026-27",
-      membershipSource: "NHL.com Fantasy Top 250",
-      membershipSourceUrl: expect.stringMatching(/^https:\/\/www\.nhl\.com\/news\//),
+      membershipSource: expect.stringContaining("NHL active season rosters"),
+      membershipSourceUrl: expect.stringMatching(/^https:\/\/api-web\.nhle\.com\//),
     });
   });
 
@@ -59,14 +59,15 @@ describe("bundled 2026-27 Player Catalog", () => {
     expect(validateCatalog(raw, OPTS)).toEqual([]);
   });
 
-  it("has 250 unique NHL ids and no duplicate normalized identities", () => {
-    expect(new Set(raw.players.map((p) => p.nhlPlayerId)).size).toBe(250);
-    const identities = raw.players.map((p) => `${normalizeSearchText(p.fullName)}|${p.teamAbbrev}`);
-    expect(new Set(identities).size).toBe(250);
+  it("has unique NHL ids and no duplicate normalized identities", () => {
+    expect(new Set(raw.players.map((p) => p.nhlPlayerId)).size).toBe(raw.playerCount);
+    const identities = raw.players.map((p) => `${normalizeSearchText(p.fullName)}|${p.teamAbbrev}|${p.primaryPosition}`);
+    expect(new Set(identities).size).toBe(raw.playerCount);
   });
 
   it("uses only canonical teams that all appear in the bundled schedule", () => {
-    for (const p of raw.players) {
+    // Requested players without a current NHL team stay listed (teamAbbrev null) but are never offered.
+    for (const p of raw.players.filter((x) => x.teamAbbrev !== null)) {
       expect(NHL_TEAM_IDS).toContain(p.teamAbbrev);
       expect(SCHEDULE_TEAMS).toContain(p.teamAbbrev);
     }
@@ -119,7 +120,7 @@ describe("validation catches bad data", () => {
   });
 
   it("a count other than 250", () => {
-    expect(validateCatalog(withPlayers(good.players.slice(0, 249)), OPTS)).toContain("Expected exactly 250 players, found 249");
+    expect(validateCatalog(withPlayers(good.players.slice(0, 249)), OPTS)).toContain(`Expected exactly ${raw.playerCount} players, found 249`);
   });
 
   it("non-NHL headshot hosts and missing names", () => {
@@ -137,7 +138,7 @@ describe("validation catches bad data", () => {
 
 describe("catalog players", () => {
   it("supply NHL team, primary position and headshot automatically", () => {
-    expect(CATALOG_PLAYERS[MCDAVID]).toEqual({
+    expect(CATALOG_PLAYERS[MCDAVID]).toMatchObject({
       id: "nhl-8478402",
       name: "Connor McDavid",
       nhlTeamId: "EDM",
@@ -149,10 +150,10 @@ describe("catalog players", () => {
     expect(getCatalogEntry(8484801)).toMatchObject({ fullName: "Macklin Celebrini", teamAbbrev: "SJS", primaryPosition: "C" });
   });
 
-  it("initialize fantasy eligibility from the NHL primary position, and it stays editable", () => {
-    const lw = getCatalogEntry(8480801)!; // Brady Tkachuk, NHL primary LW
+  it("use listed fantasy eligibility (NHL position only as a labeled fallback), and it stays editable", () => {
+    const lw = getCatalogEntry(8480801)!; // Brady Tkachuk, NHL primary LW; list: C/LW
     const player = playerFromCatalogEntry(lw)!;
-    expect(player.eligiblePositions).toEqual(["LW"]);
+    expect(player).toMatchObject({ eligiblePositions: ["C", "LW"], eligibilitySource: "MANUAL" });
     const edited = playerFromDraft(
       { name: player.name, nhlTeamId: player.nhlTeamId, eligiblePositions: ["C", "LW"], headshot: player.headshot ?? "" },
       player.id,
@@ -193,7 +194,7 @@ describe("searchPlayers", () => {
   });
 
   it("lists shared surnames as distinct players, alphabetically", () => {
-    expect(names(searchPlayers("hughes", pool))).toEqual(["Jack Hughes", "Luke Hughes", "Quinn Hughes"]);
+    expect(names(searchPlayers("hughes", pool))).toEqual(["Cameron Hughes", "Jack Hughes", "Luke Hughes", "Quinn Hughes", "T.J. Hughes"]);
     expect(names(searchPlayers("tkachuk", pool))).toEqual(["Brady Tkachuk", "Matthew Tkachuk"]);
   });
 

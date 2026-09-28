@@ -140,9 +140,15 @@
   --shift-pos-bn: var(--shift-slate-600);
   --shift-pos-bn-soft: var(--shift-slate-100);
   --shift-pos-bn-line: var(--shift-slate-200);
-  --shift-pos-ir: var(--shift-danger);
-  --shift-pos-ir-soft: #fdf0f0;
-  --shift-pos-ir-line: var(--shift-danger-line);
+  --shift-pos-ir: #65506c;
+  --shift-pos-ir-soft: #f4f0f5;
+  --shift-pos-ir-line: #dfd3e3;
+
+  /* Planned move (a scheduled transaction, not a lineup slot): charcoal on cool gray, no position tint. */
+  --shift-move-soft: #f1f3f6;
+  --shift-move-line: #c3cbd6;
+  --shift-move-ink: var(--shift-slate-700);
+  --shift-move-strong: #1f2733;
 }
 
 @theme inline {
@@ -227,6 +233,10 @@
   --color-pos-ir: var(--shift-pos-ir);
   --color-pos-ir-soft: var(--shift-pos-ir-soft);
   --color-pos-ir-line: var(--shift-pos-ir-line);
+  --color-move-soft: var(--shift-move-soft);
+  --color-move-line: var(--shift-move-line);
+  --color-move-ink: var(--shift-move-ink);
+  --color-move-strong: var(--shift-move-strong);
 
   /* Type roles */
   --text-wordmark: 1.625rem;
@@ -301,3 +311,5 @@ dialog::backdrop {
 dialog {
   margin: auto;
 }
+
+@media (max-width: 1023px) { .layout-form-rail { grid-template-columns: minmax(0, 1fr); } }

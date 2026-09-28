@@ -6,7 +6,7 @@ import { PlayerIdentity, TeamTag } from "@/components/player/PlayerBits";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Field";
 import { CATALOG_ERROR } from "@/domain/players/playerCatalog";
-import { searchPlayers } from "@/domain/players/searchPlayers";
+import { DEFAULT_SEARCH_LIMIT, searchPlayers } from "@/domain/players/searchPlayers";
 import type { Player } from "@/domain/types";
 
 type Mode =
@@ -45,7 +45,10 @@ export function PlayerSearch({
   meta?: (p: Player) => ReactNode;
   autoFocus?: boolean;
 }) {
-  const results = useMemo(() => searchPlayers(query, pool), [query, pool]);
+  // Ask for one extra result to know whether the list was capped.
+  const found = useMemo(() => searchPlayers(query, pool, DEFAULT_SEARCH_LIMIT + 1), [query, pool]);
+  const results = found.slice(0, DEFAULT_SEARCH_LIMIT);
+  const capped = found.length > DEFAULT_SEARCH_LIMIT;
   const typed = query.trim().length > 0;
   const rows = typed ? results : (idle?.players ?? []);
   const selectedId = mode.kind === "select" ? mode.selectedId : undefined;
@@ -77,6 +80,7 @@ export function PlayerSearch({
 
       {!typed && idle && idle.players.length > 0 && <p className="text-overline uppercase text-ink-3">{idle.label}</p>}
 
+      {typed && capped && <p className="text-caption text-ink-3">Showing {results.length} · Refine your search</p>}
       {rows.length > 0 && (
         <ul
           aria-label={typed ? "Search results" : idle?.label}
@@ -85,7 +89,7 @@ export function PlayerSearch({
         >
           {rows.map((p) => {
             const rostered = isRostered(p);
-            const detail = `${p.nhlTeamId} · ${p.eligiblePositions.join(", ")}${p.source === "CUSTOM" ? " · created by you" : ""}`;
+            const detail = `${p.nhlTeamId} · ${p.eligiblePositions.join(" · ")}${p.source === "CUSTOM" ? " · created by you" : p.eligibilitySource === "NHL_PRIMARY_FALLBACK" ? " · NHL position; verify fantasy eligibility" : ""}`;
             if (mode.kind === "action") {
               return (
                 <li key={p.id} className="flex items-center gap-4 px-4 py-2.5">
@@ -143,7 +147,7 @@ export function PlayerSearch({
         </div>
       )}
       {!typed && !(idle && idle.players.length) && (
-        <p className="text-body-sm text-ink-3">Type a player&apos;s name, like &ldquo;McDavid&rdquo;.</p>
+        <p className="text-body-sm text-ink-3">{idle ? `No available players in ${idle.label.toLowerCase()}. Change the filter or date, or search another player.` : "Type a player’s name, like McDavid."}</p>
       )}
       {(typed ? results.length > 0 : true) && (
         <p className="text-body-sm text-ink-2">

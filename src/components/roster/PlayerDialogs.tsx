@@ -24,6 +24,8 @@ import { newId } from "@/state/reducer";
 import { STATUS_LABEL } from "@/state/selectors";
 import { useStore } from "@/state/store";
 
+import { canAddToRoster, defaultRosterStatus, rosterCapacity } from "@/domain/roster/capacity";
+
 const STATUSES: RosterStatus[] = ["ACTIVE", "BENCH", "IR_PLUS"];
 const STATUS_HELP: Record<RosterStatus, string> = {
   ACTIVE: "First pick for open lineup slots.",
@@ -98,11 +100,16 @@ export function ExistingIdentityNotice({
 
 /** Add a player to the actual roster (Roster screen and setup). */
 export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+  return open ? <FreshAddPlayerDialog onClose={onClose} /> : null;
+}
+
+function FreshAddPlayerDialog({ onClose }: { onClose: () => void }) {
+  const open = true;
   const { state, dispatch } = useStore();
   const toast = useToast();
   const [mode, setMode] = useState<"search" | "create">("search");
   const [query, setQuery] = useState("");
-  const [status, setStatus] = useState<RosterStatus>("BENCH");
+  const [status, setStatus] = useState<RosterStatus>(() => defaultRosterStatus(state.roster, state.settings.roster));
   const [draft, setDraft] = useState<PlayerDraft>(emptyPlayerDraft);
   const [errors, setErrors] = useState<string[]>([]);
   const [existing, setExisting] = useState<ExistingIdentity>(null);
@@ -128,7 +135,10 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
     onClose();
   };
 
+  const capacity = rosterCapacity(state.roster, state.settings.roster);
+  const canAdd = canAddToRoster(state.roster, state.settings.roster, status);
   const addPlayer = (p: Player) => {
+    if (!canAdd) { setRosteredNotice("Selected roster section is full. Drop a player or choose an available status; IR+ is separate."); return; }
     if (rostered(p)) {
       setRosteredNotice(`${p.name} is already on your roster.`);
       return;
@@ -137,14 +147,17 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
     if (!state.players[p.id]) dispatch({ type: "player/upsert", player: p });
     dispatch({ type: "roster/add", playerId: p.id, status });
     setRosteredNotice(null);
+    setStatus(defaultRosterStatus([...state.roster, {playerId: p.id, rosterStatus: status}], state.settings.roster));
     toast(`${p.name} added to your roster.`);
   };
 
   const create = () => {
+    if (!canAdd) { setErrors(["Selected roster section is full."]); return; }
     const errs = validatePlayerDraft(draft);
     setErrors(errs);
     if (errs.length) return;
     const found = findExistingIdentity(draft.name, draft.nhlTeamId, pool);
+    if (found && rostered(found.player)) { setErrors(["Already on your roster"]); return; }
     if (found) {
       setExisting(found);
       return;
@@ -174,7 +187,7 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
               <ArrowLeft aria-hidden /> Back to search
             </Button>
             <Button onClick={close}>Cancel</Button>
-            <Button variant="primary" onClick={create}>
+            <Button variant="primary" onClick={create} disabled={!canAdd}>
               Add player
             </Button>
           </>
@@ -184,6 +197,7 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
       }
     >
       <div className="grid gap-5">
+        <p role="status" className="text-body-sm text-ink-2">{capacity.regular} / {capacity.regularCapacity} rostered · {capacity.ir} / {state.settings.roster.irPlusSlots} IR+{capacity.regularOver > 0 && ` · Over by ${capacity.regularOver}`}{!canAdd && " · Selected section full"}</p>
         {rosteredNotice && (
           <p role="status" className="rounded-control border border-line bg-surface-muted px-3.5 py-2.5 text-body-sm text-ink-2">
             {rosteredNotice}
@@ -199,6 +213,7 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
             mode={{ kind: "action", actionLabel: "Add", onPick: addPlayer }}
             onCreateManually={() => {
               setDraft({ ...emptyPlayerDraft(), name: query.trim() });
+              setStatus(defaultRosterStatus(state.roster, state.settings.roster));
               setMode("create");
             }}
             idle={{ label: "Your saved players", players: savedIdle }}

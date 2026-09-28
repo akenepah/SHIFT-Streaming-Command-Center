@@ -82,8 +82,9 @@ describe("bench and IR+ rows", () => {
 
   it("shows bench players in roster order, a vacated spot for the auto-started one, benched games, then padding", () => {
     const rows = benchRows(day, 5);
+    expect(rows[0]).toMatchObject({ kind: "player", starting: true });
     expect(rows.map((r) => (r.kind === "open" ? "open" : `${r.playerId}${r.benchedGame ? "*" : ""}`))).toEqual([
-      "open", // benchStarts is in the lineup today
+      "benchStarts", // benchStarts remains represented as starting today
       "benchIdle",
       "benchG*",
       "activeG2*", // an Active player's benched game is never hidden

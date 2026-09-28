@@ -54,7 +54,7 @@ export function RosterTable() {
             filter === "ALL" ? "border-line bg-surface text-ink" : "border-transparent text-ink-2 hover:text-ink"
           }`}
         >
-          All players · {summary.rostered}
+          All positions · {summary.rostered}
         </button>
         <div className="w-44">
           <label htmlFor="roster-position-filter" className="sr-only">
@@ -143,7 +143,7 @@ export function RosterTable() {
                       <td className="py-3 pr-4">
                         <TeamTag teamId={p.nhlTeamId} />
                       </td>
-                      <td className="py-3 pr-4 text-data text-ink">{p.eligiblePositions.join(", ")}</td>
+                      <td className="py-3 pr-4 text-data text-ink">{p.eligiblePositions.join(" · ")}</td>
                       <td className="py-3 pr-4">
                         <span className="flex flex-col items-start gap-1">
                           <StatusBadge status={status} />
@@ -199,7 +199,8 @@ export function RosterTable() {
 
       <p className="text-body-sm text-ink-3">
         {state.settings.season} · The Slot column is a baseline lineup. Each day the planner starts every player whose team
-        has a game when a legal slot is free; Active players get first pick, IR+ never starts. Use ⋯ to manage a player.
+        has a game when a legal slot is free. Active means lineup priority, not a guaranteed daily slot: Active players get
+        first pick, then Bench; IR+ never starts. Use ⋯ to manage a player.
       </p>
 
       <ManagePlayerDialog
