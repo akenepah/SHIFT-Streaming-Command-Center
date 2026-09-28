@@ -75,6 +75,7 @@ function parsePlayer(v: unknown): PlayerParse {
       nhlTeamId: v.nhlTeamId as Player["nhlTeamId"],
       eligiblePositions: positions,
       ...(typeof v.headshot === "string" && v.headshot ? { headshot: v.headshot } : {}),
+      ...(typeof v.nhlId === "number" && Number.isInteger(v.nhlId) ? { nhlId: v.nhlId } : {}),
       ...(v.custom === true ? { custom: true } : {}),
     },
   };

@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { generateWeek, type WeekInput, type WeekPlan } from "@/domain/lineup/generateWeek";
+import { withCatalog } from "@/domain/players/catalog";
 import { getScheduleProvider } from "@/domain/schedule/staticProvider";
 import type { ISODate } from "@/domain/types";
 import { useStore } from "./store";
@@ -13,7 +14,8 @@ export function useWeekInput(weekStart: ISODate): WeekInput {
     () => ({
       weekStart,
       roster: state.roster,
-      players: state.players,
+      // Catalog players resolve too, so a planned Add can preview before it's saved.
+      players: withCatalog(state.players),
       scheduleProvider: getScheduleProvider(),
       rosterConfiguration: state.settings.roster,
       plannedTransactions: state.transactions,
