@@ -1,10 +1,13 @@
 "use client";
 
+import { AlertTriangle, Search } from "lucide-react";
 import { useMemo, useState } from "react";
+import { PlayerIdentity, TeamTag } from "@/components/player/PlayerBits";
+import { PlayerForm } from "@/components/player/PlayerForm";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
-import { Avatar, PositionList, TeamTag } from "@/components/player/PlayerBits";
-import { PlayerForm, inputClass, labelClass } from "@/components/player/PlayerForm";
+import { Field, Input, Select } from "@/components/ui/Field";
+import { useToast } from "@/components/ui/Toast";
 import { findRosterDuplicate } from "@/domain/roster/duplicates";
 import {
   draftFromPlayer,
@@ -15,27 +18,66 @@ import {
   type PlayerDraft,
 } from "@/domain/roster/playerDraft";
 import type { Player, RosterStatus } from "@/domain/types";
-import { newId } from "@/state/reducer";
 import type { RepairEntry } from "@/state/appState";
+import { newId } from "@/state/reducer";
 import { STATUS_LABEL } from "@/state/selectors";
 import { useStore } from "@/state/store";
 
 const STATUSES: RosterStatus[] = ["ACTIVE", "BENCH", "IR_PLUS"];
+const STATUS_HELP: Record<RosterStatus, string> = {
+  ACTIVE: "First pick for open lineup slots.",
+  BENCH: "Starts whenever a legal slot is still open.",
+  IR_PLUS: "Never starts.",
+};
 
 function StatusSelect({ value, onChange, id }: { value: RosterStatus; onChange: (s: RosterStatus) => void; id: string }) {
   return (
-    <select id={id} className={inputClass} value={value} onChange={(e) => onChange(e.target.value as RosterStatus)}>
-      {STATUSES.map((s) => (
-        <option key={s} value={s}>
-          {STATUS_LABEL[s]}
-        </option>
+    <Field id={id} label="Roster status" help={STATUS_HELP[value]}>
+      <Select id={id} value={value} onChange={(e) => onChange(e.target.value as RosterStatus)}>
+        {STATUSES.map((s) => (
+          <option key={s} value={s}>
+            {STATUS_LABEL[s]}
+          </option>
+        ))}
+      </Select>
+    </Field>
+  );
+}
+
+function Segmented<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: T;
+  options: readonly (readonly [T, string])[];
+  onChange: (v: T) => void;
+}) {
+  return (
+    <div role="tablist" aria-label={label} className="inline-flex rounded-control border border-line bg-surface-muted p-1">
+      {options.map(([v, text]) => (
+        <button
+          key={v}
+          role="tab"
+          type="button"
+          aria-selected={value === v}
+          onClick={() => onChange(v)}
+          className={`h-9 rounded-badge px-3.5 text-body-sm font-medium ${
+            value === v ? "bg-surface text-ink shadow-sm ring-1 ring-line" : "text-ink-2 hover:text-ink"
+          }`}
+        >
+          {text}
+        </button>
       ))}
-    </select>
+    </div>
   );
 }
 
 export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { state, dispatch } = useStore();
+  const toast = useToast();
   const [mode, setMode] = useState<"existing" | "create">("existing");
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<RosterStatus>("BENCH");
@@ -77,7 +119,10 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
   };
 
   const addExisting = (p: Player) => {
-    guardDuplicate(p.name, () => dispatch({ type: "roster/add", playerId: p.id, status }));
+    guardDuplicate(p.name, () => {
+      dispatch({ type: "roster/add", playerId: p.id, status });
+      toast(`${p.name} added to your roster.`);
+    });
   };
 
   const create = () => {
@@ -88,6 +133,7 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
       const player = playerFromDraft(draft, newId("player"), true);
       dispatch({ type: "player/upsert", player });
       dispatch({ type: "roster/add", playerId: player.id, status });
+      toast(`${player.name} added to your roster.`);
       close();
     });
   };
@@ -97,14 +143,14 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
       open={open}
       onClose={close}
       title="Add player"
-      description="Add a player to your fantasy roster. Their NHL team determines their schedule."
+      description="Their NHL team fills in their schedule automatically."
       width="md"
       footer={
         effectiveMode === "create" ? (
           <>
             <Button onClick={close}>Cancel</Button>
             <Button variant="primary" onClick={create}>
-              {duplicateOf ? "Add anyway" : "Create and add"}
+              {duplicateOf ? "Add anyway" : "Add player"}
             </Button>
           </>
         ) : (
@@ -112,107 +158,112 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
         )
       }
     >
-      {duplicateOf && (
-        <div role="alert" className="mb-4 rounded-md border border-warn-line bg-warn-soft px-3 py-2 text-[13px] text-warn-strong">
-          <strong>{duplicateOf.existing.name}</strong> ({duplicateOf.existing.nhlTeamId}) is already on your roster.{" "}
-          {effectiveMode === "create" ? "Choose Add anyway to create a second copy, or change the name." : ""}
-          <div className="mt-2 flex gap-2">
-            <Button size="sm" onClick={() => setDuplicateOf(null)}>
-              Don&apos;t add
-            </Button>
-            <Button
-              size="sm"
-              variant="primary"
-              onClick={() => {
-                const pending = duplicateOf.pending;
-                setDuplicateOf(null);
-                pending();
-              }}
-            >
-              Add anyway
-            </Button>
+      <div className="grid gap-5">
+        {duplicateOf && (
+          <div role="alert" className="rounded-card border border-warn-line bg-warn-soft px-4 py-3 text-body-sm text-warn-strong">
+            <p className="flex items-start gap-2">
+              <AlertTriangle aria-hidden className="mt-0.5 size-4 shrink-0" />
+              <span>
+                <strong>{duplicateOf.existing.name}</strong> ({duplicateOf.existing.nhlTeamId}) is already on your roster.
+                {effectiveMode === "create" && " Add a second copy anyway, or change the name."}
+              </span>
+            </p>
+            <div className="mt-3 flex gap-2 pl-6">
+              <Button size="sm" onClick={() => setDuplicateOf(null)}>
+                Don&apos;t add
+              </Button>
+              <Button
+                size="sm"
+                variant="primary"
+                onClick={() => {
+                  const pending = duplicateOf.pending;
+                  setDuplicateOf(null);
+                  pending();
+                }}
+              >
+                Add anyway
+              </Button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {anyAvailable && (
-        <div role="tablist" aria-label="Add player method" className="mb-4 inline-flex rounded-md border border-line p-0.5">
-          {(
-            [
-              ["existing", "Choose a player"],
-              ["create", "Create player manually"],
-            ] as const
-          ).map(([m, label]) => (
-            <button
-              key={m}
-              role="tab"
-              type="button"
-              aria-selected={mode === m}
-              onClick={() => setMode(m)}
-              className={`rounded px-3 py-1.5 text-[13px] font-medium ${mode === m ? "bg-nav text-white" : "text-ink-2 hover:text-ink"}`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      )}
-
-      <div className="mb-4 w-48">
-        <label htmlFor="add-status" className={labelClass}>
-          Add to
-        </label>
-        <StatusSelect id="add-status" value={status} onChange={setStatus} />
-      </div>
-
-      {effectiveMode === "existing" ? (
-        <div>
-          <label htmlFor="add-search" className={labelClass}>
-            Search players
-          </label>
-          <input
-            id="add-search"
-            className={inputClass}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Name or team code"
-            autoComplete="off"
+        {anyAvailable && (
+          <Segmented
+            label="Add player method"
+            value={mode}
+            onChange={setMode}
+            options={[
+              ["existing", "Saved players"],
+              ["create", "Create player"],
+            ]}
           />
-          <ul className="mt-3 max-h-72 divide-y divide-line overflow-y-auto rounded-md border border-line">
-            {available.length === 0 && (
-              <li className="px-3 py-4 text-[13px] text-ink-3">
-                No matching players.{" "}
-                <button type="button" className="font-medium text-brand underline" onClick={() => setMode("create")}>
-                  Create one manually
-                </button>
-              </li>
-            )}
-            {available.map((p) => (
-              <li key={p.id} className="flex items-center gap-3 px-3 py-2">
-                <Avatar src={p.headshot} name={p.name} />
-                <div className="min-w-0 flex-1">
-                  <div className="truncate font-medium">{p.name}</div>
-                  <div className="flex gap-3 text-[12px]">
-                    <TeamTag teamId={p.nhlTeamId} />
-                    <PositionList positions={p.eligiblePositions} />
-                  </div>
-                </div>
-                <Button size="sm" variant="primary" onClick={() => addExisting(p)} aria-label={`Add ${p.name}`}>
-                  Add
-                </Button>
-              </li>
-            ))}
-          </ul>
+        )}
+
+        {effectiveMode === "existing" ? (
+          <div>
+            <label htmlFor="add-search" className="sr-only">
+              Search saved players
+            </label>
+            <div className="relative">
+              <Search aria-hidden className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
+              <Input
+                id="add-search"
+                className="pl-10"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search by name or team code"
+                autoComplete="off"
+              />
+            </div>
+            <ul className="mt-3 max-h-72 divide-y divide-line overflow-y-auto rounded-card border border-line">
+              {available.length === 0 && (
+                <li className="px-4 py-4 text-body-sm text-ink-3">
+                  No matching players.{" "}
+                  <button type="button" className="font-medium text-primary hover:underline" onClick={() => setMode("create")}>
+                    Create one
+                  </button>
+                </li>
+              )}
+              {available.map((p) => (
+                <li key={p.id} className="flex items-center gap-4 px-4 py-2.5">
+                  <span className="min-w-0 flex-1">
+                    <PlayerIdentity name={p.name} headshot={p.headshot} secondary={p.eligiblePositions.join(", ")} />
+                  </span>
+                  <TeamTag teamId={p.nhlTeamId} />
+                  <Button size="sm" variant="primary" onClick={() => addExisting(p)} aria-label={`Add ${p.name}`}>
+                    Add
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <PlayerForm draft={draft} onChange={setDraft} errors={errors} />
+        )}
+        <div className="w-56">
+          <StatusSelect id="add-status" value={status} onChange={setStatus} />
         </div>
-      ) : (
-        <PlayerForm draft={draft} onChange={setDraft} errors={errors} />
-      )}
+      </div>
     </Dialog>
   );
 }
 
-export function EditPlayerDialog({ player, onClose }: { player: Player | null; onClose: () => void }) {
+/** Edit a rostered player's details and roster status, or drop them. */
+export function ManagePlayerDialog({
+  player,
+  status,
+  onClose,
+  onDrop,
+}: {
+  player: Player | null;
+  status: RosterStatus | null;
+  onClose: () => void;
+  onDrop?: (p: Player) => void;
+}) {
   const { dispatch } = useStore();
+  const toast = useToast();
   const [draft, setDraft] = useState<PlayerDraft>(() => (player ? draftFromPlayer(player) : emptyPlayerDraft()));
+  const [nextStatus, setNextStatus] = useState<RosterStatus | null>(status);
   const [errors, setErrors] = useState<string[]>([]);
 
   const save = () => {
@@ -221,6 +272,8 @@ export function EditPlayerDialog({ player, onClose }: { player: Player | null; o
     setErrors(errs);
     if (errs.length) return;
     dispatch({ type: "player/upsert", player: playerFromDraft(draft, player.id, !!player.custom) });
+    if (nextStatus && nextStatus !== status) dispatch({ type: "roster/setStatus", playerId: player.id, status: nextStatus });
+    toast(`${draft.name.trim()} updated.`);
     onClose();
   };
 
@@ -228,10 +281,15 @@ export function EditPlayerDialog({ player, onClose }: { player: Player | null; o
     <Dialog
       open={!!player}
       onClose={onClose}
-      title={player ? `Edit ${player.name}` : "Edit player"}
+      title={player ? `Manage ${player.name}` : "Manage player"}
       description="Changing the NHL team immediately changes this player's schedule in the planner."
       footer={
         <>
+          {onDrop && player && (
+            <Button variant="quiet-danger" className="mr-auto" onClick={() => onDrop(player)}>
+              Drop player
+            </Button>
+          )}
           <Button onClick={onClose}>Cancel</Button>
           <Button variant="primary" onClick={save}>
             Save changes
@@ -239,27 +297,38 @@ export function EditPlayerDialog({ player, onClose }: { player: Player | null; o
         </>
       }
     >
-      <PlayerForm draft={draft} onChange={setDraft} errors={errors} />
+      <div className="grid gap-5">
+        <PlayerForm draft={draft} onChange={setDraft} errors={errors} />
+        {nextStatus && (
+          <div className="w-56">
+            <StatusSelect id="manage-status" value={nextStatus} onChange={setNextStatus} />
+          </div>
+        )}
+      </div>
     </Dialog>
   );
 }
 
 export function DropPlayerDialog({ player, onClose }: { player: Player | null; onClose: () => void }) {
   const { dispatch } = useStore();
+  const toast = useToast();
   return (
     <Dialog
       open={!!player}
       onClose={onClose}
       width="sm"
       title={player ? `Drop ${player.name}?` : "Drop player"}
-      description="This removes the player from your roster now. To plan a future drop instead, use Plan a move on the Weekly Planner."
+      description="This removes the player from your roster now. To plan a future drop, use Plan a move on the Weekly Planner."
       footer={
         <>
           <Button onClick={onClose}>Cancel</Button>
           <Button
             variant="danger"
             onClick={() => {
-              if (player) dispatch({ type: "roster/drop", playerId: player.id });
+              if (player) {
+                dispatch({ type: "roster/drop", playerId: player.id });
+                toast(`${player.name} dropped.`);
+              }
               onClose();
             }}
           >
@@ -268,7 +337,7 @@ export function DropPlayerDialog({ player, onClose }: { player: Player | null; o
         </>
       }
     >
-      <p className="text-[13px] text-ink-2">The player stays in your player list, so you can add them back later.</p>
+      <p className="text-body-sm text-ink-2">They stay in your saved players, so you can add them back later.</p>
     </Dialog>
   );
 }
@@ -279,19 +348,16 @@ export function RepairPlayersPanel() {
   const [fixing, setFixing] = useState<RepairEntry | null>(null);
   if (state.needsRepair.length === 0) return null;
   return (
-    <section
-      aria-label="Players that need repair"
-      className="mb-4 rounded-xl border border-warn-line bg-warn-soft px-4 py-3 text-[13px] text-warn-strong"
-    >
-      <h2 className="font-semibold">
-        <span aria-hidden>⚠ </span>
+    <section aria-label="Players that need repair" className="rounded-panel border border-warn-line bg-warn-soft px-5 py-4 text-warn-strong">
+      <h2 className="flex items-center gap-2 text-body font-semibold">
+        <AlertTriangle aria-hidden className="size-4" />
         {state.needsRepair.length === 1 ? "1 saved player needs repair" : `${state.needsRepair.length} saved players need repair`}
       </h2>
-      <p className="mt-0.5 text-[12px]">These records couldn&apos;t be loaded, so the planner is ignoring them until they&apos;re fixed.</p>
-      <ul className="mt-2 flex flex-col gap-1.5">
+      <p className="mt-1 text-body-sm">These records couldn&apos;t be loaded, so the planner is ignoring them until they&apos;re fixed.</p>
+      <ul className="mt-3 flex flex-col gap-2">
         {state.needsRepair.map((r) => (
-          <li key={r.playerId} className="flex items-center gap-3 rounded-md bg-surface/70 px-3 py-1.5 text-ink">
-            <span className="min-w-0 flex-1">
+          <li key={r.playerId} className="flex items-center gap-3 rounded-control border border-warn-line bg-surface px-3.5 py-2 text-ink">
+            <span className="min-w-0 flex-1 text-body-sm">
               <span className="font-medium">{r.name}</span>
               <span className="text-ink-2"> · {r.problems.join(", ")}</span>
             </span>
@@ -311,6 +377,7 @@ export function RepairPlayersPanel() {
 
 function RepairPlayerDialog({ entry, onClose }: { entry: RepairEntry | null; onClose: () => void }) {
   const { dispatch } = useStore();
+  const toast = useToast();
   const [draft, setDraft] = useState<PlayerDraft>(() => (entry ? draftFromRepair(entry) : emptyPlayerDraft()));
   const [errors, setErrors] = useState<string[]>([]);
   const save = () => {
@@ -319,6 +386,7 @@ function RepairPlayerDialog({ entry, onClose }: { entry: RepairEntry | null; onC
     setErrors(errs);
     if (errs.length) return;
     dispatch({ type: "repair/resolve", player: playerFromDraft(draft, entry.playerId, true) });
+    toast(`${draft.name.trim()} repaired.`);
     onClose();
   };
   return (

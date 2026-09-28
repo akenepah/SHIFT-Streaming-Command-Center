@@ -1,152 +1,181 @@
 "use client";
 
+import { AlertTriangle, CircleCheck, Pause, Pencil, ShieldPlus, UserMinus } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/Button";
-import { Avatar, PositionList, TeamTag, matchupText } from "@/components/player/PlayerBits";
-import { addDays, formatDayShort, todayISO } from "@/domain/dates";
-import { toPlayerGame } from "@/domain/lineup/generateDailyLineup";
-import { getScheduleProvider } from "@/domain/schedule/staticProvider";
-import type { Player, RosterStatus } from "@/domain/types";
-import { STATUS_LABEL, rosterCapacity, rosterCounts } from "@/state/selectors";
+import { PlayerIdentity, TeamTag } from "@/components/player/PlayerBits";
+import { PositionBadge, StatusBadge } from "@/components/ui/Badges";
+import { Select } from "@/components/ui/Field";
+import { ActionMenu, MenuDivider, MenuItem } from "@/components/ui/Popover";
+import { useToast } from "@/components/ui/Toast";
+import { rosterLayout, type RosterGroupKey } from "@/domain/roster/rosterLayout";
+import { POSITIONS, type Player, type Position, type RosterStatus } from "@/domain/types";
+import { rosterSummary } from "@/state/selectors";
 import { useStore } from "@/state/store";
-import { AddPlayerDialog, DropPlayerDialog, EditPlayerDialog, RepairPlayersPanel } from "./PlayerDialogs";
-
-const SECTIONS: RosterStatus[] = ["ACTIVE", "BENCH", "IR_PLUS"];
-
-/** Roster status only sets priority; who starts each day is derived by the planner. */
-const SECTION_HINT: Record<RosterStatus, string> = {
-  ACTIVE: "first priority for open lineup slots",
-  BENCH: "starts whenever a legal slot is still open",
-  IR_PLUS: "never starts",
-};
+import { DropPlayerDialog, ManagePlayerDialog, RepairPlayersPanel } from "./PlayerDialogs";
 
 export function plural(n: number, word: string): string {
   return `${n} ${word}${n === 1 ? "" : "s"}`;
 }
 
-function nextGameLabel(player: Player, from: string): string {
-  const games = getScheduleProvider().getTeamGames(player.nhlTeamId, from, addDays(from, 30));
-  const next = games[0];
-  if (!next) return "No games in next 30 days";
-  const g = toPlayerGame(next, player.nhlTeamId);
-  return `${next.date === from ? "Today" : formatDayShort(next.date) + " " + next.date.slice(5).replace("-", "/")} ${matchupText(g)}`;
-}
+const STATUS_ACTIONS: { status: RosterStatus; label: string; Icon: typeof CircleCheck }[] = [
+  { status: "ACTIVE", label: "Set Active", Icon: CircleCheck },
+  { status: "BENCH", label: "Move to Bench", Icon: Pause },
+  { status: "IR_PLUS", label: "Move to IR+", Icon: ShieldPlus },
+];
 
+/** Roster toolbar + grouped table. Shared by the Roster screen and setup's Add Roster step. */
 export function RosterTable() {
   const { state, dispatch } = useStore();
-  const [adding, setAdding] = useState(false);
-  const [editing, setEditing] = useState<Player | null>(null);
+  const toast = useToast();
+  const [filter, setFilter] = useState<Position | "ALL">("ALL");
+  const [managing, setManaging] = useState<{ player: Player; status: RosterStatus } | null>(null);
   const [dropping, setDropping] = useState<Player | null>(null);
 
-  const today = todayISO();
-  const weekEnd = addDays(today, 6);
-  const counts = rosterCounts(state.roster);
-  const capacity = rosterCapacity(state.settings);
-  const provider = getScheduleProvider();
+  const summary = rosterSummary(state.roster, state.settings);
+  const groups = rosterLayout(state.roster, state.players, state.settings.roster);
+  const matches = (p: Player | null) => filter === "ALL" || (!!p && p.eligiblePositions.includes(filter));
+
+  const setStatus = (p: Player, status: RosterStatus) => {
+    dispatch({ type: "roster/setStatus", playerId: p.id, status });
+    toast(`${p.name} is now ${status === "IR_PLUS" ? "on IR+" : status === "BENCH" ? "on the bench" : "Active"}.`);
+  };
 
   return (
-    <div>
-      <div className="mb-4 flex flex-wrap items-center gap-3">
-        {SECTIONS.map((s) => {
-          const over = counts[s] > capacity[s];
-          return (
-            <span
-              key={s}
-              className={`rounded-full border px-3 py-1 text-[12px] font-medium ${
-                over ? "border-warn-line bg-warn-soft text-warn-strong" : "border-line bg-surface text-ink-2"
-              }`}
-            >
-              {STATUS_LABEL[s]} {counts[s]} / {capacity[s]}
-              {over && " · over capacity"}
-            </span>
-          );
-        })}
-        <Button variant="primary" className="ml-auto" onClick={() => setAdding(true)}>
-          <span aria-hidden>+</span> Add player
-        </Button>
-      </div>
-
-      <p className="mb-3 text-[12px] text-ink-2">
-        Roster status sets priority, not who plays. Each day the planner starts every player whose team has a game, as
-        long as a legal lineup slot is free. Active players get first pick when slots run out. IR+ players never start.
-      </p>
-
+    <div className="grid gap-4">
       <RepairPlayersPanel />
 
-      <div className="overflow-x-auto rounded-xl border border-line bg-surface">
-        <table className="w-full min-w-[860px] text-left text-[13px]">
-          <thead className="border-b border-line text-[11px] font-semibold uppercase tracking-wide text-ink-3">
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={() => setFilter("ALL")}
+          aria-pressed={filter === "ALL"}
+          className={`h-11 rounded-control border px-4 text-body font-semibold ${
+            filter === "ALL" ? "border-line bg-surface text-ink" : "border-transparent text-ink-2 hover:text-ink"
+          }`}
+        >
+          All players · {summary.rostered}
+        </button>
+        <div className="w-44">
+          <label htmlFor="roster-position-filter" className="sr-only">
+            Filter by position
+          </label>
+          <Select id="roster-position-filter" value={filter} onChange={(e) => setFilter(e.target.value as Position | "ALL")}>
+            <option value="ALL">Position</option>
+            {POSITIONS.map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
+          </Select>
+        </div>
+        <p className="text-body text-ink-3 tabular-nums">
+          {summary.regular} / {summary.regularCapacity} rostered · {summary.irPlus} / {summary.irPlusCapacity} IR+
+        </p>
+        {summary.regular > summary.regularCapacity && (
+          <p className="flex items-center gap-1.5 text-body-sm font-medium text-warn">
+            <AlertTriangle aria-hidden className="size-4" />
+            Over by {summary.regular - summary.regularCapacity}
+          </p>
+        )}
+      </div>
+
+      <div className="overflow-x-auto rounded-panel border border-line bg-surface">
+        <table className="w-full min-w-[880px] text-left">
+          <thead className="bg-surface-muted text-overline uppercase text-ink-2">
             <tr>
-              <th scope="col" className="px-4 py-2.5">Player</th>
-              <th scope="col" className="px-3 py-2.5">NHL team</th>
-              <th scope="col" className="px-3 py-2.5">Positions</th>
-              <th scope="col" className="px-3 py-2.5">Next 7 days</th>
-              <th scope="col" className="px-3 py-2.5">Next game</th>
-              <th scope="col" className="px-3 py-2.5">Roster status</th>
-              <th scope="col" className="px-4 py-2.5 text-right">Actions</th>
+              <th scope="col" className="w-16 py-3 pl-2 pr-2 text-center">Slot</th>
+              <th scope="col" className="py-3 pr-4">Player</th>
+              <th scope="col" className="w-36 py-3 pr-4">NHL team</th>
+              <th scope="col" className="w-52 py-3 pr-4">Eligible positions</th>
+              <th scope="col" className="w-40 py-3 pr-4">Status</th>
+              <th scope="col" className="w-20 py-3 pr-5 text-right">Actions</th>
             </tr>
           </thead>
-          {SECTIONS.map((section) => {
-            const rows = state.roster.filter((r) => r.rosterStatus === section);
+          {groups.map((group) => {
+            const rows = group.rows.filter((r) => (r.player ? matches(r.player) : filter === "ALL"));
+            if (rows.length === 0 && filter !== "ALL") return null;
+            const ir = group.key === "IR_PLUS";
             return (
-              <tbody key={section} className="border-b border-line last:border-b-0">
-                <tr className="bg-canvas/60">
-                  <th scope="rowgroup" colSpan={7} className="px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-2">
-                    {STATUS_LABEL[section]} · {rows.length}
-                    <span className="ml-2 font-normal normal-case tracking-normal text-ink-3">{SECTION_HINT[section]}</span>
+              <tbody key={group.key}>
+                <tr className={ir ? "bg-pos-ir-soft" : "bg-surface-muted"}>
+                  <th scope="rowgroup" colSpan={6} className="border-t border-line px-4 py-2.5 text-left">
+                    <span className="text-label uppercase tracking-wide text-ink">{group.label}</span>
+                    <span className="ml-2 text-label text-ink-3 tabular-nums">
+                      {group.filled} / {group.capacity}
+                    </span>
+                    <span className="ml-3 text-caption font-normal normal-case text-ink-3">{GROUP_HINT[group.key]}</span>
                   </th>
                 </tr>
-                {rows.length === 0 && (
-                  <tr>
-                    <td colSpan={7} className="px-4 py-3 text-ink-3">
-                      No players.
-                    </td>
-                  </tr>
-                )}
-                {rows.map((r) => {
-                  const p = state.players[r.playerId];
-                  if (!p) return null;
+                {rows.map((row, i) => {
+                  const p = row.player;
+                  const status = row.rosterPlayer?.rosterStatus;
+                  if (!p || !status) {
+                    return (
+                      <tr key={`open-${i}`} className="border-t border-line">
+                        <td className="py-2.5 pl-2 pr-2 text-center">
+                          <PositionBadge kind={row.slot} />
+                        </td>
+                        <td colSpan={5} className="py-2.5 pr-4 text-body text-ink-3">
+                          Open {row.slot === "BN" ? "bench" : row.slot} slot
+                        </td>
+                      </tr>
+                    );
+                  }
                   return (
-                    <tr key={p.id} className="border-t border-line first:border-t-0 hover:bg-canvas/40">
-                      <td className="px-4 py-2">
-                        <div className="flex items-center gap-2.5">
-                          <Avatar src={p.headshot} name={p.name} />
-                          <span className="font-medium">{p.name}</span>
-                        </div>
+                    <tr key={p.id} className="border-t border-line hover:bg-surface-muted/60">
+                      <td className="py-3 pl-2 pr-2 text-center">
+                        <PositionBadge kind={row.slot} />
                       </td>
-                      <td className="px-3 py-2">
+                      <td className="py-3 pr-4">
+                        <PlayerIdentity name={p.name} headshot={p.headshot} />
+                      </td>
+                      <td className="py-3 pr-4">
                         <TeamTag teamId={p.nhlTeamId} />
                       </td>
-                      <td className="px-3 py-2">
-                        <PositionList positions={p.eligiblePositions} />
+                      <td className="py-3 pr-4 text-data text-ink">{p.eligiblePositions.join(", ")}</td>
+                      <td className="py-3 pr-4">
+                        <span className="flex flex-col items-start gap-1">
+                          <StatusBadge status={status} />
+                          {row.overflow && <span className="text-caption text-warn">No free slot in baseline</span>}
+                        </span>
                       </td>
-                      <td className="px-3 py-2 tabular-nums">{plural(provider.getTeamGames(p.nhlTeamId, today, weekEnd).length, "game")}</td>
-                      <td className="px-3 py-2 text-ink-2">{nextGameLabel(p, today)}</td>
-                      <td className="px-3 py-2">
-                        <select
-                          aria-label={`Roster status for ${p.name}`}
-                          className="h-8 rounded-md border border-line-strong bg-surface px-2 text-[13px]"
-                          value={r.rosterStatus}
-                          onChange={(e) =>
-                            dispatch({ type: "roster/setStatus", playerId: p.id, status: e.target.value as RosterStatus })
-                          }
-                        >
-                          {SECTIONS.map((s) => (
-                            <option key={s} value={s}>
-                              {STATUS_LABEL[s]}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-4 py-2">
-                        <div className="flex justify-end gap-1">
-                          <Button size="sm" variant="ghost" onClick={() => setEditing(p)} aria-label={`Edit ${p.name}`}>
-                            Edit
-                          </Button>
-                          <Button size="sm" variant="ghost" onClick={() => setDropping(p)} aria-label={`Drop ${p.name}`}>
-                            Drop
-                          </Button>
-                        </div>
+                      <td className="py-3 pr-4 text-right">
+                        <ActionMenu label={`Actions for ${p.name}`}>
+                          {(close) => (
+                            <>
+                              <MenuItem
+                                onSelect={() => {
+                                  close();
+                                  setManaging({ player: p, status });
+                                }}
+                              >
+                                <Pencil aria-hidden /> Manage player
+                              </MenuItem>
+                              <MenuDivider />
+                              {STATUS_ACTIONS.filter((a) => a.status !== status).map(({ status: s, label, Icon }) => (
+                                <MenuItem
+                                  key={s}
+                                  onSelect={() => {
+                                    close();
+                                    setStatus(p, s);
+                                  }}
+                                >
+                                  <Icon aria-hidden /> {label}
+                                </MenuItem>
+                              ))}
+                              <MenuDivider />
+                              <MenuItem
+                                tone="danger"
+                                onSelect={() => {
+                                  close();
+                                  setDropping(p);
+                                }}
+                              >
+                                <UserMinus aria-hidden /> Drop player
+                              </MenuItem>
+                            </>
+                          )}
+                        </ActionMenu>
                       </td>
                     </tr>
                   );
@@ -157,9 +186,31 @@ export function RosterTable() {
         </table>
       </div>
 
-      <AddPlayerDialog open={adding} onClose={() => setAdding(false)} />
-      <EditPlayerDialog key={editing?.id ?? "none"} player={editing} onClose={() => setEditing(null)} />
+      <p className="text-body-sm text-ink-3">
+        {state.settings.season} · The Slot column is a baseline lineup. Each day the planner starts every player whose team
+        has a game when a legal slot is free; Active players get first pick, IR+ never starts. Use ⋯ to manage a player.
+      </p>
+
+      <ManagePlayerDialog
+        key={managing?.player.id ?? "none"}
+        player={managing?.player ?? null}
+        status={managing?.status ?? null}
+        onClose={() => setManaging(null)}
+        onDrop={(p) => {
+          setManaging(null);
+          setDropping(p);
+        }}
+      />
       <DropPlayerDialog player={dropping} onClose={() => setDropping(null)} />
     </div>
   );
 }
+
+const GROUP_HINT: Record<RosterGroupKey, string> = {
+  FORWARDS: "",
+  DEFENSE: "",
+  UTILITY: "Any skater",
+  GOALTENDERS: "",
+  BENCH: "Starts when a slot is open",
+  IR_PLUS: "Never starts",
+};
