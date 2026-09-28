@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, ArrowLeft } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Info } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PlayerForm } from "@/components/player/PlayerForm";
 import { PlayerSearch } from "@/components/player/PlayerSearch";
@@ -9,9 +9,11 @@ import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
 import { ErrorList, Field, Select } from "@/components/ui/Field";
 import { useToast } from "@/components/ui/Toast";
-import { addDays, formatDayShort, formatMonthDay, weekDates } from "@/domain/dates";
+import { addDays, formatDayLong, formatDayShort, formatMonthDay, weekDates } from "@/domain/dates";
+import type { OpenSlotContext } from "@/domain/lineup/openSlot";
+import { findTeamGame } from "@/domain/schedule/provider";
 import type { WeekInput } from "@/domain/lineup/generateWeek";
-import { activeSlotCount } from "@/domain/config";
+import { activeSlotCount, canPlaySlot } from "@/domain/config";
 import { findExistingIdentity, isRostered, type ExistingIdentity } from "@/domain/players/searchPlayers";
 import { projectRoster } from "@/domain/roster/projectedRoster";
 import { emptyPlayerDraft, playerFromDraft, validatePlayerDraft, type PlayerDraft } from "@/domain/roster/playerDraft";
@@ -43,6 +45,7 @@ export function PlanMoveDialog({
   editing,
   defaultDate,
   initialType = "ADD_DROP",
+  slotContext = null,
 }: {
   open: boolean;
   onClose: () => void;
@@ -51,6 +54,8 @@ export function PlanMoveDialog({
   defaultDate: ISODate;
   /** Starting move type for a new move (e.g. ADD when the roster has room). */
   initialType?: TransactionType;
+  /** Set when the flow starts from an empty active slot on the Weekly Planner. */
+  slotContext?: OpenSlotContext | null;
 }) {
   const { state, dispatch } = useStore();
   const toast = useToast();
@@ -87,11 +92,28 @@ export function PlanMoveDialog({
 
   // Add candidates come from the shared player search (catalog + saved players).
   // No per-player scoring: the review below shows the chosen move's impact.
-  const { pool, lookup } = usePlayerPool();
+  const { pool: fullPool, lookup } = usePlayerPool();
   const rosteredThen = (p: Player) => isRostered(p, rosterThen, lookup);
   const savedIdle = Object.values(state.players)
     .filter((p) => !rosterIds.has(p.id))
     .sort((a, b) => a.name.localeCompare(b.name));
+
+  // From an open slot: start with players who fit that slot and play that day.
+  // A checkbox widens back to everyone; nobody is permanently hidden, nothing is ranked.
+  const [fitSlot, setFitSlot] = useState(!!slotContext);
+  const fitsContext = (p: Player) =>
+    !!slotContext &&
+    canPlaySlot(p.eligiblePositions, slotContext.position) &&
+    !!findTeamGame(weekInput.scheduleProvider, p.nhlTeamId, slotContext.date);
+  const pool = slotContext && fitSlot ? fullPool.filter(fitsContext) : fullPool;
+  const contextIdle =
+    slotContext && fitSlot
+      ? pool
+          .filter((p) => !rosteredThen(p))
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .slice(0, 20)
+      : null;
+  const slotDayLabel = slotContext ? `${formatDayShort(slotContext.date)} ${formatMonthDay(slotContext.date)}` : "";
   const selected = draft.addPlayerId ? lookup[draft.addPlayerId] : undefined;
 
   // Roster capacity on the effective date decides Add vs Add + Drop.
@@ -158,8 +180,18 @@ export function PlanMoveDialog({
       open={open}
       onClose={onClose}
       width="lg"
-      title={editing ? "Edit planned move" : "Plan a move"}
-      description="Planning only. SHIFT doesn't make changes in your fantasy league. The move applies to the planner from its effective date."
+      title={
+        editing
+          ? "Edit planned move"
+          : slotContext
+            ? `Add player for ${formatDayLong(slotContext.date)} · ${slotContext.position}`
+            : "Plan a move"
+      }
+      description={
+        slotContext && !editing
+          ? "Find a player who can help fill this lineup opportunity. Planning only: SHIFT doesn't make changes in your fantasy league."
+          : "Planning only. SHIFT doesn't make changes in your fantasy league. The move applies to the planner from its effective date."
+      }
       footer={
         <>
           <Button onClick={onClose}>Cancel</Button>
@@ -279,28 +311,54 @@ export function PlanMoveDialog({
                   </div>
                 </div>
               ) : (
-                <PlayerSearch
-                  inputId="move-add-search"
-                  query={addQuery}
-                  onQueryChange={setAddQuery}
-                  pool={pool}
-                  isRostered={rosteredThen}
-                  mode={{ kind: "select", name: "move-add", selectedId: draft.addPlayerId, onSelect: selectAdd }}
-                  onCreateManually={() => {
-                    setPlayerDraft({ ...emptyPlayerDraft(), name: addQuery.trim() });
-                    setCreating(true);
-                  }}
-                  idle={{ label: "Your saved players", players: savedIdle }}
-                  meta={(p) => (
-                    <span className="shrink-0 text-caption text-ink-3 tabular-nums">
-                      {remaining(p)} {remaining(p) === 1 ? "game" : "games"} left this week
-                    </span>
+                <>
+                  {slotContext && (
+                    <label className="mb-3 flex items-center gap-2 text-body-sm text-ink-2">
+                      <input
+                        type="checkbox"
+                        className="size-4 accent-primary"
+                        checked={fitSlot}
+                        onChange={(e) => setFitSlot(e.target.checked)}
+                      />
+                      Only {slotContext.position}-eligible players with a game {slotDayLabel}
+                    </label>
                   )}
-                />
+                  <PlayerSearch
+                    inputId="move-add-search"
+                    query={addQuery}
+                    onQueryChange={setAddQuery}
+                    pool={pool}
+                    autoFocus={!!slotContext}
+                    isRostered={rosteredThen}
+                    mode={{ kind: "select", name: "move-add", selectedId: draft.addPlayerId, onSelect: selectAdd }}
+                    onCreateManually={() => {
+                      setPlayerDraft({ ...emptyPlayerDraft(), name: addQuery.trim() });
+                      setCreating(true);
+                    }}
+                    idle={
+                      contextIdle
+                        ? { label: `${slotContext!.position}-eligible · playing ${slotDayLabel}`, players: contextIdle }
+                        : { label: "Your saved players", players: savedIdle }
+                    }
+                    meta={(p) => (
+                      <span className="shrink-0 text-caption text-ink-3 tabular-nums">
+                        {remaining(p)} {remaining(p) === 1 ? "game" : "games"} left this week
+                      </span>
+                    )}
+                  />
+                </>
               )}
             </div>
           )}
         </div>
+
+        {slotContext && needsAdd && draft.effectiveDate > slotContext.date && (
+          <p role="status" className="flex items-start gap-2 rounded-control border border-line bg-surface-muted px-3.5 py-2.5 text-body-sm text-ink-2">
+            <Info aria-hidden className="mt-0.5 size-4 shrink-0 text-primary" />
+            This move takes effect {formatDayShort(draft.effectiveDate)} {formatMonthDay(draft.effectiveDate)}, so{" "}
+            {formatDayLong(slotContext.date)}&apos;s {slotContext.position} slot stays open.
+          </p>
+        )}
 
         {impact && (
           <div className="rounded-card border border-line bg-surface-muted px-4 py-3" aria-live="polite">
