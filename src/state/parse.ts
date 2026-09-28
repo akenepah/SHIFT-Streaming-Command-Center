@@ -10,8 +10,10 @@ import {
   type Player,
   type Position,
   type RosterPlayer,
+  type RosterStatus,
 } from "@/domain/types";
-import { APP_STATE_VERSION, type AppState } from "./appState";
+import { APP_STATE_VERSION, type AppState, type RepairEntry } from "./appState";
+import { isUntouchedDemoPlayer } from "./legacyDemo";
 
 type Obj = Record<string, unknown>;
 const isObj = (v: unknown): v is Obj => typeof v === "object" && v !== null && !Array.isArray(v);
@@ -39,19 +41,56 @@ function parseSettings(v: unknown): LeagueSettings {
   };
 }
 
-function parsePlayer(v: unknown): Player | null {
-  if (!isObj(v) || typeof v.id !== "string" || typeof v.name !== "string" || !isNHLTeamId(v.nhlTeamId)) return null;
-  const positions = Array.isArray(v.eligiblePositions)
-    ? [...new Set(v.eligiblePositions.filter((p): p is Position => POSITIONS.includes(p as Position)))]
-    : [];
-  if (!positions.length) return null;
+type PlayerParse = { player: Player } | { repair: Omit<RepairEntry, "rosterStatus"> } | null;
+
+/** A valid player, a record worth repairing (it has an id), or nothing usable. */
+function parsePlayer(v: unknown): PlayerParse {
+  if (!isObj(v) || typeof v.id !== "string" || !v.id) return null;
+  const rawPositions = Array.isArray(v.eligiblePositions) ? v.eligiblePositions : [];
+  const positions = [...new Set(rawPositions.filter((p): p is Position => POSITIONS.includes(p as Position)))];
+  const name = typeof v.name === "string" ? v.name.trim() : "";
+  const problems: string[] = [];
+  if (!name) problems.push("Missing name");
+  if (!isNHLTeamId(v.nhlTeamId)) problems.push(`Unknown NHL team${typeof v.nhlTeamId === "string" && v.nhlTeamId ? ` "${v.nhlTeamId}"` : ""}`);
+  if (!positions.length) problems.push("No valid positions");
+  else if (positions.includes("G") && positions.length > 1) problems.push("Goalie listed with skater positions");
+
+  if (problems.length) {
+    return {
+      repair: {
+        playerId: v.id,
+        name: name || "Unnamed player",
+        nhlTeamId: typeof v.nhlTeamId === "string" ? v.nhlTeamId : "",
+        eligiblePositions: rawPositions.filter((p): p is string => typeof p === "string"),
+        problems,
+      },
+    };
+  }
   return {
-    id: v.id,
-    name: v.name,
-    nhlTeamId: v.nhlTeamId,
-    eligiblePositions: positions,
-    ...(typeof v.headshot === "string" && v.headshot ? { headshot: v.headshot } : {}),
-    ...(v.custom === true ? { custom: true } : {}),
+    player: {
+      id: v.id,
+      name,
+      nhlTeamId: v.nhlTeamId as Player["nhlTeamId"],
+      eligiblePositions: positions,
+      ...(typeof v.headshot === "string" && v.headshot ? { headshot: v.headshot } : {}),
+      ...(v.custom === true ? { custom: true } : {}),
+    },
+  };
+}
+
+function parseRosterStatus(v: unknown): RosterStatus {
+  return v === "BENCH" || v === "IR_PLUS" ? v : "ACTIVE";
+}
+
+function parseRepairEntry(v: unknown): RepairEntry | null {
+  if (!isObj(v) || typeof v.playerId !== "string" || !v.playerId) return null;
+  return {
+    playerId: v.playerId,
+    name: str(v.name, "Unnamed player"),
+    nhlTeamId: str(v.nhlTeamId, ""),
+    eligiblePositions: Array.isArray(v.eligiblePositions) ? v.eligiblePositions.filter((p): p is string => typeof p === "string") : [],
+    rosterStatus: v.rosterStatus === null || v.rosterStatus === undefined ? null : parseRosterStatus(v.rosterStatus),
+    problems: Array.isArray(v.problems) ? v.problems.filter((p): p is string => typeof p === "string") : [],
   };
 }
 
@@ -77,40 +116,89 @@ function parseOverride(v: unknown): DailyLineupOverride | null {
 }
 
 /**
- * Turn stored JSON into a valid AppState. Returns null when the payload isn't
- * a v1 state at all. Otherwise invalid individual records are dropped, so
- * one bad entry can't break the whole app.
+ * Parse the body shared by every schema version. Invalid records never break
+ * the app: transactions and overrides that don't parse are dropped, and
+ * malformed players (with their roster status) go to `needsRepair` so the
+ * user can fix or remove them.
  */
-export function parseAppState(raw: unknown): AppState | null {
-  if (!isObj(raw) || raw.version !== APP_STATE_VERSION) return null;
-
+function parseBody(raw: Obj): Omit<AppState, "version"> {
   const players: Record<string, Player> = {};
+  const repairs = new Map<string, RepairEntry>();
+  for (const e of Array.isArray(raw.needsRepair) ? raw.needsRepair : []) {
+    const r = parseRepairEntry(e);
+    if (r) repairs.set(r.playerId, r);
+  }
   if (isObj(raw.players)) {
     for (const value of Object.values(raw.players)) {
-      const p = parsePlayer(value);
-      if (p) players[p.id] = p;
+      const parsed = parsePlayer(value);
+      if (!parsed) continue;
+      if ("player" in parsed) players[parsed.player.id] = parsed.player;
+      else repairs.set(parsed.repair.playerId, { ...parsed.repair, rosterStatus: null });
     }
   }
 
   const seen = new Set<string>();
   const roster: RosterPlayer[] = [];
   for (const r of Array.isArray(raw.roster) ? raw.roster : []) {
-    if (!isObj(r) || typeof r.playerId !== "string" || !players[r.playerId] || seen.has(r.playerId)) continue;
-    const status = r.rosterStatus === "BENCH" || r.rosterStatus === "IR_PLUS" ? r.rosterStatus : "ACTIVE";
-    roster.push({ playerId: r.playerId, rosterStatus: status });
+    if (!isObj(r) || typeof r.playerId !== "string" || seen.has(r.playerId)) continue;
     seen.add(r.playerId);
+    const status = parseRosterStatus(r.rosterStatus);
+    if (players[r.playerId]) roster.push({ playerId: r.playerId, rosterStatus: status });
+    else if (repairs.has(r.playerId)) repairs.get(r.playerId)!.rosterStatus = status;
   }
 
   const list = <T>(v: unknown, f: (x: unknown) => T | null) =>
     (Array.isArray(v) ? v : []).map(f).filter((x): x is T => x !== null);
 
   return {
-    version: APP_STATE_VERSION,
     settings: parseSettings(raw.settings),
     players,
     roster,
     transactions: list(raw.transactions, parseTransaction),
     overrides: list(raw.overrides, parseOverride),
     setupComplete: raw.setupComplete === true,
+    needsRepair: [...repairs.values()],
+  };
+}
+
+/** Parse a stored v2 state. Returns null when the payload isn't a v2 state at all. */
+export function parseAppState(raw: unknown): AppState | null {
+  if (!isObj(raw) || raw.version !== APP_STATE_VERSION) return null;
+  return { version: APP_STATE_VERSION, ...parseBody(raw) };
+}
+
+export type MigrationResult = { state: AppState; removedDemoPlayers: number; keptPlayers: number };
+
+/**
+ * Migrate a v1 payload (the alpha build that seeded a sample roster).
+ *
+ * Only untouched legacy sample players are removed, along with their roster
+ * entries, planned moves and overrides. Players the user created, and sample
+ * players the user edited, are kept with everything that refers to them.
+ * Settings are kept. If no roster is left, setup runs again.
+ */
+export function migrateV1(raw: unknown): MigrationResult | null {
+  if (!isObj(raw) || raw.version !== 1) return null;
+  const body = parseBody(raw);
+  const demo = new Set(Object.values(body.players).filter(isUntouchedDemoPlayer).map((p) => p.id));
+  const keep = (id?: string) => !id || !demo.has(id);
+
+  const players = Object.fromEntries(Object.entries(body.players).filter(([id]) => !demo.has(id)));
+  const roster = body.roster.filter((r) => !demo.has(r.playerId));
+  const transactions = body.transactions.filter((t) => keep(t.addPlayerId) && keep(t.dropPlayerId));
+  const overrides = body.overrides.filter((o) => !demo.has(o.playerId));
+
+  return {
+    state: {
+      version: APP_STATE_VERSION,
+      ...body,
+      players,
+      roster,
+      transactions,
+      overrides,
+      setupComplete: body.setupComplete && roster.length > 0,
+    },
+    removedDemoPlayers: demo.size,
+    keptPlayers: Object.keys(players).length,
   };
 }

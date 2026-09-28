@@ -28,3 +28,30 @@ export function teamGamesBetween(teamId: NHLTeamId, start: ISODate, end: ISODate
 export function teamGamesInWeek(teamId: NHLTeamId, weekStart: ISODate): number {
   return teamGamesBetween(teamId, weekStart, addDays(weekStart, 6));
 }
+
+export type RosterSummary = {
+  /** Every player on the fantasy roster, including IR+. */
+  rostered: number;
+  /** Players occupying regular roster spots (Active + Bench status). */
+  regular: number;
+  /** Regular roster spots available: active lineup slots + bench slots. */
+  regularCapacity: number;
+  irPlus: number;
+  irPlusCapacity: number;
+};
+
+/**
+ * Roster inventory for summaries. Deliberately says nothing about who starts:
+ * that is derived per day by the planner.
+ */
+export function rosterSummary(roster: readonly RosterPlayer[], settings: LeagueSettings): RosterSummary {
+  const counts = rosterCounts(roster);
+  const capacity = rosterCapacity(settings);
+  return {
+    rostered: roster.length,
+    regular: counts.ACTIVE + counts.BENCH,
+    regularCapacity: capacity.ACTIVE + capacity.BENCH,
+    irPlus: counts.IR_PLUS,
+    irPlusCapacity: capacity.IR_PLUS,
+  };
+}

@@ -12,7 +12,7 @@ const NAV = [
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { state, hydrated, loadStatus } = useStore();
+  const { state, hydrated, loadStatus, removedDemoPlayers } = useStore();
   const pathname = usePathname();
   const router = useRouter();
   const inSetup = pathname.startsWith("/setup");
@@ -59,8 +59,14 @@ export function AppShell({ children }: { children: ReactNode }) {
       </header>
       {loadStatus === "corrupt" && (
         <div role="alert" className="border-b border-warn-line bg-warn-soft px-6 py-2 text-[13px] text-warn-strong">
-          Saved data couldn&apos;t be read, so sample data was loaded. A copy of the unreadable data was kept in
-          browser storage.
+          Saved data couldn&apos;t be read, so the app started fresh. A copy of the unreadable data was kept in browser
+          storage.
+        </div>
+      )}
+      {loadStatus === "migrated" && removedDemoPlayers > 0 && (
+        <div role="status" className="border-b border-brand/30 bg-brand-soft px-6 py-2 text-[13px] text-brand-strong">
+          This version no longer includes the sample roster. {removedDemoPlayers} sample players were removed. Players you
+          created or edited were kept.
         </div>
       )}
       <main className="mx-auto w-full max-w-[1920px] flex-1 px-6 py-6">

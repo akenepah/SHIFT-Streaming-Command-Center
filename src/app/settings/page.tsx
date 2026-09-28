@@ -26,8 +26,8 @@ export default function SettingsPage() {
     setSaved(true);
   };
 
-  const reset = (mode: "sample" | "empty") => {
-    dispatch({ type: "data/reset", mode });
+  const reset = () => {
+    dispatch({ type: "data/reset" });
     setConfirmReset(false);
     router.push("/setup");
   };
@@ -85,16 +85,19 @@ export default function SettingsPage() {
         width="sm"
         title="Reset local data?"
         description="This can't be undone. You'll go through setup again."
-        footer={<Button onClick={() => setConfirmReset(false)}>Cancel</Button>}
+        footer={
+          <>
+            <Button onClick={() => setConfirmReset(false)}>Cancel</Button>
+            <Button variant="danger" onClick={reset}>
+              Erase all local data
+            </Button>
+          </>
+        }
       >
-        <div className="grid gap-2">
-          <Button variant="danger" onClick={() => reset("empty")}>
-            Erase everything and start with an empty roster
-          </Button>
-          <Button variant="secondary" onClick={() => reset("sample")}>
-            Erase everything and load the sample roster
-          </Button>
-        </div>
+        <p className="text-[13px] text-ink-2">
+          Your roster, players, planned moves, lineup overrides and settings will be deleted from this browser. The app
+          will start again with an empty roster.
+        </p>
       </Dialog>
     </div>
   );
