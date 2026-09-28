@@ -51,10 +51,16 @@ export type RosterConfiguration = {
   irPlusSlots: number;
 };
 
+/** When a newly planned move takes effect by default. Each move can still pick its own date. */
+export type MoveTiming = "TODAY" | "NEXT_DAY";
+
 export type LeagueSettings = {
   leagueName: string;
   teamName: string;
   season: string;
+  /** Informational: teams in the fantasy league. */
+  numberOfTeams: number;
+  defaultMoveTiming: MoveTiming;
   roster: RosterConfiguration;
   weeklyAcquisitionLimit: number;
   /** Day the fantasy week (and acquisition count) resets. 0 = Sunday … 1 = Monday. */

@@ -97,6 +97,23 @@ runs in UTC on those strings, so the browser time zone can't shift a game. "Toda
 NHL public web API, retrieved 2026-09-27. See `src/data/nhl/README.md`. Refresh with
 `node scripts/fetch-nhl-schedule.mjs`.
 
+## Design system
+
+The UI follows the Weekly Streaming Planner Figma. Retheming is centralized in `src/app/globals.css`:
+
+- **Raw values** live once in `:root` as `--shift-*` variables: neutrals, navigation, primary/feedback colors,
+  position semantics (C, LW, RW, D, UTIL, G, BN, IR+), and the display/body font families.
+- **Semantic Tailwind tokens** (`@theme inline`) map onto them: `bg-surface`, `text-ink-2`, `border-line`,
+  `bg-pos-c-soft`, type roles (`text-page-title`, `text-section-title`, `text-card-title`, `text-body`,
+  `text-body-sm`, `text-label`, `text-data`, `text-caption`, `text-overline`), radii (`rounded-badge`,
+  `rounded-control`, `rounded-card`, `rounded-panel`, `rounded-pill`), elevation (`shadow-popover`,
+  `shadow-overlay`), `max-w-page` and the `layout-form-rail` two-column utility.
+- Components use only those names. Changing the palette or typeface means editing the `--shift-*` values.
+
+Shared primitives live in `src/components/ui/`: Button (44px baseline), Field/Input/Select/Stepper, position and
+status badges, Dialog, AnchoredPopover/ActionMenu, Toast, and PageHeader/SectionCard. Icons come from
+`lucide-react`.
+
 ## Roster status vs. daily lineup
 
 Two different things, deliberately kept apart:

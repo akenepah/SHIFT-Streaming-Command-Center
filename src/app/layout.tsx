@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { AppShell } from "@/components/AppShell";
+import { ToastProvider } from "@/components/ui/Toast";
 import { StoreProvider } from "@/state/store";
 import "./globals.css";
 
@@ -14,9 +15,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full font-sans text-sm">
+      <body className="min-h-full font-body text-body">
         <StoreProvider>
-          <AppShell>{children}</AppShell>
+          <ToastProvider>
+            <AppShell>{children}</AppShell>
+          </ToastProvider>
         </StoreProvider>
       </body>
     </html>

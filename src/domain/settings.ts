@@ -6,6 +6,7 @@ export function validateSettings(s: LeagueSettings): string[] {
   const whole = (n: number, min: number, max: number) => Number.isInteger(n) && n >= min && n <= max;
   if (!s.leagueName.trim()) errors.push("Enter a league name.");
   if (!s.teamName.trim()) errors.push("Enter a team name.");
+  if (!whole(s.numberOfTeams, 2, 32)) errors.push("Number of teams must be a whole number from 2 to 32.");
   for (const t of SLOT_TYPES) {
     if (!whole(s.roster.slots[t], 0, 10)) errors.push(`${t} slots must be a whole number from 0 to 10.`);
   }

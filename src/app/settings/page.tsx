@@ -2,82 +2,107 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { LeagueSettingsForm } from "@/components/settings/LeagueSettingsForm";
+import {
+  LeagueTeamFields,
+  LineupSlotFields,
+  LineupSummary,
+  RulesFields,
+} from "@/components/settings/LeagueSettingsForm";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
-import { validateSettings } from "@/domain/settings";
+import { ErrorList } from "@/components/ui/Field";
+import { PageHeader, SectionCard } from "@/components/ui/Page";
+import { useToast } from "@/components/ui/Toast";
 import { SCHEDULE_META } from "@/domain/schedule/staticProvider";
+import { validateSettings } from "@/domain/settings";
+import { rosterCounts } from "@/state/selectors";
 import { useStore } from "@/state/store";
 
 export default function SettingsPage() {
   const { state, dispatch } = useStore();
   const router = useRouter();
+  const toast = useToast();
   const [draft, setDraft] = useState(state.settings);
   const [errors, setErrors] = useState<string[]>([]);
-  const [saved, setSaved] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
   const dirty = JSON.stringify(draft) !== JSON.stringify(state.settings);
+  const s = state.settings;
 
   const save = () => {
     const errs = validateSettings(draft);
     setErrors(errs);
     if (errs.length) return;
     dispatch({ type: "settings/update", settings: draft });
-    setSaved(true);
+    toast("Settings saved. The planner has been updated.");
+  };
+
+  const cancel = () => {
+    setDraft(state.settings);
+    setErrors([]);
   };
 
   const reset = () => {
     dispatch({ type: "data/reset" });
     setConfirmReset(false);
+    toast("Local data erased.", "info");
     router.push("/setup");
   };
 
   return (
-    <div className="mx-auto max-w-[1080px]">
-      <div className="mb-5 flex items-end gap-4">
-        <div className="mr-auto">
-          <h1 className="text-2xl font-bold tracking-tight">League Settings</h1>
-          <p className="mt-1 text-ink-2">The planner rebuilds every day&apos;s lineup from these settings.</p>
-        </div>
-        <span role="status" className="text-[13px] text-ok">
-          {saved && !dirty ? "✓ Saved" : ""}
-        </span>
-        <Button disabled={!dirty} onClick={() => { setDraft(state.settings); setErrors([]); }}>
-          Discard changes
-        </Button>
-        <Button variant="primary" disabled={!dirty} onClick={save}>
-          Save settings
-        </Button>
-      </div>
-
-      <LeagueSettingsForm
-        value={draft}
-        onChange={(s) => {
-          setDraft(s);
-          setSaved(false);
-        }}
-        errors={errors}
+    <div className="mx-auto max-w-page px-10 py-10">
+      <PageHeader
+        title="League Settings"
+        subtitle={`${s.leagueName} · ${s.teamName} · ${s.season.replace("-", "–")} · ${s.numberOfTeams} teams`}
       />
 
-      <section className="mt-5 rounded-xl border border-line bg-surface p-5">
-        <h2 className="text-[15px] font-bold">Schedule data</h2>
-        <p className="mt-1 text-[13px] text-ink-2">
-          {SCHEDULE_META.season} NHL regular season · {SCHEDULE_META.gameCount.toLocaleString()} games ·{" "}
-          {SCHEDULE_META.regularSeasonStart} to {SCHEDULE_META.regularSeasonEnd} · bundled with the app, retrieved{" "}
-          {SCHEDULE_META.retrievedAt.slice(0, 10)} from the NHL public schedule API.
-        </p>
-      </section>
+      <div className="mt-8 layout-form-rail">
+        <div className="grid gap-6">
+          <SectionCard title="League & team">
+            <LeagueTeamFields value={draft} onChange={setDraft} />
+          </SectionCard>
 
-      <section className="mt-5 rounded-xl border border-danger/30 bg-surface p-5">
-        <h2 className="text-[15px] font-bold">Reset local data</h2>
-        <p className="mt-1 text-[13px] text-ink-2">
-          Everything is stored in this browser only. Resetting erases your roster, created players, planned moves,
-          lineup overrides and settings.
-        </p>
-        <Button variant="danger" className="mt-3" onClick={() => setConfirmReset(true)}>
-          Reset local data…
-        </Button>
-      </section>
+          <SectionCard title="Daily lineup slots" description="One roster generates Monday–Sunday lineups using these limits.">
+            <LineupSlotFields value={draft} onChange={setDraft} />
+          </SectionCard>
+
+          <SectionCard title="Acquisitions & league rules">
+            <RulesFields value={draft} onChange={setDraft} />
+          </SectionCard>
+
+          <ErrorList errors={errors} />
+
+          <div className="flex gap-3">
+            <Button variant="primary" className="min-w-40" onClick={save} disabled={!dirty}>
+              Save changes
+            </Button>
+            <Button className="min-w-28" onClick={cancel} disabled={!dirty}>
+              Cancel
+            </Button>
+          </div>
+
+          <SectionCard title="Reset local data" className="mt-4 border-danger-line">
+            <p className="text-body text-ink-2">
+              Everything lives in this browser only. Resetting erases your roster, saved players, planned moves, lineup
+              overrides and settings.
+            </p>
+            <Button variant="quiet-danger" className="mt-4 border border-danger-line" onClick={() => setConfirmReset(true)}>
+              Reset local data…
+            </Button>
+          </SectionCard>
+        </div>
+
+        <LineupSummary
+          value={draft}
+          irOccupied={rosterCounts(state.roster).IR_PLUS}
+          title={`${draft.leagueName || "League"} lineup`}
+          footer={
+            <>
+              NHL schedule: {SCHEDULE_META.season} regular season, {SCHEDULE_META.gameCount.toLocaleString()} games,
+              bundled with the app.
+            </>
+          }
+        />
+      </div>
 
       <Dialog
         open={confirmReset}
@@ -94,7 +119,7 @@ export default function SettingsPage() {
           </>
         }
       >
-        <p className="text-[13px] text-ink-2">
+        <p className="text-body-sm text-ink-2">
           Your roster, players, planned moves, lineup overrides and settings will be deleted from this browser. The app
           will start again with an empty roster.
         </p>

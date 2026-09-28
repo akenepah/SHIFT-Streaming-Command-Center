@@ -1,36 +1,21 @@
 /* eslint-disable @next/next/no-img-element -- headshots are arbitrary user URLs */
+"use client";
+
+import { useState } from "react";
 import { getTeam, type NHLTeamId } from "@/domain/nhl/teams";
-import type { PlayerGame, Position, SlotType } from "@/domain/types";
-
-const POS_STYLE: Record<SlotType, string> = {
-  C: "bg-pos-c-soft text-pos-c",
-  LW: "bg-pos-lw-soft text-pos-lw",
-  RW: "bg-pos-rw-soft text-pos-rw",
-  D: "bg-pos-d-soft text-pos-d",
-  UTIL: "bg-pos-util-soft text-pos-util",
-  G: "bg-pos-g-soft text-pos-g",
-};
-
-export function SlotBadge({ type, className = "" }: { type: SlotType; className?: string }) {
-  return (
-    <span
-      className={`inline-flex h-5 min-w-7 shrink-0 items-center justify-center rounded px-1 text-[10px] font-bold tracking-wide ${POS_STYLE[type]} ${className}`}
-    >
-      {type}
-    </span>
-  );
-}
+import type { PlayerGame, Position } from "@/domain/types";
 
 export function PositionList({ positions }: { positions: readonly Position[] }) {
-  return <span className="text-ink-2">{positions.join(" / ")}</span>;
+  return <span className="text-ink-2">{positions.join(", ")}</span>;
 }
 
-export function TeamTag({ teamId }: { teamId: NHLTeamId }) {
+/** NHL team mark + abbreviation. A small team-color disc stands in for a logo. */
+export function TeamTag({ teamId, className = "" }: { teamId: NHLTeamId; className?: string }) {
   const team = getTeam(teamId);
   return (
-    <span className="inline-flex items-center gap-1.5 font-medium" title={`${team.city} ${team.name}`}>
-      <span aria-hidden className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: team.color }} />
-      {team.id}
+    <span className={`inline-flex items-center gap-2 ${className}`} title={`${team.city} ${team.name}`}>
+      <span aria-hidden className="size-3 shrink-0 rounded-pill ring-1 ring-black/10" style={{ backgroundColor: team.color }} />
+      <span className="text-data text-ink">{team.id}</span>
     </span>
   );
 }
@@ -45,17 +30,20 @@ export function fullMatchup(teamId: NHLTeamId, game: PlayerGame): string {
   return `${teamId} ${matchupText(game)}`;
 }
 
-/** Neutral silhouette used whenever there's no headshot. */
+/** Headshot, or the neutral silhouette. Fixed size, so a missing image never shifts layout. */
 export function Avatar({ src, name, size = 28 }: { src?: string; name: string; size?: number }) {
-  if (src) {
+  const [failed, setFailed] = useState(false);
+  const box = { width: size, height: size };
+  if (src && !failed) {
     return (
       <img
         src={src}
         alt=""
         width={size}
         height={size}
-        className="shrink-0 rounded-full border border-line bg-canvas object-cover"
-        style={{ width: size, height: size }}
+        onError={() => setFailed(true)}
+        className="shrink-0 rounded-pill border border-line bg-surface-muted object-cover"
+        style={box}
         title={name}
       />
     );
@@ -63,13 +51,38 @@ export function Avatar({ src, name, size = 28 }: { src?: string; name: string; s
   return (
     <span
       aria-hidden
-      className="inline-flex shrink-0 items-end justify-center overflow-hidden rounded-full border border-line bg-[#e8ebf0]"
-      style={{ width: size, height: size }}
+      className="inline-flex shrink-0 items-end justify-center overflow-hidden rounded-pill border border-line bg-surface-muted"
+      style={box}
     >
-      <svg viewBox="0 0 24 24" className="h-[85%] w-[85%] text-[#aab2bf]" fill="currentColor">
+      <svg viewBox="0 0 24 24" className="h-[85%] w-[85%] text-line-strong" fill="currentColor">
         <circle cx="12" cy="9" r="4.2" />
         <path d="M3.5 24c0-5 3.8-8.2 8.5-8.2s8.5 3.2 8.5 8.2z" />
       </svg>
+    </span>
+  );
+}
+
+/** Avatar + name (+ optional secondary line). */
+export function PlayerIdentity({
+  name,
+  headshot,
+  secondary,
+  size = 28,
+  short = false,
+}: {
+  name: string;
+  headshot?: string;
+  secondary?: string;
+  size?: number;
+  short?: boolean;
+}) {
+  return (
+    <span className="flex min-w-0 items-center gap-2.5">
+      <Avatar src={headshot} name={name} size={size} />
+      <span className="min-w-0">
+        <span className="block truncate text-body font-medium text-ink">{short ? shortName(name) : name}</span>
+        {secondary && <span className="block truncate text-caption text-ink-3">{secondary}</span>}
+      </span>
     </span>
   );
 }
@@ -79,4 +92,13 @@ export function shortName(name: string): string {
   const parts = name.trim().split(/\s+/);
   if (parts.length < 2) return name;
   return `${parts[0][0]}. ${parts.slice(1).join(" ")}`;
+}
+
+export function initials(name: string): string {
+  const words = name
+    .replace(/[^\p{L}\p{N}\s]/gu, "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  return (words.slice(0, 3).map((w) => w[0]).join("") || "?").toUpperCase();
 }

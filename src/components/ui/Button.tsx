@@ -1,31 +1,38 @@
-import type { ButtonHTMLAttributes } from "react";
+import { forwardRef, type ButtonHTMLAttributes } from "react";
 
-type Variant = "primary" | "secondary" | "ghost" | "danger";
-type Size = "sm" | "md";
+type Variant = "primary" | "secondary" | "ghost" | "danger" | "quiet-danger";
+type Size = "sm" | "md" | "icon" | "icon-sm";
 
 const VARIANT: Record<Variant, string> = {
-  primary: "bg-brand text-white hover:bg-brand-strong disabled:bg-brand/50",
-  secondary: "border border-line-strong bg-surface text-ink hover:bg-canvas disabled:text-ink-3",
-  ghost: "text-ink-2 hover:bg-canvas hover:text-ink disabled:text-ink-3",
-  danger: "bg-danger text-white hover:bg-danger/90 disabled:bg-danger/50",
-};
-const SIZE: Record<Size, string> = {
-  sm: "h-7 px-2.5 text-[12px]",
-  md: "h-9 px-3.5 text-[13px]",
+  primary:
+    "bg-primary text-white hover:bg-primary-hover active:bg-primary-pressed disabled:bg-primary/45 disabled:text-white",
+  secondary:
+    "border border-line bg-surface text-ink hover:border-line-strong hover:bg-surface-muted disabled:text-ink-3",
+  ghost: "text-ink-2 hover:bg-surface-muted hover:text-ink disabled:text-ink-3",
+  danger: "bg-danger text-white hover:bg-danger/90 disabled:bg-danger/45",
+  "quiet-danger": "text-danger hover:bg-danger-soft disabled:text-ink-3",
 };
 
-export function Button({
-  variant = "secondary",
-  size = "md",
-  className = "",
-  type = "button",
-  ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; size?: Size }) {
+/** 44px is the desktop control baseline; sm is for dense rows. */
+const SIZE: Record<Size, string> = {
+  sm: "h-8 px-3 text-body-sm gap-1.5",
+  md: "h-11 px-4 text-body gap-2",
+  icon: "h-11 w-11",
+  "icon-sm": "h-8 w-8",
+};
+
+export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; size?: Size };
+
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  { variant = "secondary", size = "md", className = "", type = "button", ...props },
+  ref,
+) {
   return (
     <button
+      ref={ref}
       type={type}
-      className={`inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md font-medium transition-colors disabled:cursor-not-allowed ${VARIANT[variant]} ${SIZE[size]} ${className}`}
+      className={`inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-control font-semibold transition-colors disabled:cursor-not-allowed [&_svg]:size-4 [&_svg]:shrink-0 ${VARIANT[variant]} ${SIZE[size]} ${className}`}
       {...props}
     />
   );
-}
+});
