@@ -170,7 +170,9 @@ export function PlanMoveDialog({
     if (slotContext && added) {
       const after = generateDailyLineup({ ...baseInput, date: draft.effectiveDate, plannedTransactions: [...others, candidateTx(draft)] });
       const assigned = after.activeSlots.find(a => a.playerId === added.id);
-      const remains = after.openSlots.some(s => s.type === slotContext.position);
+      // Only call out the clicked slot when the engine placed the player elsewhere (or benched them).
+      const elsewhere = assigned?.slot.type !== slotContext.position;
+      const remains = elsewhere && after.openSlots.some(s => s.type === slotContext.position);
       toast(`${added.name} ${assigned ? `fills ${assigned.slot.type}` : "is benched"} on ${formatDayShort(draft.effectiveDate)}${remains ? ` · ${slotContext.position} remains open` : ""}.`);
     } else toast(editing ? "Planned move updated." : "Move planned.");
     onClose();

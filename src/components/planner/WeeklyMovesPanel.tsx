@@ -108,10 +108,7 @@ export function WeeklyMovesPanel({
 
       <h3 className="font-display text-body font-semibold text-ink">Opening roster</h3>
       <p className="mt-1.5 text-body-sm text-ink-2 tabular-nums">
-        {inventory.rostered} rostered · IR+ {inventory.irPlus} / {inventory.irPlusCapacity}
-      </p>
-      <p className="text-body-sm text-ink-3 tabular-nums">
-        {inventory.regular} of {inventory.regularCapacity} roster spots used
+        {inventory.regular} / {inventory.regularCapacity} roster · {inventory.irPlus} / {inventory.irPlusCapacity} IR+
       </p>
       {inventory.regular > inventory.regularCapacity && (
         <p className="mt-1.5 flex items-start gap-1.5 text-caption font-medium text-warn">

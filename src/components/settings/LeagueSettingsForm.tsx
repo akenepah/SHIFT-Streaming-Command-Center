@@ -126,6 +126,8 @@ export function RulesFields({ value, onChange, showErrors = false, timingLabel =
 }
 
 /** Right-rail summary that reflects edits immediately. */
+const plural = (count: number, word: string) => (count === 1 ? word : `${word}s`);
+
 export function LineupSummary({
   value,
   irOccupied,
@@ -139,8 +141,11 @@ export function LineupSummary({
   variant?: "settings" | "setup";
   footer?: ReactNode;
 }) {
-  const active = activeSlotCount(value.roster);
-  const n = (x: number) => (Number.isFinite(x) ? x : "–");
+  // Invalid (typed) values show "–" instead of nonsense totals like "99 active" or "2.5 active".
+  const valid = (x: number, max: number) => Number.isInteger(x) && x >= 0 && x <= max;
+  const slotsValid = Object.values(value.roster.slots).every((x) => valid(x, 10));
+  const active = slotsValid ? activeSlotCount(value.roster) : NaN;
+  const n = (x: number) => (valid(x, 50) ? x : "–");
   const rules = (
     <div className="grid gap-1 text-body-sm text-ink-2 tabular-nums">
       {variant === "setup" && (
@@ -172,10 +177,10 @@ export function LineupSummary({
       ) : (
         <>
           <div className="mt-4 grid gap-1 text-body text-ink">
-            <p className="tabular-nums">{n(active)} active slots</p>
-            <p className="tabular-nums">{n(value.roster.benchSlots)} bench slots</p>
+            <p className="tabular-nums">{n(active)} active {plural(active, "slot")}</p>
+            <p className="tabular-nums">{n(value.roster.benchSlots)} bench {plural(value.roster.benchSlots, "slot")}</p>
             <p className="tabular-nums">
-              {n(value.roster.irPlusSlots)} IR+ slots{irOccupied !== undefined && ` · ${irOccupied} occupied`}
+              {n(value.roster.irPlusSlots)} IR+ {plural(value.roster.irPlusSlots, "slot")}{irOccupied !== undefined && ` · ${irOccupied} occupied`}
             </p>
           </div>
           <p className="mt-5 text-body-sm text-ink-3">UTIL accepts any skater. IR+ stays separate from your active roster.</p>

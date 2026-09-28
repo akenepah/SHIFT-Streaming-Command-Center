@@ -199,7 +199,8 @@ export function RosterTable() {
 
       <p className="text-body-sm text-ink-3">
         {state.settings.season} · The Slot column is a baseline lineup. Each day the planner starts every player whose team
-        has a game when a legal slot is free; Active players get first pick, IR+ never starts. Use ⋯ to manage a player.
+        has a game when a legal slot is free. Active means lineup priority, not a guaranteed daily slot: Active players get
+        first pick, then Bench; IR+ never starts. Use ⋯ to manage a player.
       </p>
 
       <ManagePlayerDialog
