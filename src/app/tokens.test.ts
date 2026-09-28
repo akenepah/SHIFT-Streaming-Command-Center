@@ -1,5 +1,5 @@
 /**
- * Guards the design tokens: resolves --shift-* values from globals.css and
+ * Guards the design tokens (locked Powerplay palette): resolves --shift-* values from globals.css and
  * checks the contrast of the pairings the UI actually uses. A retheme that
  * breaks accessibility fails here.
  */
@@ -33,20 +33,22 @@ function contrast(a: string, b: string): number {
 }
 
 describe("SHIFT brand tokens", () => {
-  it("keeps the six approved brand anchors", () => {
-    expect(resolve("--shift-brand-teal")).toBe("#14b8b0");
-    expect(resolve("--shift-brand-navy")).toBe("#0b1b28");
-    expect(resolve("--shift-brand-deep-teal")).toBe("#0e6b7a");
-    expect(resolve("--shift-brand-copper")).toBe("#c6925b");
-    expect(resolve("--shift-brand-frost")).toBe("#f4f7f8");
-    expect(resolve("--shift-brand-steel")).toBe("#94a3ae");
+  it("keeps the locked Powerplay anchors", () => {
+    expect(resolve("--shift-brand-blue")).toBe("#2563eb");
+    expect(resolve("--shift-brand-navy")).toBe("#0b1425");
+    expect(resolve("--shift-brand-slate")).toBe("#334155");
+    expect(resolve("--shift-brand-coral")).toBe("#fb7185");
+    expect(resolve("--shift-brand-coral-text")).toBe("#9f2346");
+    expect(resolve("--shift-brand-canvas")).toBe("#f7f7f7");
   });
 
-  it("maps primary, navigation and background roles to the brand", () => {
-    expect(resolve("--shift-primary")).toBe("#14b8b0");
-    expect(resolve("--shift-nav")).toBe("#0b1b28");
-    expect(resolve("--shift-bg")).toBe("#f4f7f8");
-    expect(resolve("--shift-secondary")).toBe("#0e6b7a");
+  it("maps primary, navigation, canvas and accent roles to the brand", () => {
+    expect(resolve("--shift-primary")).toBe("#2563eb");
+    expect(resolve("--shift-nav")).toBe("#0b1425");
+    expect(resolve("--shift-bg")).toBe("#f7f7f7");
+    expect(resolve("--shift-accent")).toBe("#fb7185");
+    // Coral is an accent, never the danger color.
+    expect(resolve("--shift-danger")).not.toBe(resolve("--shift-accent"));
   });
 
   it.each([
@@ -60,6 +62,13 @@ describe("SHIFT brand tokens", () => {
     ["--shift-primary-strong", "--shift-surface", 4.5],
     ["--shift-primary-strong", "--shift-primary-soft", 4.5],
     ["--shift-secondary", "--shift-secondary-soft", 4.5],
+    ["--shift-on-primary", "--shift-primary-pressed", 4.5],
+    ["--shift-accent-strong", "--shift-bg", 4.5],
+    ["--shift-opp-very-high", "--shift-surface", 3],
+    ["--shift-opp-strong", "--shift-surface", 3],
+    ["--shift-opp-moderate", "--shift-surface", 3],
+    ["--shift-opp-limited", "--shift-surface", 3],
+    ["--shift-opp-none", "--shift-surface", 3],
     ["--shift-accent-strong", "--shift-accent-soft", 4.5],
     ["--shift-nav-text", "--shift-nav", 4.5],
     ["--shift-nav-text-muted", "--shift-nav", 4.5],
