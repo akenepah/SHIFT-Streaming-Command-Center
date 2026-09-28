@@ -136,6 +136,16 @@ Two different things, deliberately kept apart:
 So a player marked Bench still starts on any day their team plays and a legal slot is free. The planner's
 roster summary reports inventory ("24 rostered · IR+ 1/4"), not starters.
 
+## Player catalog
+
+Add Player and Plan a Move search a bundled catalog of 250 fantasy-relevant NHL players
+(`src/data/players/2026-27.json`): NHL id, name, current team, primary position and NHL headshot. Membership
+comes from NHL.com's 2026-27 fantasy Top 250; ranks and analysis are not stored or shown. Player data was
+resolved against the NHL player API at build time, and every resolution is recorded in
+`src/data/players/2026-27.audit.json`. Adding a catalog player saves a copy to your players, so edits (for
+example extra position eligibility) stick. Manual creation remains the fallback for anyone not in the catalog.
+Refresh with `node scripts/fetch-player-catalog.mjs`. See `src/data/players/README.md`.
+
 ## Local data
 
 Everything is stored in this browser's `localStorage` under `shift.streaming.v2`: settings, player registry,

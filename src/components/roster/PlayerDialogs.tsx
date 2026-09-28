@@ -1,13 +1,14 @@
 "use client";
 
-import { AlertTriangle, Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import { AlertTriangle, ArrowLeft, Search } from "lucide-react";
+import { useMemo, useState, type ReactNode } from "react";
 import { PlayerIdentity, TeamTag } from "@/components/player/PlayerBits";
 import { PlayerForm } from "@/components/player/PlayerForm";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
 import { Field, Input, Select } from "@/components/ui/Field";
 import { useToast } from "@/components/ui/Toast";
+import { CATALOG_META, searchPlayers, withCatalog } from "@/domain/players/catalog";
 import { findRosterDuplicate } from "@/domain/roster/duplicates";
 import {
   draftFromPlayer,
@@ -44,41 +45,36 @@ function StatusSelect({ value, onChange, id }: { value: RosterStatus; onChange: 
   );
 }
 
-function Segmented<T extends string>({
-  label,
-  value,
-  options,
-  onChange,
-}: {
-  label: string;
-  value: T;
-  options: readonly (readonly [T, string])[];
-  onChange: (v: T) => void;
-}) {
+/** Saved players plus the bundled catalog, minus anyone already rostered. */
+function usePlayerPool(excludeIds: ReadonlySet<string>): Player[] {
+  const { state } = useStore();
+  return useMemo(
+    () => Object.values(withCatalog(state.players)).filter((p) => !excludeIds.has(p.id)),
+    [state.players, excludeIds],
+  );
+}
+
+/** Search result row: headshot, name, team and position, with an action. */
+export function PlayerResultRow({ player, action }: { player: Player; action: ReactNode }) {
   return (
-    <div role="tablist" aria-label={label} className="inline-flex rounded-control border border-line bg-surface-muted p-1">
-      {options.map(([v, text]) => (
-        <button
-          key={v}
-          role="tab"
-          type="button"
-          aria-selected={value === v}
-          onClick={() => onChange(v)}
-          className={`h-9 rounded-badge px-3.5 text-body-sm font-medium ${
-            value === v ? "bg-surface text-ink shadow-sm ring-1 ring-line" : "text-ink-2 hover:text-ink"
-          }`}
-        >
-          {text}
-        </button>
-      ))}
-    </div>
+    <li className="flex items-center gap-4 px-4 py-2.5">
+      <span className="min-w-0 flex-1">
+        <PlayerIdentity
+          name={player.name}
+          headshot={player.headshot}
+          secondary={player.custom ? `${player.eligiblePositions.join(", ")} · created by you` : player.eligiblePositions.join(", ")}
+        />
+      </span>
+      <TeamTag teamId={player.nhlTeamId} />
+      {action}
+    </li>
   );
 }
 
 export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { state, dispatch } = useStore();
   const toast = useToast();
-  const [mode, setMode] = useState<"existing" | "create">("existing");
+  const [mode, setMode] = useState<"search" | "create">("search");
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<RosterStatus>("BENCH");
   const [draft, setDraft] = useState<PlayerDraft>(emptyPlayerDraft);
@@ -86,21 +82,17 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
   /** Name the user was warned about; confirming the same name again adds anyway. */
   const [duplicateOf, setDuplicateOf] = useState<{ name: string; existing: Player; pending: () => void } | null>(null);
 
-  const available = useMemo(() => {
-    const rostered = new Set(state.roster.map((r) => r.playerId));
-    const q = query.trim().toLowerCase();
-    return Object.values(state.players)
-      .filter((p) => !rostered.has(p.id))
-      .filter((p) => !q || p.name.toLowerCase().includes(q) || p.nhlTeamId.toLowerCase() === q)
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }, [state.players, state.roster, query]);
-
-  const anyAvailable = Object.keys(state.players).some((id) => !state.roster.some((r) => r.playerId === id));
-  // With nothing saved to pick from, manual creation is the only useful mode.
-  const effectiveMode = anyAvailable ? mode : "create";
+  const rostered = useMemo(() => new Set(state.roster.map((r) => r.playerId)), [state.roster]);
+  const pool = usePlayerPool(rostered);
+  const results = useMemo(() => searchPlayers(query, pool, 30), [query, pool]);
+  const savedCustom = useMemo(
+    () => pool.filter((p) => p.custom).sort((a, b) => a.name.localeCompare(b.name)),
+    [pool],
+  );
 
   const close = () => {
     setQuery("");
+    setMode("search");
     setDraft(emptyPlayerDraft());
     setErrors([]);
     setDuplicateOf(null);
@@ -120,6 +112,8 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
 
   const addExisting = (p: Player) => {
     guardDuplicate(p.name, () => {
+      // Catalog players become saved players when first added, so later edits stick.
+      if (!state.players[p.id]) dispatch({ type: "player/upsert", player: p });
       dispatch({ type: "roster/add", playerId: p.id, status });
       toast(`${p.name} added to your roster.`);
     });
@@ -138,16 +132,29 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
     });
   };
 
+  const addButton = (p: Player) => (
+    <Button size="sm" variant="primary" onClick={() => addExisting(p)} aria-label={`Add ${p.name}`}>
+      Add
+    </Button>
+  );
+
   return (
     <Dialog
       open={open}
       onClose={close}
-      title="Add player"
-      description="Their NHL team fills in their schedule automatically."
+      title={mode === "search" ? "Add player" : "Create player manually"}
+      description={
+        mode === "search"
+          ? `Search ${CATALOG_META.playerCount} NHL players. Team, position and headshot fill in automatically.`
+          : "Only for players who aren't in the catalog. Their NHL team fills in their schedule."
+      }
       width="md"
       footer={
-        effectiveMode === "create" ? (
+        mode === "create" ? (
           <>
+            <Button variant="ghost" className="mr-auto" onClick={() => setMode("search")}>
+              <ArrowLeft aria-hidden /> Back to search
+            </Button>
             <Button onClick={close}>Cancel</Button>
             <Button variant="primary" onClick={create}>
               {duplicateOf ? "Add anyway" : "Add player"}
@@ -165,7 +172,7 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
               <AlertTriangle aria-hidden className="mt-0.5 size-4 shrink-0" />
               <span>
                 <strong>{duplicateOf.existing.name}</strong> ({duplicateOf.existing.nhlTeamId}) is already on your roster.
-                {effectiveMode === "create" && " Add a second copy anyway, or change the name."}
+                {mode === "create" && " Add a second copy anyway, or change the name."}
               </span>
             </p>
             <div className="mt-3 flex gap-2 pl-6">
@@ -187,22 +194,10 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
           </div>
         )}
 
-        {anyAvailable && (
-          <Segmented
-            label="Add player method"
-            value={mode}
-            onChange={setMode}
-            options={[
-              ["existing", "Saved players"],
-              ["create", "Create player"],
-            ]}
-          />
-        )}
-
-        {effectiveMode === "existing" ? (
+        {mode === "search" ? (
           <div>
             <label htmlFor="add-search" className="sr-only">
-              Search saved players
+              Search players
             </label>
             <div className="relative">
               <Search aria-hidden className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
@@ -211,31 +206,38 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
                 className="pl-10"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by name or team code"
+                placeholder="Search by player name or team code"
                 autoComplete="off"
+                data-autofocus
               />
             </div>
-            <ul className="mt-3 max-h-72 divide-y divide-line overflow-y-auto rounded-card border border-line">
-              {available.length === 0 && (
-                <li className="px-4 py-4 text-body-sm text-ink-3">
-                  No matching players.{" "}
-                  <button type="button" className="font-medium text-primary-strong hover:underline" onClick={() => setMode("create")}>
-                    Create one
-                  </button>
-                </li>
-              )}
-              {available.map((p) => (
-                <li key={p.id} className="flex items-center gap-4 px-4 py-2.5">
-                  <span className="min-w-0 flex-1">
-                    <PlayerIdentity name={p.name} headshot={p.headshot} secondary={p.eligiblePositions.join(", ")} />
-                  </span>
-                  <TeamTag teamId={p.nhlTeamId} />
-                  <Button size="sm" variant="primary" onClick={() => addExisting(p)} aria-label={`Add ${p.name}`}>
-                    Add
-                  </Button>
-                </li>
-              ))}
-            </ul>
+            {query.trim() ? (
+              <ul className="mt-3 max-h-80 divide-y divide-line overflow-y-auto rounded-card border border-line" aria-label="Search results">
+                {results.length === 0 && (
+                  <li className="px-4 py-4 text-body-sm text-ink-2">No players match &ldquo;{query.trim()}&rdquo;.</li>
+                )}
+                {results.map((p) => (
+                  <PlayerResultRow key={p.id} player={p} action={addButton(p)} />
+                ))}
+              </ul>
+            ) : savedCustom.length > 0 ? (
+              <div className="mt-3">
+                <p className="mb-2 text-overline uppercase text-ink-3">Players you created</p>
+                <ul className="max-h-64 divide-y divide-line overflow-y-auto rounded-card border border-line">
+                  {savedCustom.map((p) => (
+                    <PlayerResultRow key={p.id} player={p} action={addButton(p)} />
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <p className="mt-3 text-body-sm text-ink-3">Start typing a name, like &ldquo;McDavid&rdquo;, or a team code like &ldquo;EDM&rdquo;.</p>
+            )}
+            <p className="mt-4 text-body-sm text-ink-2">
+              Can&apos;t find them?{" "}
+              <button type="button" className="font-semibold text-primary-strong hover:underline" onClick={() => setMode("create")}>
+                Create player manually
+              </button>
+            </p>
           </div>
         ) : (
           <PlayerForm draft={draft} onChange={setDraft} errors={errors} />
@@ -271,7 +273,8 @@ export function ManagePlayerDialog({
     const errs = validatePlayerDraft(draft);
     setErrors(errs);
     if (errs.length) return;
-    dispatch({ type: "player/upsert", player: playerFromDraft(draft, player.id, !!player.custom) });
+    const updated = playerFromDraft(draft, player.id, !!player.custom);
+    dispatch({ type: "player/upsert", player: player.nhlId ? { ...updated, nhlId: player.nhlId } : updated });
     if (nextStatus && nextStatus !== status) dispatch({ type: "roster/setStatus", playerId: player.id, status: nextStatus });
     toast(`${draft.name.trim()} updated.`);
     onClose();

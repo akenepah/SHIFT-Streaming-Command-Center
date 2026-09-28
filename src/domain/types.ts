@@ -34,6 +34,8 @@ export type Player = {
   nhlTeamId: NHLTeamId;
   eligiblePositions: Position[];
   headshot?: string;
+  /** NHL player id, for players that came from the bundled catalog. */
+  nhlId?: number;
   /** True for players the user created by hand. */
   custom?: boolean;
 };

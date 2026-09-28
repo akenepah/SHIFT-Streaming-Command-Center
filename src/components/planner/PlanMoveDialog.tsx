@@ -1,14 +1,16 @@
 "use client";
 
-import { AlertTriangle, ArrowLeft, Plus } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Plus, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PlayerForm } from "@/components/player/PlayerForm";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
-import { ErrorList, Field, Select } from "@/components/ui/Field";
+import { Avatar } from "@/components/player/PlayerBits";
+import { ErrorList, Field, Input, Select } from "@/components/ui/Field";
 import { useToast } from "@/components/ui/Toast";
 import { addDays, formatDayShort, formatMonthDay, weekDates } from "@/domain/dates";
 import type { WeekInput } from "@/domain/lineup/generateWeek";
+import { searchPlayers, withCatalog } from "@/domain/players/catalog";
 import { projectRoster } from "@/domain/roster/projectedRoster";
 import { emptyPlayerDraft, playerFromDraft, validatePlayerDraft, type PlayerDraft } from "@/domain/roster/playerDraft";
 import { evaluateMoveImpact } from "@/domain/transactions/impact";
@@ -56,6 +58,7 @@ export function PlanMoveDialog({
   const [playerDraft, setPlayerDraft] = useState<PlayerDraft>(emptyPlayerDraft);
   const [playerErrors, setPlayerErrors] = useState<string[]>([]);
   const [showErrors, setShowErrors] = useState(false);
+  const [addQuery, setAddQuery] = useState("");
 
   const weekEnd = addDays(weekInput.weekStart, 6);
   const needsAdd = draft.type !== "DROP";
@@ -75,18 +78,24 @@ export function PlanMoveDialog({
   });
   const baseInput = { ...weekInput, plannedTransactions: others };
 
-  // Candidate adds, ranked by how many games they'd add this week.
+  // Add candidates: search the catalog + saved players; with no query, suggest
+  // the players whose teams play the most games from the effective date on.
+  // Start deltas are computed only for the rows shown.
+  const lookup = useMemo(() => withCatalog(state.players), [state.players]);
+  const pool = Object.values(lookup).filter((p) => !rosterIds.has(p.id));
+  const shown = addQuery.trim()
+    ? searchPlayers(addQuery, pool, 20)
+    : [...pool].sort((a, b) => remaining(b) - remaining(a) || a.name.localeCompare(b.name)).slice(0, 12);
+  const selected = draft.addPlayerId ? lookup[draft.addPlayerId] : undefined;
+  if (selected && !shown.some((p) => p.id === selected.id)) shown.unshift(selected);
   const addOptions = !needsAdd
     ? []
-    : Object.values(state.players)
-      .filter((p) => !rosterIds.has(p.id))
-      .map((p) => {
+    : shown.map((p) => {
         const d: TransactionDraft = { ...draft, addPlayerId: p.id, dropPlayerId: needsDrop ? draft.dropPlayerId : undefined };
         const valid = !needsDrop || !!draft.dropPlayerId;
         const delta = valid ? evaluateMoveImpact(baseInput, candidateTx(d)).gamesStartedDelta : null;
         return { player: p, games: remaining(p), delta };
-      })
-      .sort((a, b) => (b.delta ?? b.games) - (a.delta ?? a.games) || b.games - a.games || a.player.name.localeCompare(b.player.name));
+      });
 
   const dropOptions = rosterThen
     .map((r) => state.players[r.playerId])
@@ -106,6 +115,9 @@ export function PlanMoveDialog({
       setShowErrors(true);
       return;
     }
+    // A catalog player becomes a saved player once a move references them.
+    const added = draft.type !== "DROP" && draft.addPlayerId ? lookup[draft.addPlayerId] : undefined;
+    if (added && !state.players[added.id]) dispatch({ type: "player/upsert", player: added });
     if (editing) dispatch({ type: "tx/update", id: editing.id, draft });
     else dispatch({ type: "tx/create", id: newId("move"), draft });
     toast(editing ? "Planned move updated." : "Move planned.");
@@ -227,39 +239,59 @@ export function PlanMoveDialog({
                   </Button>
                 </div>
               ) : (
-                <div role="radiogroup" aria-labelledby="move-add-label" className="max-h-64 overflow-y-auto rounded-card border border-line">
-                  {addOptions.length === 0 && (
-                    <p className="px-4 py-3 text-body-sm text-ink-3">No other saved players yet. Create one to plan an add.</p>
-                  )}
-                  {addOptions.map(({ player: p, games, delta }) => (
-                    <label
-                      key={p.id}
-                      className={`flex cursor-pointer items-center gap-3 border-b border-line px-4 py-2.5 last:border-b-0 has-[:focus-visible]:bg-primary-soft ${
-                        draft.addPlayerId === p.id ? "bg-primary-soft" : "hover:bg-surface-muted"
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="move-add"
-                        className="accent-primary"
-                        checked={draft.addPlayerId === p.id}
-                        onChange={() => setDraft((d) => ({ ...d, addPlayerId: p.id }))}
-                      />
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-body font-medium text-ink">{p.name}</span>
-                        <span className="block text-caption text-ink-3">
-                          {p.nhlTeamId} · {p.eligiblePositions.join(" / ")} · {games} {games === 1 ? "game" : "games"} left this week
-                        </span>
-                      </span>
-                      {delta !== null && (
-                        <span
-                          className={`text-caption font-semibold tabular-nums ${delta > 0 ? "text-success" : delta < 0 ? "text-warn" : "text-ink-3"}`}
-                        >
-                          {signed(delta)} started
-                        </span>
-                      )}
+                <div className="grid gap-2">
+                  <div className="relative">
+                    <label htmlFor="move-add-search" className="sr-only">
+                      Search players to add
                     </label>
-                  ))}
+                    <Search aria-hidden className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
+                    <Input
+                      id="move-add-search"
+                      className="pl-10"
+                      value={addQuery}
+                      onChange={(e) => setAddQuery(e.target.value)}
+                      placeholder="Search name or team code"
+                      autoComplete="off"
+                    />
+                  </div>
+                  {!addQuery.trim() && (
+                    <p className="text-overline uppercase text-ink-3">Most games left this week</p>
+                  )}
+                  <div role="radiogroup" aria-labelledby="move-add-label" className="max-h-72 overflow-y-auto rounded-card border border-line">
+                    {addOptions.length === 0 && (
+                      <p className="px-4 py-3 text-body-sm text-ink-3">No players match. Try another name, or create the player.</p>
+                    )}
+                    {addOptions.map(({ player: p, games, delta }) => (
+                      <label
+                        key={p.id}
+                        className={`flex cursor-pointer items-center gap-3 border-b border-line px-4 py-2.5 last:border-b-0 has-[:focus-visible]:bg-primary-soft ${
+                          draft.addPlayerId === p.id ? "bg-primary-soft" : "hover:bg-surface-muted"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="move-add"
+                          className="accent-primary"
+                          checked={draft.addPlayerId === p.id}
+                          onChange={() => setDraft((d) => ({ ...d, addPlayerId: p.id }))}
+                        />
+                        <Avatar src={p.headshot} name={p.name} size={28} />
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-body font-medium text-ink">{p.name}</span>
+                          <span className="block text-caption text-ink-3">
+                            {p.nhlTeamId} · {p.eligiblePositions.join(" / ")} · {games} {games === 1 ? "game" : "games"} left this week
+                          </span>
+                        </span>
+                        {delta !== null && (
+                          <span
+                            className={`text-caption font-semibold tabular-nums ${delta > 0 ? "text-success" : delta < 0 ? "text-warn" : "text-ink-3"}`}
+                          >
+                            {signed(delta)} started
+                          </span>
+                        )}
+                      </label>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

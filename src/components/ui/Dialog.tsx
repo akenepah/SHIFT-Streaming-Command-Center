@@ -31,6 +31,8 @@ export function Dialog({ open, onClose, title, description, children, footer, wi
     // which skips the browser's own focus restore.
     const opener = document.activeElement as HTMLElement | null;
     if (!el.open) el.showModal();
+    // showModal() focuses the first control; honor an explicit [data-autofocus] instead.
+    el.querySelector<HTMLElement>("[data-autofocus]")?.focus();
     return () => {
       if (el.open) el.close();
       if (opener?.isConnected) opener.focus();
