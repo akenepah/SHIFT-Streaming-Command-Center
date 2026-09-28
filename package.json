@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "next typegen && tsc --noEmit"
+    "typecheck": "next typegen && tsc --noEmit",
+    "catalog:refresh": "node --no-warnings scripts/refresh-player-catalog.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.48.0",
