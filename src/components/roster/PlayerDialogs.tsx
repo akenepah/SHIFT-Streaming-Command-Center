@@ -1,15 +1,15 @@
 "use client";
 
-import { AlertTriangle, ArrowLeft, Search } from "lucide-react";
-import { useMemo, useState, type ReactNode } from "react";
-import { PlayerIdentity, TeamTag } from "@/components/player/PlayerBits";
+import { AlertTriangle, ArrowLeft } from "lucide-react";
+import { useMemo, useState } from "react";
 import { PlayerForm } from "@/components/player/PlayerForm";
+import { PlayerSearch } from "@/components/player/PlayerSearch";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
-import { Field, Input, Select } from "@/components/ui/Field";
+import { Field, Select } from "@/components/ui/Field";
 import { useToast } from "@/components/ui/Toast";
-import { CATALOG_META, searchPlayers, withCatalog } from "@/domain/players/catalog";
-import { findRosterDuplicate } from "@/domain/roster/duplicates";
+import { withCatalog } from "@/domain/players/playerCatalog";
+import { findExistingIdentity, isRostered, type ExistingIdentity } from "@/domain/players/searchPlayers";
 import {
   draftFromPlayer,
   draftFromRepair,
@@ -45,32 +45,58 @@ function StatusSelect({ value, onChange, id }: { value: RosterStatus; onChange: 
   );
 }
 
-/** Saved players plus the bundled catalog, minus anyone already rostered. */
-function usePlayerPool(excludeIds: ReadonlySet<string>): Player[] {
+/** Everything searchable: the bundled catalog plus the user's saved players. */
+export function usePlayerPool(): { pool: Player[]; lookup: Record<string, Player> } {
   const { state } = useStore();
-  return useMemo(
-    () => Object.values(withCatalog(state.players)).filter((p) => !excludeIds.has(p.id)),
-    [state.players, excludeIds],
-  );
+  return useMemo(() => {
+    const lookup = withCatalog(state.players);
+    return { pool: Object.values(lookup), lookup };
+  }, [state.players]);
 }
 
-/** Search result row: headshot, name, team and position, with an action. */
-export function PlayerResultRow({ player, action }: { player: Player; action: ReactNode }) {
+/**
+ * Shown when a manually entered player already exists: a catalog player is
+ * offered instead (preferred), or an existing custom player is reused.
+ */
+export function ExistingIdentityNotice({
+  existing,
+  onUse,
+  onDismiss,
+}: {
+  existing: NonNullable<ExistingIdentity>;
+  onUse: (p: Player) => void;
+  onDismiss?: () => void;
+}) {
+  const p = existing.player;
   return (
-    <li className="flex items-center gap-4 px-4 py-2.5">
-      <span className="min-w-0 flex-1">
-        <PlayerIdentity
-          name={player.name}
-          headshot={player.headshot}
-          secondary={player.custom ? `${player.eligiblePositions.join(", ")} · created by you` : player.eligiblePositions.join(", ")}
-        />
-      </span>
-      <TeamTag teamId={player.nhlTeamId} />
-      {action}
-    </li>
+    <div role="alert" className="rounded-card border border-primary-line bg-primary-soft px-4 py-3 text-body-sm text-ink">
+      <p>
+        {existing.kind === "catalog" ? (
+          <>
+            <strong>{p.name}</strong> ({p.nhlTeamId} · {p.eligiblePositions.join(", ")}) is already in the SHIFT Player
+            Catalog. Use that player instead of creating a copy.
+          </>
+        ) : (
+          <>
+            You already created <strong>{p.name}</strong> ({p.nhlTeamId}). Use that player instead of creating another.
+          </>
+        )}
+      </p>
+      <div className="mt-3 flex gap-2">
+        <Button size="sm" variant="primary" onClick={() => onUse(p)}>
+          Use {p.name}
+        </Button>
+        {onDismiss && (
+          <Button size="sm" onClick={onDismiss}>
+            Keep editing
+          </Button>
+        )}
+      </div>
+    </div>
   );
 }
 
+/** Add a player to the actual roster (Roster screen and setup). */
 export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { state, dispatch } = useStore();
   const toast = useToast();
@@ -79,15 +105,17 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
   const [status, setStatus] = useState<RosterStatus>("BENCH");
   const [draft, setDraft] = useState<PlayerDraft>(emptyPlayerDraft);
   const [errors, setErrors] = useState<string[]>([]);
-  /** Name the user was warned about; confirming the same name again adds anyway. */
-  const [duplicateOf, setDuplicateOf] = useState<{ name: string; existing: Player; pending: () => void } | null>(null);
+  const [existing, setExisting] = useState<ExistingIdentity>(null);
+  const [rosteredNotice, setRosteredNotice] = useState<string | null>(null);
+  const { pool } = usePlayerPool();
 
-  const rostered = useMemo(() => new Set(state.roster.map((r) => r.playerId)), [state.roster]);
-  const pool = usePlayerPool(rostered);
-  const results = useMemo(() => searchPlayers(query, pool, 30), [query, pool]);
-  const savedCustom = useMemo(
-    () => pool.filter((p) => p.custom).sort((a, b) => a.name.localeCompare(b.name)),
-    [pool],
+  const rostered = (p: Player) => isRostered(p, state.roster, state.players);
+  const savedIdle = useMemo(
+    () =>
+      Object.values(state.players)
+        .filter((p) => !state.roster.some((r) => r.playerId === p.id))
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    [state.players, state.roster],
   );
 
   const close = () => {
@@ -95,48 +123,38 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
     setMode("search");
     setDraft(emptyPlayerDraft());
     setErrors([]);
-    setDuplicateOf(null);
+    setExisting(null);
+    setRosteredNotice(null);
     onClose();
   };
 
-  /** Run `add` unless it would duplicate a rostered name; then warn first. */
-  const guardDuplicate = (name: string, add: () => void) => {
-    const existing = findRosterDuplicate(name, state.roster, state.players);
-    if (existing && duplicateOf?.name !== name) {
-      setDuplicateOf({ name, existing, pending: add });
+  const addPlayer = (p: Player) => {
+    if (rostered(p)) {
+      setRosteredNotice(`${p.name} is already on your roster.`);
       return;
     }
-    setDuplicateOf(null);
-    add();
-  };
-
-  const addExisting = (p: Player) => {
-    guardDuplicate(p.name, () => {
-      // Catalog players become saved players when first added, so later edits stick.
-      if (!state.players[p.id]) dispatch({ type: "player/upsert", player: p });
-      dispatch({ type: "roster/add", playerId: p.id, status });
-      toast(`${p.name} added to your roster.`);
-    });
+    // Catalog players become saved players when first added, so later edits (e.g. eligibility) stick.
+    if (!state.players[p.id]) dispatch({ type: "player/upsert", player: p });
+    dispatch({ type: "roster/add", playerId: p.id, status });
+    setRosteredNotice(null);
+    toast(`${p.name} added to your roster.`);
   };
 
   const create = () => {
     const errs = validatePlayerDraft(draft);
     setErrors(errs);
     if (errs.length) return;
-    guardDuplicate(draft.name.trim(), () => {
-      const player = playerFromDraft(draft, newId("player"), true);
-      dispatch({ type: "player/upsert", player });
-      dispatch({ type: "roster/add", playerId: player.id, status });
-      toast(`${player.name} added to your roster.`);
-      close();
-    });
+    const found = findExistingIdentity(draft.name, draft.nhlTeamId, pool);
+    if (found) {
+      setExisting(found);
+      return;
+    }
+    const player = playerFromDraft(draft, newId("player"));
+    dispatch({ type: "player/upsert", player });
+    dispatch({ type: "roster/add", playerId: player.id, status });
+    toast(`${player.name} added to your roster.`);
+    close();
   };
-
-  const addButton = (p: Player) => (
-    <Button size="sm" variant="primary" onClick={() => addExisting(p)} aria-label={`Add ${p.name}`}>
-      Add
-    </Button>
-  );
 
   return (
     <Dialog
@@ -145,8 +163,8 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
       title={mode === "search" ? "Add player" : "Create player manually"}
       description={
         mode === "search"
-          ? `Search ${CATALOG_META.playerCount} NHL players. Team, position and headshot fill in automatically.`
-          : "Only for players who aren't in the catalog. Their NHL team fills in their schedule."
+          ? "Team, position and headshot fill in automatically."
+          : "For players who aren't in the SHIFT Player Catalog. Their NHL team fills in their schedule."
       }
       width="md"
       footer={
@@ -157,7 +175,7 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
             </Button>
             <Button onClick={close}>Cancel</Button>
             <Button variant="primary" onClick={create}>
-              {duplicateOf ? "Add anyway" : "Add player"}
+              Add player
             </Button>
           </>
         ) : (
@@ -166,81 +184,40 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
       }
     >
       <div className="grid gap-5">
-        {duplicateOf && (
-          <div role="alert" className="rounded-card border border-warn-line bg-warn-soft px-4 py-3 text-body-sm text-warn-strong">
-            <p className="flex items-start gap-2">
-              <AlertTriangle aria-hidden className="mt-0.5 size-4 shrink-0" />
-              <span>
-                <strong>{duplicateOf.existing.name}</strong> ({duplicateOf.existing.nhlTeamId}) is already on your roster.
-                {mode === "create" && " Add a second copy anyway, or change the name."}
-              </span>
-            </p>
-            <div className="mt-3 flex gap-2 pl-6">
-              <Button size="sm" onClick={() => setDuplicateOf(null)}>
-                Don&apos;t add
-              </Button>
-              <Button
-                size="sm"
-                variant="primary"
-                onClick={() => {
-                  const pending = duplicateOf.pending;
-                  setDuplicateOf(null);
-                  pending();
-                }}
-              >
-                Add anyway
-              </Button>
-            </div>
-          </div>
+        {rosteredNotice && (
+          <p role="status" className="rounded-control border border-line bg-surface-muted px-3.5 py-2.5 text-body-sm text-ink-2">
+            {rosteredNotice}
+          </p>
         )}
-
         {mode === "search" ? (
-          <div>
-            <label htmlFor="add-search" className="sr-only">
-              Search players
-            </label>
-            <div className="relative">
-              <Search aria-hidden className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
-              <Input
-                id="add-search"
-                className="pl-10"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by player name or team code"
-                autoComplete="off"
-                data-autofocus
-              />
-            </div>
-            {query.trim() ? (
-              <ul className="mt-3 max-h-80 divide-y divide-line overflow-y-auto rounded-card border border-line" aria-label="Search results">
-                {results.length === 0 && (
-                  <li className="px-4 py-4 text-body-sm text-ink-2">No players match &ldquo;{query.trim()}&rdquo;.</li>
-                )}
-                {results.map((p) => (
-                  <PlayerResultRow key={p.id} player={p} action={addButton(p)} />
-                ))}
-              </ul>
-            ) : savedCustom.length > 0 ? (
-              <div className="mt-3">
-                <p className="mb-2 text-overline uppercase text-ink-3">Players you created</p>
-                <ul className="max-h-64 divide-y divide-line overflow-y-auto rounded-card border border-line">
-                  {savedCustom.map((p) => (
-                    <PlayerResultRow key={p.id} player={p} action={addButton(p)} />
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              <p className="mt-3 text-body-sm text-ink-3">Start typing a name, like &ldquo;McDavid&rdquo;, or a team code like &ldquo;EDM&rdquo;.</p>
-            )}
-            <p className="mt-4 text-body-sm text-ink-2">
-              Can&apos;t find them?{" "}
-              <button type="button" className="font-semibold text-primary-strong hover:underline" onClick={() => setMode("create")}>
-                Create player manually
-              </button>
-            </p>
-          </div>
+          <PlayerSearch
+            inputId="add-search"
+            query={query}
+            onQueryChange={setQuery}
+            pool={pool}
+            isRostered={rostered}
+            mode={{ kind: "action", actionLabel: "Add", onPick: addPlayer }}
+            onCreateManually={() => {
+              setDraft({ ...emptyPlayerDraft(), name: query.trim() });
+              setMode("create");
+            }}
+            idle={{ label: "Your saved players", players: savedIdle }}
+            autoFocus
+          />
         ) : (
-          <PlayerForm draft={draft} onChange={setDraft} errors={errors} />
+          <>
+            {existing && (
+              <ExistingIdentityNotice
+                existing={existing}
+                onUse={(p) => {
+                  addPlayer(p);
+                  close();
+                }}
+                onDismiss={() => setExisting(null)}
+              />
+            )}
+            <PlayerForm draft={draft} onChange={setDraft} errors={errors} />
+          </>
         )}
         <div className="w-56">
           <StatusSelect id="add-status" value={status} onChange={setStatus} />
@@ -273,8 +250,8 @@ export function ManagePlayerDialog({
     const errs = validatePlayerDraft(draft);
     setErrors(errs);
     if (errs.length) return;
-    const updated = playerFromDraft(draft, player.id, !!player.custom);
-    dispatch({ type: "player/upsert", player: player.nhlId ? { ...updated, nhlId: player.nhlId } : updated });
+    // Keeps the player's identity (source, NHL id); only user-owned data changes.
+    dispatch({ type: "player/upsert", player: playerFromDraft(draft, player.id, player) });
     if (nextStatus && nextStatus !== status) dispatch({ type: "roster/setStatus", playerId: player.id, status: nextStatus });
     toast(`${draft.name.trim()} updated.`);
     onClose();
@@ -388,7 +365,7 @@ function RepairPlayerDialog({ entry, onClose }: { entry: RepairEntry | null; onC
     const errs = validatePlayerDraft(draft);
     setErrors(errs);
     if (errs.length) return;
-    dispatch({ type: "repair/resolve", player: playerFromDraft(draft, entry.playerId, true) });
+    dispatch({ type: "repair/resolve", player: playerFromDraft(draft, entry.playerId) });
     toast(`${draft.name.trim()} repaired.`);
     onClose();
   };
