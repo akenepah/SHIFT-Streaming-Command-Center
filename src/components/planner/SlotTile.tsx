@@ -5,8 +5,13 @@ import { Avatar, shortName } from "@/components/player/PlayerBits";
 import { POSITION_TONE, PositionBadge, type BadgeKind } from "@/components/ui/Badges";
 import type { Player, SlotType } from "@/domain/types";
 
-/** Shared tile height and shape for every planner row, so all states line up. */
-const TILE = "flex h-[52px] w-full items-center gap-1.5 rounded-card border px-1.5 text-left 2xl:gap-2 2xl:px-2";
+/** Active lineup rows (56px, 36px headshot) and compact reserve rows (BN / IR+). */
+const SHAPE = "flex w-full items-center gap-1.5 rounded-card border px-1.5 text-left 2xl:gap-2 2xl:px-2";
+const ACTIVE_ROW = `${SHAPE} h-14`;
+const RESERVE_ROW = `${SHAPE} h-11`;
+const isReserve = (badge: BadgeKind) => badge === "BN" || badge === "IR+";
+/** White/neutral: the "available" surface. Tint is reserved for occupied slots. */
+const OPEN_SURFACE = "border-line bg-surface";
 
 /**
  * One planner row. Three states:
@@ -23,6 +28,8 @@ export type SlotTileProps =
       /** Marks a playable game that isn't being started. */
       benched?: boolean;
       overridden?: boolean;
+      /** A bench player who is in today's lineup: shown muted in the bench list. */
+      muted?: boolean;
       onSelect?: (anchor: HTMLElement) => void;
       ariaLabel?: string;
     }
@@ -36,12 +43,13 @@ export function SlotTile(props: SlotTileProps) {
         type="button"
         onClick={props.onAdd}
         aria-label={props.ariaLabel}
-        className={`${TILE} ${POSITION_TONE[props.badge].tile} group cursor-pointer text-ink-3 transition-colors hover:border-primary hover:bg-primary-soft hover:text-primary focus-visible:border-primary focus-visible:bg-primary-soft focus-visible:text-primary active:bg-primary-line/40`}
+        className={`${ACTIVE_ROW} ${OPEN_SURFACE} ${POSITION_TONE[props.badge].accent} group cursor-pointer text-ink-2 transition-colors hover:text-ink focus-visible:text-ink`}
       >
         <PositionBadge kind={props.badge} compact />
-        <span className="flex min-w-0 items-center gap-0.5 text-caption font-medium 2xl:gap-1 2xl:text-body-sm">
-          <Plus aria-hidden className="size-3.5 shrink-0 2xl:size-4" />
-          <span className="truncate">Add player</span>
+        <span className="flex min-w-0 items-center gap-1 text-body-sm font-medium">
+          <Plus aria-hidden className="size-4 shrink-0" />
+          {/* Icon-only at laptop widths; the aria-label always carries the full action. */}
+          <span className="hidden truncate min-[1360px]:inline">Open slot</span>
         </span>
       </button>
     );
@@ -49,7 +57,7 @@ export function SlotTile(props: SlotTileProps) {
 
   if (props.kind === "open") {
     return (
-      <div className={`${TILE} ${POSITION_TONE[props.badge].tile} text-ink-3`}>
+      <div className={`${isReserve(props.badge) ? RESERVE_ROW : ACTIVE_ROW} ${OPEN_SURFACE} text-ink-3`}>
         <PositionBadge kind={props.badge} compact />
         <span aria-hidden className="size-4 shrink-0 rounded-pill border border-dashed border-line-strong" />
         <span className="truncate text-body-sm">{props.label ?? "Open slot"}</span>
@@ -58,14 +66,14 @@ export function SlotTile(props: SlotTileProps) {
   }
 
   const { player: p, badge, secondary, benched, overridden, onSelect } = props;
+  const reserve = isReserve(badge);
+  const TILE = reserve ? RESERVE_ROW : ACTIVE_ROW;
   const content = (
     <>
       <PositionBadge kind={badge} compact />
-      <span className="contents">
-        <Avatar src={p.headshot} name={p.name} size={28} />
-      </span>
+      <Avatar src={p.headshot} name={p.name} size={reserve ? 28 : 36} />
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-body-sm font-medium leading-tight text-ink" title={p.name}>
+        <span className={`block truncate font-medium leading-tight text-ink ${reserve ? "text-body-sm" : "text-body"}`} title={p.name}>
           {shortName(p.name)}
         </span>
         <span className={`block truncate text-caption leading-tight ${benched ? "font-medium text-warn-strong" : "text-ink-3"}`}>
@@ -75,7 +83,7 @@ export function SlotTile(props: SlotTileProps) {
       </span>
     </>
   );
-  const tone = benched ? "border-warn-line bg-warn-soft" : POSITION_TONE[badge].tile;
+  const tone = benched ? "border-warn-line bg-warn-soft" : props.muted ? OPEN_SURFACE : POSITION_TONE[badge].tile;
   if (!onSelect) return <div className={`${TILE} ${tone}`}>{content}</div>;
   return (
     <button

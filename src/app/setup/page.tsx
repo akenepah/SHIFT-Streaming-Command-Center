@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Plus } from "lucide-react";
+import { ArrowRight, Check, Plus } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { AddPlayerDialog } from "@/components/roster/PlayerDialogs";
@@ -35,7 +35,9 @@ function StepIndicator({ step, onSelect }: { step: number; onSelect: (i: number)
               i === step ? "border-primary bg-primary text-on-primary" : "border-line bg-surface text-ink disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-ink-3"
             }`}
           >
+            {i < step ? <Check aria-hidden className="size-4 text-success" /> : null}
             <span className="tabular-nums">{i + 1}</span> {label}
+            {i < step && <span className="sr-only">(complete)</span>}
           </button>
         </li>
       ))}

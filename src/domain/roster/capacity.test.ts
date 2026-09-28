@@ -47,3 +47,14 @@ describe('roster capacity and fresh add defaults',()=>{
   s.minGoalieAppearances=0;expect(validateSettings(s)).not.toContain('Add a G slot or set minimum goalie appearances to None.');
  });
 });
+
+import { describe as describe2, expect as expect2, it as it2 } from 'vitest';
+import { cancelTransaction, restoreTransaction } from '../transactions/transactions';
+describe2('planned move undo', () => {
+ it2('restores a cancelled move exactly (Undo toast)', () => {
+  const t = { id: 'm', type: 'ADD' as const, addPlayerId: 'x', effectiveDate: '2026-10-13', status: 'PLANNED' as const, createdAt: '2026-10-01T00:00:00Z' };
+  const cancelled = cancelTransaction([t], 'm');
+  expect2(cancelled[0].status).toBe('CANCELLED');
+  expect2(restoreTransaction(cancelled, 'm')).toEqual([t]);
+ });
+});

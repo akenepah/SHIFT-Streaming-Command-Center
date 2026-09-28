@@ -78,7 +78,7 @@ export function WeeklyMovesPanel({
                       type="button"
                       onClick={() => {
                         dispatch({ type: "tx/cancel", id: t.id });
-                        toast("Planned move cancelled.", "info");
+                        toast("Planned move cancelled.", "info", { label: "Undo", onClick: () => dispatch({ type: "tx/restore", id: t.id }) });
                       }}
                       aria-label="Cancel planned move"
                       className="inline-flex size-7 items-center justify-center rounded-control text-ink-3 hover:bg-danger-soft hover:text-danger"
@@ -122,7 +122,7 @@ export function WeeklyMovesPanel({
 
       {goalieMin > 0 && state.roster.length > 0 && (
         <div className="mt-4 border-t border-line pt-4">
-          <p className="text-body-sm font-semibold text-primary-strong">Goalie appearances</p>
+          <p className="text-body-sm font-semibold text-ink">Goalie appearances</p>
           <p className="mt-1 text-body-sm font-medium text-ink">Minimum {goalieMin} per week</p>
           <p className="mt-1 text-body-sm text-ink-2 tabular-nums">
             {summary.goalieStarts} goalie {summary.goalieStarts === 1 ? "game" : "games"} available this week

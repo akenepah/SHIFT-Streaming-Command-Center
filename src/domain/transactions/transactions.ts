@@ -97,6 +97,11 @@ export function cancelTransaction(transactions: readonly PlannedTransaction[], i
   return transactions.map((t) => (t.id === id ? { ...t, status: "CANCELLED" } : t));
 }
 
+/** Undo a cancellation (the record is kept, so this is exact). */
+export function restoreTransaction(transactions: readonly PlannedTransaction[], id: string): PlannedTransaction[] {
+  return transactions.map((t) => (t.id === id ? { ...t, status: "PLANNED" } : t));
+}
+
 /** Planned (non-cancelled) moves effective within the given week, ordered by date. */
 export function movesForWeek(transactions: readonly PlannedTransaction[], weekStart: ISODate): PlannedTransaction[] {
   const weekEnd = addDays(weekStart, 6);

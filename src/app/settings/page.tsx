@@ -20,13 +20,23 @@ import { rosterCounts } from "@/state/selectors";
 import { useStore } from "@/state/store";
 
 export default function SettingsPage() {
-  const { state, dispatch, user } = useStore();
+  const { state, dispatch, user, externalRevision } = useStore();
   const router = useRouter();
   const toast = useToast();
   const [draft, setDraft] = useState(state.settings);
   const [errors, setErrors] = useState<string[]>([]);
   const [confirmReset, setConfirmReset] = useState(false);
   const dirty = JSON.stringify(draft) !== JSON.stringify(state.settings);
+  // Another tab changed settings: follow it when this form is clean; warn (never clobber) when dirty.
+  const [base, setBase] = useState(state.settings);
+  const [seenRevision, setSeenRevision] = useState(externalRevision);
+  const [externalChange, setExternalChange] = useState(false);
+  if (seenRevision !== externalRevision) {
+    setSeenRevision(externalRevision);
+    if (JSON.stringify(draft) === JSON.stringify(base)) setDraft(state.settings);
+    else setExternalChange(true);
+    setBase(state.settings);
+  }
   const s = state.settings;
   const [confirmShrink, setConfirmShrink] = useState(false);
   const capacity = rosterCapacity(state.roster, draft.roster);
@@ -43,7 +53,10 @@ export default function SettingsPage() {
   }, [dirty]);
   const commit = () => {
     dispatch({ type: "settings/update", settings: draft });
-    setDraft({ ...draft, leagueName: draft.leagueName.trim(), teamName: draft.teamName.trim() });
+    const saved = { ...draft, leagueName: draft.leagueName.trim(), teamName: draft.teamName.trim() };
+    setDraft(saved);
+    setBase(saved);
+    setExternalChange(false);
     setConfirmShrink(false);
     toast("Settings saved. The planner has been updated.");
   };
@@ -58,6 +71,8 @@ export default function SettingsPage() {
 
   const cancel = () => {
     setDraft(state.settings);
+    setBase(state.settings);
+    setExternalChange(false);
     setErrors([]);
   };
 
@@ -89,6 +104,15 @@ export default function SettingsPage() {
           <SectionCard title="Acquisitions & league rules">
             <RulesFields showErrors={errors.length > 0} value={draft} onChange={setDraft} />
           </SectionCard>
+
+          {externalChange && (
+            <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-control border border-warn-line bg-warn-soft px-4 py-3 text-body-sm text-ink">
+              <span>
+                <strong className="font-semibold">Updated in another tab.</strong> Your unsaved edits here are kept; saving will replace those changes.
+              </span>
+              <Button onClick={cancel}>Load latest</Button>
+            </div>
+          )}
 
           <ErrorList errors={errors} />
 

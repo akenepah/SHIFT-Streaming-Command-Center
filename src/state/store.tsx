@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useMemo, useReducer, useRef, useS
 import type { User } from '@supabase/supabase-js';
 import { createInitialState, type AppState } from "./appState";
 import { reducer, type Action } from "./reducer";
-import { browserRepository, type AppStateRepository, type LoadResult } from "./repository";
+import { browserRepository, STORAGE_KEY, type AppStateRepository, type LoadResult } from "./repository";
 import { cloudClient } from './cloud/client';
 import { CloudRepository, shouldOfferMigration } from './cloud/repository';
 
@@ -13,6 +13,8 @@ type Store = {
  user: User | null; cloudStatus: string; cloudError: string | null;
  migration: boolean; resolveMigration: (save: boolean) => Promise<void>;
  reloadCloud: () => Promise<void>; signOut: () => Promise<void>;
+ /** Bumps when another tab's change is loaded into this one (dirty forms warn on it). */
+ externalRevision: number;
 };
 const StoreContext = createContext<Store | null>(null);
 export function StoreProvider({children,repository}: {children:ReactNode;repository?:AppStateRepository}) {
@@ -35,6 +37,9 @@ export function StoreProvider({children,repository}: {children:ReactNode;reposit
  const owner=useRef<string|null>(null);
  const generation=useRef(0);
  const loaded=useRef(false);
+ const [externalRevision,setExternalRevision]=useState(0);
+ // Set while hydrating another tab's state, so it isn't written straight back.
+ const external=useRef(false);
 
  useEffect(()=>{ latest.current=state; },[state]);
  useEffect(()=>{
@@ -97,16 +102,41 @@ export function StoreProvider({children,repository}: {children:ReactNode;reposit
  }
  useEffect(()=>{
   if(!hydrated)return;
+  if(external.current){external.current=false;if(!user)candidate.current=state;else lastSaved.current=state;return;}
   if(!user){repo.current?.save(state);candidate.current=state;return;}
   if(!cloud.current||blocked.current||state===lastSaved.current)return;
   pending.current=state;
   void drain();
  // Writes are serialized by repository revision; callbacks read only refs.
- // eslint-disable-next-line react-hooks/exhaustive-deps
  },[state,hydrated,user]);
  useEffect(()=>{
   const guard=(e:BeforeUnloadEvent)=>{if(pending.current||saving.current||blocked.current&&owner.current)e.preventDefault();};
   window.addEventListener('beforeunload',guard);return()=>window.removeEventListener('beforeunload',guard);
+ },[]);
+
+ // Multi-tab: never overwrite another tab's newer state with this tab's stale copy.
+ // Local mode follows the storage event; cloud mode refetches on focus when nothing is unsaved.
+ useEffect(()=>{
+  const onStorage=(e:StorageEvent)=>{
+   if(e.key!==STORAGE_KEY||owner.current||!repo.current)return;
+   const result=repo.current.load();
+   external.current=true;candidate.current=result.state;
+   dispatch({type:'hydrate',state:result.state});setExternalRevision(n=>n+1);
+  };
+  const onFocus=()=>{
+   const remote=cloud.current;
+   if(document.visibilityState!=='visible'||!remote||pending.current||saving.current||blocked.current)return;
+   const before=remote.revision;
+   remote.load().then(saved=>{
+    if(cloud.current!==remote||pending.current||saving.current||!saved||remote.revision===before)return;
+    external.current=true;lastSaved.current=saved;
+    dispatch({type:'hydrate',state:saved});setExternalRevision(n=>n+1);
+   }).catch(()=>{/* A failed background refresh leaves current data untouched. */});
+  };
+  window.addEventListener('storage',onStorage);
+  window.addEventListener('focus',onFocus);
+  document.addEventListener('visibilitychange',onFocus);
+  return()=>{window.removeEventListener('storage',onStorage);window.removeEventListener('focus',onFocus);document.removeEventListener('visibilitychange',onFocus);};
  },[]);
 
  async function resolveMigration(save:boolean){
@@ -130,9 +160,10 @@ export function StoreProvider({children,repository}: {children:ReactNode;reposit
   if(blocked.current&&!migration)throw new Error('Resolve unsaved changes before signing out.');
   const {error}=await cloudClient()!.auth.signOut();if(error)throw error;
  }
- const value=useMemo(()=>({state,dispatch,hydrated,loadStatus,removedDemoPlayers,user,cloudStatus,cloudError,migration,resolveMigration,reloadCloud,signOut}),
+ const value=useMemo(()=>({state,dispatch,hydrated,loadStatus,removedDemoPlayers,user,cloudStatus,cloudError,migration,resolveMigration,reloadCloud,signOut,externalRevision}),
  // Functions use current state and refs; recreate the public value as state changes.
- [state,hydrated,loadStatus,removedDemoPlayers,user,cloudStatus,cloudError,migration]);
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ [state,hydrated,loadStatus,removedDemoPlayers,user,cloudStatus,cloudError,migration,externalRevision]);
  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
 }
 export function useStore(){const value=useContext(StoreContext);if(!value)throw new Error('StoreProvider required');return value;}

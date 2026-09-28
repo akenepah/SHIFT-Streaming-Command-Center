@@ -9,6 +9,7 @@ import type { NHLTeamId } from "@/domain/types";
 import { DayCard } from "@/components/planner/DayCard";
 import { MovePlayerPopover, type MoveTarget } from "@/components/planner/MovePlayerPopover";
 import { PlanMoveDialog } from "@/components/planner/PlanMoveDialog";
+import { WeekGridScroller } from "@/components/planner/WeekGridScroller";
 import { WeeklyMovesPanel } from "@/components/planner/WeeklyMovesPanel";
 import { AddPlayerDialog } from "@/components/roster/PlayerDialogs";
 import { Button } from "@/components/ui/Button";
@@ -174,9 +175,8 @@ export default function WeeklyPlannerPage() {
         ) : (
           <div className="min-w-0">
             <p className="mb-2 text-caption text-ink-2">Bar = active slots filled · Green = more room to stream · Red = lineup full</p>
-            <p className="mb-2 text-caption text-ink-2 2xl:hidden">Scroll horizontally to compare all seven days →</p>
-          <div id="week-grid" tabIndex={-1} className="overflow-x-auto pb-2">
-            <div className="grid min-w-[1400px] grid-cols-7 gap-2 2xl:gap-3">
+          <WeekGridScroller>
+            <div className="grid min-w-[1376px] grid-cols-7 gap-2 2xl:gap-3">
               {plan.days.map((day) => (
                 <DayCard
                   key={day.date}
@@ -191,7 +191,7 @@ export default function WeeklyPlannerPage() {
                 />
               ))}
             </div>
-          </div>
+          </WeekGridScroller>
           </div>
         )}
       </div>

@@ -6,7 +6,7 @@ import { getTeam, type NHLTeamId } from "@/domain/nhl/teams";
 import type { PlayerGame, Position } from "@/domain/types";
 
 export function PositionList({ positions }: { positions: readonly Position[] }) {
-  return <span className="text-ink-2">{positions.join(", ")}</span>;
+  return <span className="text-ink-2">{positions.join(" · ")}</span>;
 }
 
 /** NHL team mark + abbreviation. A small team-color disc stands in for a logo. */
@@ -30,34 +30,41 @@ export function fullMatchup(teamId: NHLTeamId, game: PlayerGame): string {
   return `${teamId} ${matchupText(game)}`;
 }
 
-/** Headshot, or the neutral silhouette. Fixed size, so a missing image never shifts layout. */
+/**
+ * Headshot in a fixed circular frame, so loading or a missing image never
+ * shifts layout. Initials show until the image loads, and stay on failure.
+ * NHL mugs have generous headroom; a slight zoom anchored near the top fills
+ * the circle with head and shoulders.
+ */
 export function Avatar({ src, name, size = 28 }: { src?: string; name: string; size?: number }) {
-  const [failed, setFailed] = useState(false);
-  const box = { width: size, height: size };
-  if (src && !failed) {
-    return (
-      <img
-        src={src}
-        alt=""
-        width={size}
-        height={size}
-        onError={() => setFailed(true)}
-        className="shrink-0 rounded-pill border border-line bg-surface-muted object-cover"
-        style={box}
-        title={name}
-      />
-    );
+  const [state, setState] = useState<"loading" | "loaded" | "failed">("loading");
+  const [prevSrc, setPrevSrc] = useState(src);
+  if (src !== prevSrc) {
+    setPrevSrc(src);
+    setState("loading");
   }
+  const showImage = !!src && state !== "failed";
   return (
     <span
       aria-hidden
-      className="inline-flex shrink-0 items-end justify-center overflow-hidden rounded-pill border border-line bg-surface-muted"
-      style={box}
+      title={name}
+      className="relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-pill border border-line bg-surface-muted font-semibold text-ink-3"
+      style={{ width: size, height: size, fontSize: Math.max(9, Math.round(size * 0.34)) }}
     >
-      <svg viewBox="0 0 24 24" className="h-[85%] w-[85%] text-line-strong" fill="currentColor">
-        <circle cx="12" cy="9" r="4.2" />
-        <path d="M3.5 24c0-5 3.8-8.2 8.5-8.2s8.5 3.2 8.5 8.2z" />
-      </svg>
+      {state !== "loaded" && <span>{initials(name)}</span>}
+      {showImage && (
+        <img
+          src={src}
+          alt=""
+          width={size}
+          height={size}
+          onLoad={() => setState("loaded")}
+          onError={() => setState("failed")}
+          className={`absolute inset-0 h-full w-full origin-[50%_20%] scale-[1.22] object-cover object-top transition-opacity duration-150 ${
+            state === "loaded" ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      )}
     </span>
   );
 }

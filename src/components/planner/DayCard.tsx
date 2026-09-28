@@ -48,8 +48,14 @@ const SLOT_NAME: Record<SlotType, string> = {
 };
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return <h4 className="mb-1.5 mt-4 px-0.5 font-display text-overline uppercase text-ink-2">{children}</h4>;
+  return (
+    <h4 className="mb-1 mt-3 border-t border-line px-0.5 pt-2 font-display text-[11px] font-semibold uppercase leading-4 tracking-[0.08em] text-secondary first:mt-0 first:border-t-0 first:pt-0">
+      {children}
+    </h4>
+  );
 }
+
+const GROUP_OF = (t: SlotType) => (t === "C" || t === "LW" || t === "RW" ? "FORWARDS" : t === "D" ? "DEFENSE" : t === "UTIL" ? "UTILITY" : "GOALTENDER");
 
 export function DayCard({ day, isToday, isPast, movesToday, statusRows, players, onMovePlayer, onAddToSlot }: Props) {
   const { state, dispatch } = useStore();
@@ -74,6 +80,7 @@ export function DayCard({ day, isToday, isPast, movesToday, statusRows, players,
         player={p}
         secondary={row.benchedGame ? `${secondary} · BN game` : secondary}
         benched={row.benchedGame}
+        muted={row.starting}
         // Only a benched game can be moved into the lineup; no-game and IR+ rows are informational.
         onSelect={row.benchedGame ? (anchor) => onMovePlayer(p, day, anchor) : undefined}
         ariaLabel={row.benchedGame ? `${p.name} has a game but is benched. Change lineup spot` : undefined}
@@ -122,23 +129,27 @@ export function DayCard({ day, isToday, isPast, movesToday, statusRows, players,
 
       <div className="flex flex-1 flex-col px-2 pb-3 2xl:px-2.5">
         {statusRows > 0 && (
-          <div style={{height: 40 + statusRows * 36}} className="mb-2 overflow-y-auto rounded-control px-2 py-2 text-caption text-primary-strong">
-            {movesToday.length > 0 && <>
-            <span className="flex items-center gap-1.5 font-semibold">
-              <ArrowLeftRight aria-hidden className="size-3.5" /> Planned move
-            </span>
-            {movesToday.map((t) => (
-              <span key={t.id} className="mt-0.5 block">
-                {t.addPlayerId && <>+ {shortName(name(t.addPlayerId))} </>}
-                {t.dropPlayerId && <>− {shortName(name(t.dropPlayerId))}</>}
-              </span>
-            ))}</>}
+          // Reserved band: same height in every column so lineup rows stay aligned across days.
+          <div style={{ height: 30 + statusRows * 36 }} className="mb-2">
+            {movesToday.length > 0 && (
+              <div className="h-full overflow-y-auto rounded-control border border-move-line bg-move-soft px-2.5 py-1.5 text-caption text-move-ink">
+                <span className="flex items-center gap-1.5 font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-move-strong">
+                  <ArrowLeftRight aria-hidden className="size-3.5" /> Planned move
+                </span>
+                {movesToday.map((t) => (
+                  <span key={t.id} className="mt-0.5 block leading-4">
+                    {t.addPlayerId && <span className="block truncate">+ {shortName(name(t.addPlayerId))}</span>}
+                    {t.dropPlayerId && <span className="block truncate">− {shortName(name(t.dropPlayerId))}</span>}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
         <ul className="flex flex-col gap-1.5" aria-label={`${dayName} active lineup`}>
           {day.activeSlots.map((a, index) => {
-            const group = (t: SlotType) => ["C", "LW", "RW"].includes(t) ? "FORWARDS" : t === "D" ? "DEFENSE" : t === "UTIL" ? "UTILITY" : "GOALTENDER";
+            const group = GROUP_OF;
             const startsGroup = index === 0 || group(day.activeSlots[index - 1].slot.type) !== group(a.slot.type);
             const p = a.playerId ? players[a.playerId] : undefined;
             return (
@@ -158,7 +169,7 @@ export function DayCard({ day, isToday, isPast, movesToday, statusRows, players,
                   <SlotTile
                     kind="add"
                     badge={a.slot.type}
-                    ariaLabel={`Add a player for ${dayName} at ${SLOT_NAME[a.slot.type]}, slot ${day.activeSlots.slice(0, index + 1).filter(b => b.slot.type === a.slot.type).length} of ${day.activeSlots.filter(b => b.slot.type === a.slot.type).length}`}
+                    ariaLabel={`Add a player for ${dayName} ${formatMonthDay(day.date)} at ${SLOT_NAME[a.slot.type]}, slot ${day.activeSlots.slice(0, index + 1).filter(b => b.slot.type === a.slot.type).length} of ${day.activeSlots.filter(b => b.slot.type === a.slot.type).length}`}
                     onAdd={() => onAddToSlot(day, a.slot.type)}
                   />
                 )}

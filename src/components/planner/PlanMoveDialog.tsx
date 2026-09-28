@@ -203,7 +203,7 @@ export function PlanMoveDialog({
         editing
           ? "Edit planned move"
           : slotContext
-            ? `Add player for ${formatDayLong(slotContext.date)} ${formatMonthDay(slotContext.date)} · ${slotContext.position}`
+            ? `Add player for ${formatDayShort(slotContext.date)} ${formatMonthDay(slotContext.date)} · ${slotContext.position}`
             : "Plan a move"
       }
       description={

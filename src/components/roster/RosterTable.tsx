@@ -143,7 +143,7 @@ export function RosterTable() {
                       <td className="py-3 pr-4">
                         <TeamTag teamId={p.nhlTeamId} />
                       </td>
-                      <td className="py-3 pr-4 text-data text-ink">{p.eligiblePositions.join(", ")}</td>
+                      <td className="py-3 pr-4 text-data text-ink">{p.eligiblePositions.join(" · ")}</td>
                       <td className="py-3 pr-4">
                         <span className="flex flex-col items-start gap-1">
                           <StatusBadge status={status} />

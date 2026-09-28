@@ -1,6 +1,6 @@
 import { canAddToRoster, defaultRosterStatus } from "@/domain/roster/capacity";
 import { resetDay, removeOverride, setOverride } from "@/domain/lineup/overrides";
-import { cancelTransaction, createTransaction, updateTransaction, type TransactionDraft } from "@/domain/transactions/transactions";
+import { cancelTransaction, createTransaction, restoreTransaction, updateTransaction, type TransactionDraft } from "@/domain/transactions/transactions";
 import type { DailyLineupOverride, LeagueSettings, Player, RosterStatus } from "@/domain/types";
 import { createInitialState, type AppState } from "./appState";
 
@@ -16,6 +16,7 @@ export type Action =
   | { type: "tx/create"; id: string; draft: TransactionDraft; now?: string }
   | { type: "tx/update"; id: string; draft: TransactionDraft }
   | { type: "tx/cancel"; id: string }
+  | { type: "tx/restore"; id: string }
   | { type: "override/set"; override: DailyLineupOverride }
   | { type: "override/remove"; date: string; playerId: string }
   | { type: "override/resetDay"; date: string }
@@ -66,6 +67,8 @@ export function reducer(state: AppState, action: Action): AppState {
       return { ...state, transactions: updateTransaction(state.transactions, action.id, action.draft) };
     case "tx/cancel":
       return { ...state, transactions: cancelTransaction(state.transactions, action.id) };
+    case "tx/restore":
+      return { ...state, transactions: restoreTransaction(state.transactions, action.id) };
     case "override/set":
       return { ...state, overrides: setOverride(state.overrides, action.override) };
     case "override/remove":
