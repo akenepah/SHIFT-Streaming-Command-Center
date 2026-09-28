@@ -1,9 +1,12 @@
 "use client";
 
+import { AlertTriangle, ArrowLeft, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
+import { PlayerForm } from "@/components/player/PlayerForm";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
-import { PlayerForm, inputClass, labelClass } from "@/components/player/PlayerForm";
+import { ErrorList, Field, Select } from "@/components/ui/Field";
+import { useToast } from "@/components/ui/Toast";
 import { addDays, formatDayShort, formatMonthDay, weekDates } from "@/domain/dates";
 import type { WeekInput } from "@/domain/lineup/generateWeek";
 import { projectRoster } from "@/domain/roster/projectedRoster";
@@ -43,6 +46,7 @@ export function PlanMoveDialog({
   defaultDate: ISODate;
 }) {
   const { state, dispatch } = useStore();
+  const toast = useToast();
   const [draft, setDraft] = useState<TransactionDraft>(() =>
     editing
       ? { type: editing.type, addPlayerId: editing.addPlayerId, dropPlayerId: editing.dropPlayerId, effectiveDate: editing.effectiveDate }
@@ -104,6 +108,7 @@ export function PlanMoveDialog({
     }
     if (editing) dispatch({ type: "tx/update", id: editing.id, draft });
     else dispatch({ type: "tx/create", id: newId("move"), draft });
+    toast(editing ? "Planned move updated." : "Move planned.");
     onClose();
   };
 
@@ -139,13 +144,13 @@ export function PlanMoveDialog({
       <div className="grid gap-5">
         <div className="flex flex-wrap items-end gap-6">
           <fieldset>
-            <legend className={labelClass}>Move type</legend>
-            <div className="inline-flex rounded-md border border-line p-0.5">
+            <legend className="mb-2 text-label text-ink">Move type</legend>
+            <div className="inline-flex rounded-control border border-line bg-surface-muted p-1">
               {TYPES.map((t) => (
                 <label
                   key={t.value}
-                  className={`cursor-pointer rounded px-3 py-1.5 text-[13px] font-medium has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-brand ${
-                    draft.type === t.value ? "bg-nav text-white" : "text-ink-2 hover:text-ink"
+                  className={`flex h-9 cursor-pointer items-center rounded-badge px-4 text-body-sm font-medium has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-primary ${
+                    draft.type === t.value ? "bg-surface text-ink shadow-sm ring-1 ring-line" : "text-ink-2 hover:text-ink"
                   }`}
                 >
                   <input
@@ -160,13 +165,9 @@ export function PlanMoveDialog({
               ))}
             </div>
           </fieldset>
-          <div>
-            <label htmlFor="move-date" className={labelClass}>
-              Effective date
-            </label>
-            <select
+          <Field id="move-date" label="Effective date" className="w-52">
+            <Select
               id="move-date"
-              className={`${inputClass} w-48`}
               value={draft.effectiveDate}
               onChange={(e) => setDraft((d) => ({ ...d, effectiveDate: e.target.value }))}
             >
@@ -180,85 +181,79 @@ export function PlanMoveDialog({
                   {formatDayShort(d)} {formatMonthDay(d)}
                 </option>
               ))}
-            </select>
-          </div>
+            </Select>
+          </Field>
         </div>
 
         <div className={`grid gap-5 ${needsAdd && needsDrop ? "grid-cols-2" : "grid-cols-1"}`}>
           {needsDrop && (
-            <div>
-              <label htmlFor="move-drop" className={labelClass}>
-                Drop
-              </label>
-              <select
+            <Field id="move-drop" label="Drop">
+              <Select
                 id="move-drop"
-                className={inputClass}
                 value={draft.dropPlayerId ?? ""}
                 onChange={(e) => setDraft((d) => ({ ...d, dropPlayerId: e.target.value || undefined }))}
               >
                 <option value="">Choose a rostered player…</option>
                 {dropOptions.map((p) => (
                   <option key={p.id} value={p.id}>
-                    {p.name} · {p.nhlTeamId} · {p.eligiblePositions.join("/")} · {remaining(p)} left this week
+                    {p.name} · {p.nhlTeamId} · {p.eligiblePositions.join("/")} · {remaining(p)} left
                   </option>
                 ))}
-              </select>
-            </div>
+              </Select>
+            </Field>
           )}
 
           {needsAdd && (
             <div>
-              <div className="mb-1 flex items-center justify-between">
-                <span id="move-add-label" className="text-[12px] font-medium text-ink-2">
+              <div className="mb-2 flex items-center justify-between">
+                <span id="move-add-label" className="text-label text-ink">
                   Add
                 </span>
                 <button
                   type="button"
-                  className="text-[12px] font-medium text-brand hover:underline"
+                  className="inline-flex items-center gap-1 text-body-sm font-medium text-primary hover:underline"
                   onClick={() => setCreating((c) => !c)}
                   aria-expanded={creating}
                 >
-                  {creating ? "Choose existing player" : "+ Create new player"}
+                  {creating ? <ArrowLeft aria-hidden className="size-3.5" /> : <Plus aria-hidden className="size-3.5" />}
+                  {creating ? "Choose a saved player" : "Create new player"}
                 </button>
               </div>
               {creating ? (
-                <div className="rounded-md border border-line p-3">
+                <div className="rounded-card border border-line bg-surface-muted p-4">
                   <PlayerForm draft={playerDraft} onChange={setPlayerDraft} errors={playerErrors} />
-                  <Button className="mt-3" variant="primary" size="sm" onClick={createPlayer}>
+                  <Button className="mt-4" variant="primary" size="sm" onClick={createPlayer}>
                     Create player
                   </Button>
                 </div>
               ) : (
-                <div
-                  role="radiogroup"
-                  aria-labelledby="move-add-label"
-                  className="max-h-64 overflow-y-auto rounded-md border border-line"
-                >
+                <div role="radiogroup" aria-labelledby="move-add-label" className="max-h-64 overflow-y-auto rounded-card border border-line">
                   {addOptions.length === 0 && (
-                    <p className="px-3 py-3 text-[13px] text-ink-3">No other saved players yet. Use Create new player to plan an add.</p>
+                    <p className="px-4 py-3 text-body-sm text-ink-3">No other saved players yet. Create one to plan an add.</p>
                   )}
                   {addOptions.map(({ player: p, games, delta }) => (
                     <label
                       key={p.id}
-                      className={`flex cursor-pointer items-center gap-3 border-b border-line px-3 py-2 last:border-b-0 has-[:focus-visible]:bg-brand-soft ${
-                        draft.addPlayerId === p.id ? "bg-brand-soft" : "hover:bg-canvas"
+                      className={`flex cursor-pointer items-center gap-3 border-b border-line px-4 py-2.5 last:border-b-0 has-[:focus-visible]:bg-primary-soft ${
+                        draft.addPlayerId === p.id ? "bg-primary-soft" : "hover:bg-surface-muted"
                       }`}
                     >
                       <input
                         type="radio"
                         name="move-add"
+                        className="accent-primary"
                         checked={draft.addPlayerId === p.id}
                         onChange={() => setDraft((d) => ({ ...d, addPlayerId: p.id }))}
                       />
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[13px] font-medium">{p.name}</span>
-                        <span className="block text-[12px] text-ink-3">
+                        <span className="block truncate text-body font-medium text-ink">{p.name}</span>
+                        <span className="block text-caption text-ink-3">
                           {p.nhlTeamId} · {p.eligiblePositions.join(" / ")} · {games} {games === 1 ? "game" : "games"} left this week
                         </span>
                       </span>
                       {delta !== null && (
                         <span
-                          className={`text-[12px] font-semibold tabular-nums ${delta > 0 ? "text-ok" : delta < 0 ? "text-warn" : "text-ink-3"}`}
+                          className={`text-caption font-semibold tabular-nums ${delta > 0 ? "text-success" : delta < 0 ? "text-warn" : "text-ink-3"}`}
                         >
                           {signed(delta)} started
                         </span>
@@ -272,27 +267,27 @@ export function PlanMoveDialog({
         </div>
 
         {impact && (
-          <div className="rounded-lg border border-line bg-canvas px-4 py-3" aria-live="polite">
-            <h3 className="text-[12px] font-semibold uppercase tracking-wide text-ink-2">Projected impact this week</h3>
-            <dl className="mt-2 grid grid-cols-3 gap-4 text-[13px]">
+          <div className="rounded-card border border-line bg-surface-muted px-4 py-3" aria-live="polite">
+            <h3 className="text-overline uppercase text-ink-2">Projected impact this week</h3>
+            <dl className="mt-2 grid grid-cols-3 gap-4 text-body-sm">
               <div>
                 <dt className="text-ink-3">Games started</dt>
-                <dd className="font-semibold tabular-nums">
+                <dd className="text-body font-semibold tabular-nums text-ink">
                   {impact.before.gamesStarted} → {impact.after.gamesStarted}{" "}
-                  <span className={impact.gamesStartedDelta > 0 ? "text-ok" : impact.gamesStartedDelta < 0 ? "text-warn" : "text-ink-3"}>
+                  <span className={impact.gamesStartedDelta > 0 ? "text-success" : impact.gamesStartedDelta < 0 ? "text-warn" : "text-ink-3"}>
                     ({signed(impact.gamesStartedDelta)})
                   </span>
                 </dd>
               </div>
               <div>
                 <dt className="text-ink-3">Benched games</dt>
-                <dd className="font-semibold tabular-nums">
+                <dd className="text-body font-semibold tabular-nums text-ink">
                   {impact.before.benchedGames} → {impact.after.benchedGames}
                 </dd>
               </div>
               <div>
                 <dt className="text-ink-3">Goalie starts</dt>
-                <dd className="font-semibold tabular-nums">
+                <dd className="text-body font-semibold tabular-nums text-ink">
                   {impact.before.goalieStarts} → {impact.after.goalieStarts}
                 </dd>
               </div>
@@ -301,17 +296,12 @@ export function PlanMoveDialog({
         )}
 
         {check.warnings.length > 0 && (
-          <p role="status" className="rounded-md border border-warn-line bg-warn-soft px-3 py-2 text-[12px] text-warn-strong">
+          <p role="status" className="flex items-start gap-2 rounded-control border border-warn-line bg-warn-soft px-3.5 py-2.5 text-body-sm text-warn-strong">
+            <AlertTriangle aria-hidden className="mt-0.5 size-4 shrink-0" />
             {check.warnings.join(" ")}
           </p>
         )}
-        {showErrors && check.errors.length > 0 && (
-          <ul role="alert" className="rounded-md border border-danger/30 bg-danger-soft px-3 py-2 text-[12px] text-danger">
-            {check.errors.map((e) => (
-              <li key={e}>{e}</li>
-            ))}
-          </ul>
-        )}
+        {showErrors && <ErrorList errors={check.errors} />}
       </div>
     </Dialog>
   );

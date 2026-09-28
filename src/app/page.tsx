@@ -1,141 +1,162 @@
 "use client";
 
+import { AlertTriangle, ChevronLeft, ChevronRight, Info, Plus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { DayCard } from "@/components/planner/DayCard";
-import { MovePlayerDialog } from "@/components/planner/MovePlayerDialog";
+import { MovePlayerPopover, type MoveTarget } from "@/components/planner/MovePlayerPopover";
 import { PlanMoveDialog } from "@/components/planner/PlanMoveDialog";
 import { WeeklyMovesPanel } from "@/components/planner/WeeklyMovesPanel";
 import { AddPlayerDialog } from "@/components/roster/PlayerDialogs";
 import { Button } from "@/components/ui/Button";
-import { addDays, formatDayShort, formatMonthDay, formatWeekRange, startOfWeek, todayISO } from "@/domain/dates";
+import { addDays, formatDayLong, formatDayShort, formatMonthDay, startOfWeek, todayISO } from "@/domain/dates";
 import { SCHEDULE_META } from "@/domain/schedule/staticProvider";
-import type { DailyLineup, PlannedTransaction, Player } from "@/domain/types";
+import type { DailyLineup, ISODate, PlannedTransaction } from "@/domain/types";
 import { useStore } from "@/state/store";
 import { useWeekPlan } from "@/state/usePlanner";
 
-function Stat({ label, value, tone = "default" }: { label: string; value: string | number; tone?: "default" | "warn" }) {
-  return (
-    <div className="rounded-lg border border-line bg-surface px-3 py-2">
-      <dt className="text-[11px] font-medium uppercase tracking-wide text-ink-3">{label}</dt>
-      <dd className={`text-lg font-bold tabular-nums ${tone === "warn" ? "text-warn" : "text-ink"}`}>{value}</dd>
-    </div>
-  );
+/** Density tiers for the NHL games strip. Counts always come from the schedule. */
+function densityClass(count: number, max: number): string {
+  if (count === 0) return "border border-line bg-surface-muted text-ink-3";
+  if (count === max && count >= 12) return "border border-danger-line bg-danger-soft text-danger";
+  if (count >= 8) return "bg-nav text-nav-ink";
+  return "border border-line bg-surface-muted text-ink-2";
+}
+
+function densityLabel(count: number, max: number): string {
+  if (count === 0) return "no games";
+  if (count === max && count >= 12) return "heaviest night";
+  if (count >= 8) return "heavy";
+  return "light";
+}
+
+function formatRange(weekStart: ISODate): string {
+  const end = addDays(weekStart, 6);
+  return `${formatMonthDay(weekStart)} – ${formatMonthDay(end)}, ${end.slice(0, 4)}`;
 }
 
 export default function WeeklyPlannerPage() {
   const { state } = useStore();
+  const { settings } = state;
   const today = todayISO();
-  const thisWeek = startOfWeek(today, state.settings.weekStartsOn);
+  const thisWeek = startOfWeek(today, settings.weekStartsOn);
   const [requestedWeek, setWeekStart] = useState<string | null>(null);
   // Re-align if the league's week start day changes.
-  const weekStart = startOfWeek(requestedWeek ?? thisWeek, state.settings.weekStartsOn);
+  const weekStart = startOfWeek(requestedWeek ?? thisWeek, settings.weekStartsOn);
   const { input, plan } = useWeekPlan(weekStart);
 
   const [planOpen, setPlanOpen] = useState(false);
   const [editing, setEditing] = useState<PlannedTransaction | null>(null);
-  const [moveTarget, setMoveTarget] = useState<{ player: Player; day: DailyLineup } | null>(null);
+  const [moveTarget, setMoveTarget] = useState<MoveTarget | null>(null);
   const [addingPlayer, setAddingPlayer] = useState(false);
   const rosterEmpty = state.roster.length === 0;
 
   const weekEnd = addDays(weekStart, 6);
-  const defaultMoveDate = today >= weekStart && today <= weekEnd ? today : weekStart;
-  const maxGames = Math.max(1, ...plan.days.map((d) => d.nhlGameCount));
+  const preferred = settings.defaultMoveTiming === "TODAY" ? today : addDays(today, 1);
+  const defaultMoveDate = preferred >= weekStart && preferred <= weekEnd ? preferred : weekStart;
+  const maxGames = Math.max(0, ...plan.days.map((d) => d.nhlGameCount));
   const seasonNotStarted = weekEnd < SCHEDULE_META.regularSeasonStart;
   const seasonOver = weekStart > SCHEDULE_META.regularSeasonEnd;
   const { summary } = plan;
 
+  const openMove = (player: MoveTarget["player"], day: DailyLineup, anchor: HTMLElement) =>
+    setMoveTarget((t) => (t?.anchor === anchor ? null : { player, day, anchor }));
+
   return (
     <div>
-      <div className="mb-4 flex flex-wrap items-end gap-4">
-        <div className="mr-auto">
-          <h1 className="text-2xl font-bold tracking-tight">{state.settings.teamName}</h1>
-          <p className="mt-0.5 text-ink-2">
-            {state.settings.leagueName} · {state.settings.season} · NHL schedule bundled with the app
-          </p>
-        </div>
-        <nav aria-label="Week navigation" className="flex items-center gap-2">
-          <Button onClick={() => setWeekStart(addDays(weekStart, -7))} aria-label="Previous week">
-            <span aria-hidden>‹</span> Prev
-          </Button>
-          <Button onClick={() => setWeekStart(thisWeek)} disabled={weekStart === thisWeek}>
-            This Week
-          </Button>
-          <Button onClick={() => setWeekStart(addDays(weekStart, 7))} aria-label="Next week">
-            Next <span aria-hidden>›</span>
-          </Button>
-          <span className="ml-2 min-w-40 text-[15px] font-semibold tabular-nums" aria-live="polite">
-            {formatWeekRange(weekStart)}
-            {weekStart === thisWeek && <span className="ml-1.5 text-[12px] font-medium text-brand">This week</span>}
-          </span>
-        </nav>
-      </div>
-
-      {state.needsRepair.length > 0 && (
-        <p role="alert" className="mb-4 rounded-lg border border-warn-line bg-warn-soft px-4 py-2.5 text-[13px] text-warn-strong">
-          {state.needsRepair.length === 1 ? "1 saved player couldn't be loaded" : `${state.needsRepair.length} saved players couldn't be loaded`}{" "}
-          and {state.needsRepair.length === 1 ? "is" : "are"} left out of the plan.{" "}
-          <Link href="/roster" className="font-semibold underline">
-            Fix on the Roster screen
-          </Link>
-        </p>
-      )}
-
-      {(seasonNotStarted || seasonOver) && (
-        <p className="mb-4 rounded-lg border border-brand/30 bg-brand-soft px-4 py-2.5 text-[13px] text-brand-strong">
-          {seasonNotStarted
-            ? `The 2026–27 regular season starts ${formatDayShort(SCHEDULE_META.regularSeasonStart)} ${formatMonthDay(SCHEDULE_META.regularSeasonStart)}. Use Next to jump ahead.`
-            : "The 2026–27 regular season is over."}{" "}
-          {seasonNotStarted && (
-            <button
-              type="button"
-              className="font-semibold underline"
-              onClick={() => setWeekStart(startOfWeek(SCHEDULE_META.regularSeasonStart, state.settings.weekStartsOn))}
+      <div className="border-b border-line bg-surface px-6 pb-6 pt-6">
+        <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
+          <div className="min-w-0">
+            <h1 className="font-display text-page-title text-ink">{settings.teamName}</h1>
+            <p className="mt-2 text-body text-ink-2">
+              {settings.leagueName} · {settings.season.replace("-", "–")} · Bundled NHL schedule
+            </p>
+          </div>
+          <nav aria-label="Week navigation" className="flex items-center gap-3">
+            <Button size="icon" onClick={() => setWeekStart(addDays(weekStart, -7))} aria-label="Previous week">
+              <ChevronLeft aria-hidden />
+            </Button>
+            <div
+              aria-live="polite"
+              className="flex h-11 min-w-52 items-center justify-center rounded-control border border-line bg-surface px-5 text-body font-semibold tabular-nums text-ink"
             >
-              Go to opening week
-            </button>
-          )}
-        </p>
-      )}
-
-      <div className="mb-4 flex flex-wrap items-stretch gap-4">
-        <div className="flex-1 rounded-xl border border-line bg-surface px-4 py-3">
-          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-ink-3">NHL games this week</h2>
-          <ol className="grid grid-cols-7 gap-2">
-            {plan.days.map((d) => {
-              const heavy = d.nhlGameCount >= Math.max(8, maxGames * 0.75);
-              const light = d.nhlGameCount > 0 && d.nhlGameCount <= 4;
-              return (
-                <li key={d.date} className="text-center">
-                  <div className="text-[11px] font-medium text-ink-3">
-                    {formatDayShort(d.date)}
-                    {d.date === today && <span className="text-brand"> ·</span>}
-                  </div>
-                  <div className="mx-auto mt-1 flex h-10 items-end justify-center" aria-hidden>
-                    <div
-                      className={`w-6 rounded-t ${heavy ? "bg-nav" : light ? "bg-brand/40" : "bg-brand/70"}`}
-                      style={{ height: `${Math.max(3, (d.nhlGameCount / maxGames) * 40)}px` }}
-                    />
-                  </div>
-                  <div className="mt-1 text-[13px] font-bold tabular-nums">
-                    {d.nhlGameCount}
-                    <span className="sr-only"> NHL games on {formatDayShort(d.date)}</span>
-                  </div>
-                  <div className="text-[10px] text-ink-3">{heavy ? "Heavy" : light ? "Light" : d.nhlGameCount ? "" : "Off"}</div>
-                </li>
-              );
-            })}
-          </ol>
+              {formatRange(weekStart)}
+            </div>
+            <Button size="icon" onClick={() => setWeekStart(addDays(weekStart, 7))} aria-label="Next week">
+              <ChevronRight aria-hidden />
+            </Button>
+            <Button onClick={() => setWeekStart(thisWeek)} aria-pressed={weekStart === thisWeek}>
+              This Week
+            </Button>
+            <Button variant="primary" onClick={() => setAddingPlayer(true)}>
+              <Plus aria-hidden /> Add Player
+            </Button>
+          </nav>
         </div>
-        <dl className="grid grid-cols-2 gap-2 sm:grid-cols-4 xl:w-[520px]">
-          <Stat label="Games started" value={summary.gamesStarted} />
-          <Stat label="Benched games" value={summary.benchedGames} tone={summary.benchedGames ? "warn" : "default"} />
-          <Stat label="Open slot-days" value={summary.openSlotDays} />
-          <Stat label="NHL games" value={summary.nhlGames} />
-        </dl>
+
+        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <div className="flex items-center gap-3">
+            <h2 className="text-body text-ink-2">NHL games this week</h2>
+            <ol className="flex gap-2">
+              {plan.days.map((d) => (
+                <li
+                  key={d.date}
+                  className={`flex h-7 min-w-20 items-center justify-center gap-2 rounded-control px-3 text-caption tabular-nums ${densityClass(
+                    d.nhlGameCount,
+                    maxGames,
+                  )} ${d.date === today ? "ring-2 ring-primary ring-offset-1" : ""}`}
+                  title={`${formatDayLong(d.date)}: ${d.nhlGameCount} NHL games (${densityLabel(d.nhlGameCount, maxGames)})`}
+                >
+                  <span>{formatDayShort(d.date)}</span>
+                  <span className="font-semibold">{d.nhlGameCount}</span>
+                  <span className="sr-only">
+                    NHL games, {densityLabel(d.nhlGameCount, maxGames)}
+                    {d.date === today ? ", today" : ""}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </div>
+          {!rosterEmpty && (
+            <p className="ml-auto text-body-sm text-ink-2 tabular-nums">
+              <span className="font-semibold text-ink">{summary.gamesStarted}</span> games started ·{" "}
+              <span className={summary.benchedGames ? "font-semibold text-warn" : ""}>{summary.benchedGames} benched</span> ·{" "}
+              {summary.openSlotDays} open slot-days
+            </p>
+          )}
+        </div>
+
+        {(seasonNotStarted || seasonOver) && (
+          <p className="mt-4 flex items-center gap-2 text-body-sm text-primary-strong">
+            <Info aria-hidden className="size-4" />
+            {seasonNotStarted
+              ? `The 2026–27 regular season starts ${formatDayShort(SCHEDULE_META.regularSeasonStart)} ${formatMonthDay(SCHEDULE_META.regularSeasonStart)}.`
+              : "The 2026–27 regular season is over."}
+            {seasonNotStarted && (
+              <button
+                type="button"
+                className="font-semibold underline underline-offset-2"
+                onClick={() => setWeekStart(startOfWeek(SCHEDULE_META.regularSeasonStart, settings.weekStartsOn))}
+              >
+                Go to opening week
+              </button>
+            )}
+          </p>
+        )}
+        {state.needsRepair.length > 0 && (
+          <p role="alert" className="mt-4 flex items-center gap-2 text-body-sm text-warn-strong">
+            <AlertTriangle aria-hidden className="size-4" />
+            {state.needsRepair.length === 1
+              ? "1 saved player couldn't be loaded and is left out of the plan."
+              : `${state.needsRepair.length} saved players couldn't be loaded and are left out of the plan.`}
+            <Link href="/roster" className="font-semibold underline underline-offset-2">
+              Fix on the Roster screen
+            </Link>
+          </p>
+        )}
       </div>
 
-      <div className="grid grid-cols-[236px_minmax(0,1fr)] gap-4 2xl:grid-cols-[280px_minmax(0,1fr)]">
+      <div className="grid grid-cols-[224px_minmax(0,1fr)] gap-4 px-6 py-6 2xl:grid-cols-[240px_minmax(0,1fr)]">
         <WeeklyMovesPanel
           weekStart={weekStart}
           summary={summary}
@@ -149,19 +170,19 @@ export default function WeeklyPlannerPage() {
           }}
         />
         {rosterEmpty ? (
-          <section className="flex flex-col items-center justify-center rounded-xl border border-dashed border-line-strong bg-surface px-6 py-16 text-center">
-            <h2 className="text-lg font-bold">Your roster is empty</h2>
-            <p className="mt-1 max-w-md text-ink-2">
-              Add your fantasy roster to generate this week&apos;s schedule. Each player&apos;s NHL team fills in their
-              games automatically.
+          <section className="flex flex-col items-center justify-center rounded-panel border border-dashed border-line-strong bg-surface px-6 py-20 text-center">
+            <h2 className="font-display text-section-title text-ink">Your roster is empty</h2>
+            <p className="mt-2 max-w-md text-body text-ink-2">
+              Add your fantasy roster to generate this week&apos;s schedule. Each player&apos;s NHL team fills in their games
+              automatically.
             </p>
-            <div className="mt-4 flex gap-2">
+            <div className="mt-6 flex gap-3">
               <Button variant="primary" onClick={() => setAddingPlayer(true)}>
-                <span aria-hidden>+</span> Add player
+                <Plus aria-hidden /> Add player
               </Button>
               <Link
                 href="/roster"
-                className="inline-flex h-9 items-center rounded-md border border-line-strong bg-surface px-3.5 text-[13px] font-medium hover:bg-canvas"
+                className="inline-flex h-11 items-center rounded-control border border-line bg-surface px-4 text-body font-semibold text-ink hover:border-line-strong hover:bg-surface-muted"
               >
                 Go to Roster
               </Link>
@@ -169,7 +190,7 @@ export default function WeeklyPlannerPage() {
           </section>
         ) : (
           <div className="overflow-x-auto pb-2">
-            <div className="grid min-w-[900px] grid-cols-7 gap-2">
+            <div className="grid min-w-[1000px] grid-cols-7 gap-2 2xl:gap-3">
               {plan.days.map((day) => (
                 <DayCard
                   key={day.date}
@@ -177,7 +198,7 @@ export default function WeeklyPlannerPage() {
                   isToday={day.date === today}
                   isPast={day.date < today}
                   movesToday={state.transactions.filter((t) => t.status === "PLANNED" && t.effectiveDate === day.date)}
-                  onMovePlayer={(player, d) => setMoveTarget({ player, day: d })}
+                  onMovePlayer={openMove}
                 />
               ))}
             </div>
@@ -199,7 +220,7 @@ export default function WeeklyPlannerPage() {
         />
       )}
       <AddPlayerDialog open={addingPlayer} onClose={() => setAddingPlayer(false)} />
-      <MovePlayerDialog target={moveTarget} weekInput={input} onClose={() => setMoveTarget(null)} />
+      <MovePlayerPopover target={moveTarget} weekInput={input} onClose={() => setMoveTarget(null)} />
     </div>
   );
 }

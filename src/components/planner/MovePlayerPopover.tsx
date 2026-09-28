@@ -1,9 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/Button";
-import { Dialog } from "@/components/ui/Dialog";
-import { SlotBadge, fullMatchup, shortName } from "@/components/player/PlayerBits";
-import { formatDayLong, formatMonthDay } from "@/domain/dates";
+import { Armchair, RotateCcw, Undo2 } from "lucide-react";
+import { matchupText } from "@/components/player/PlayerBits";
+import { PositionBadge } from "@/components/ui/Badges";
+import { AnchoredPopover, MenuDivider, MenuItem } from "@/components/ui/Popover";
+import { useToast } from "@/components/ui/Toast";
+import { formatDayShort, formatMonthDay } from "@/domain/dates";
 import { generateDailyLineup } from "@/domain/lineup/generateDailyLineup";
 import type { WeekInput } from "@/domain/lineup/generateWeek";
 import { legalTargets, setOverride } from "@/domain/lineup/overrides";
@@ -12,26 +14,30 @@ import { useStore } from "@/state/store";
 
 const startsOf = (d: DailyLineup) => d.activeSlots.filter((a) => a.playerId).length;
 
-/** One-day lineup change for a single player. */
-export function MovePlayerDialog({
+export type MoveTarget = { player: Player; day: DailyLineup; anchor: HTMLElement };
+
+/** Compact one-day lineup popover anchored to the selected player tile. */
+export function MovePlayerPopover({
   target,
   weekInput,
   onClose,
 }: {
-  target: { player: Player; day: DailyLineup } | null;
+  target: MoveTarget | null;
   weekInput: WeekInput;
   onClose: () => void;
 }) {
   const { state, dispatch } = useStore();
-  const player = target?.player;
-  const day = target?.day;
-  const targets = player && day ? legalTargets(day, player) : [];
-  const current = day?.activeSlots.find((a) => a.playerId === player?.id);
-  const game = current?.game ?? day?.benchedGames.find((b) => b.playerId === player?.id)?.game ?? null;
-  const existing = day && player ? state.overrides.find((o) => o.date === day.date && o.playerId === player.id) : undefined;
+  const toast = useToast();
+  if (!target) return null;
+  const { player, day, anchor } = target;
+  const targets = legalTargets(day, player);
+  const current = day.activeSlots.find((a) => a.playerId === player.id);
+  const game = current?.game ?? day.benchedGames.find((b) => b.playerId === player.id)?.game ?? null;
+  const existing = state.overrides.find((o) => o.date === day.date && o.playerId === player.id);
+  const dayHasOverrides = day.appliedOverrides.length > 0 || day.ignoredOverrides.length > 0;
+  const dateLabel = `${formatDayShort(day.date)} ${formatMonthDay(day.date)}`;
 
-  const preview = (targetSlotId: string) => {
-    if (!day || !player) return 0;
+  const delta = (targetSlotId: string) => {
     const next = generateDailyLineup({
       ...weekInput,
       date: day.date,
@@ -41,89 +47,70 @@ export function MovePlayerDialog({
   };
 
   const choose = (targetSlotId: string) => {
-    if (!day || !player) return;
     dispatch({ type: "override/set", override: { date: day.date, playerId: player.id, targetSlotId } });
+    toast(`${player.name}: lineup changed for ${dateLabel}.`);
     onClose();
   };
 
   return (
-    <Dialog
-      open={!!target}
-      onClose={onClose}
-      width="sm"
-      title={player ? `Move ${player.name}` : "Move player"}
-      description={
-        day && player ? (
-          <>
-            {formatDayLong(day.date)}, {formatMonthDay(day.date)} only
-            {game && <> · {fullMatchup(player.nhlTeamId, game)}</>}
-            {current ? <> · now in {current.slot.type}</> : <> · now benched</>}
-          </>
-        ) : undefined
-      }
-      footer={
-        <>
-          {existing && day && player && (
-            <Button
-              variant="ghost"
-              className="mr-auto"
-              onClick={() => {
-                dispatch({ type: "override/remove", date: day.date, playerId: player.id });
-                onClose();
-              }}
-            >
-              Return to automatic
-            </Button>
-          )}
-          <Button onClick={onClose}>Cancel</Button>
-        </>
-      }
-    >
-      {targets.length === 0 ? (
-        <p className="text-[13px] text-ink-2">No other legal lineup spots for this player today.</p>
-      ) : (
-        <ul className="flex flex-col gap-1.5">
-          {targets.map((t) => {
-            const delta = preview(t.targetSlotId);
-            const occupant = t.occupantId ? state.players[t.occupantId] : null;
-            return (
-              <li key={t.targetSlotId}>
-                <button
-                  type="button"
-                  onClick={() => choose(t.targetSlotId)}
-                  className="flex w-full items-center gap-3 rounded-md border border-line px-3 py-2 text-left hover:border-brand hover:bg-brand-soft"
-                >
-                  {t.targetSlotId === BENCH_TARGET ? (
-                    <span className="inline-flex h-5 min-w-8 items-center justify-center rounded bg-canvas px-1 text-[10px] font-bold text-ink-2">
-                      BN
-                    </span>
-                  ) : (
-                    <SlotBadge type={day!.activeSlots.find((a) => a.slot.id === t.targetSlotId)!.slot.type} />
-                  )}
-                  <span className="flex-1 text-[13px]">
-                    {t.targetSlotId === BENCH_TARGET ? "Sit on bench" : `Move to ${t.label}`}
-                    {occupant ? (
-                      <span className="text-ink-3"> · replaces {shortName(occupant.name)}</span>
-                    ) : (
-                      t.targetSlotId !== BENCH_TARGET && <span className="text-ink-3"> · open slot</span>
-                    )}
-                  </span>
-                  <span
-                    className={`text-[12px] font-semibold tabular-nums ${
-                      delta < 0 ? "text-warn" : delta > 0 ? "text-ok" : "text-ink-3"
-                    }`}
-                  >
-                    {delta === 0 ? "No change in starts" : `${delta > 0 ? "+" : ""}${delta} ${Math.abs(delta) === 1 ? "start" : "starts"}`}
-                  </span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-      <p className="mt-3 text-[12px] text-ink-3">
-        Anyone displaced is re-placed automatically to keep as many games started as possible.
-      </p>
-    </Dialog>
+    <AnchoredPopover anchor={anchor} onClose={onClose} label={`Move ${player.name}`} width={248}>
+      <div className="px-2.5 pb-2 pt-1.5">
+        <p className="truncate text-body-sm font-semibold text-ink">{player.name}</p>
+        <p className="text-caption text-ink-3">
+          {dateLabel} only{game && ` · ${matchupText(game)}`} · {current ? `in ${current.slot.type}` : "benched"}
+        </p>
+      </div>
+      <MenuDivider />
+      <div role="menu" aria-label={`Lineup options for ${player.name}`}>
+        {targets.length === 0 && <p className="px-2.5 py-2 text-caption text-ink-3">No other legal spot today.</p>}
+        {targets.map((t) => {
+          const d = delta(t.targetSlotId);
+          const occupant = t.occupantId ? state.players[t.occupantId] : null;
+          const bench = t.targetSlotId === BENCH_TARGET;
+          const type = day.activeSlots.find((a) => a.slot.id === t.targetSlotId)?.slot.type;
+          const effect =
+            d !== 0
+              ? `${d > 0 ? "+" : ""}${d} ${Math.abs(d) === 1 ? "start" : "starts"}`
+              : occupant
+                ? `Replaces ${occupant.name}`
+                : bench
+                  ? "No change in starts"
+                  : "Open slot";
+          return (
+            <MenuItem key={t.targetSlotId} onSelect={() => choose(t.targetSlotId)}>
+              {bench ? <Armchair aria-hidden className="text-ink-3" /> : type && <PositionBadge kind={type} />}
+              <span className="min-w-0 flex-1">
+                <span className="block truncate">{bench ? "Sit on bench" : `Move to ${t.label}`}</span>
+                <span className={`block truncate text-caption ${d < 0 ? "text-warn" : d > 0 ? "text-success" : "text-ink-3"}`}>
+                  {effect}
+                </span>
+              </span>
+            </MenuItem>
+          );
+        })}
+        {(existing || dayHasOverrides) && <MenuDivider />}
+        {existing && (
+          <MenuItem
+            onSelect={() => {
+              dispatch({ type: "override/remove", date: day.date, playerId: player.id });
+              onClose();
+            }}
+          >
+            <Undo2 aria-hidden className="text-ink-3" /> Return to automatic
+          </MenuItem>
+        )}
+        {dayHasOverrides && (
+          <MenuItem
+            onSelect={() => {
+              dispatch({ type: "override/resetDay", date: day.date });
+              toast(`${dateLabel} reset to the automatic lineup.`);
+              onClose();
+            }}
+          >
+            <RotateCcw aria-hidden className="text-ink-3" /> Reset day
+          </MenuItem>
+        )}
+      </div>
+    </AnchoredPopover>
   );
 }
