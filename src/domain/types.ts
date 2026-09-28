@@ -34,11 +34,13 @@ export type Player = {
   nhlTeamId: NHLTeamId;
   eligiblePositions: Position[];
   headshot?: string;
-  /** NHL player id, for players that came from the bundled catalog. */
-  nhlId?: number;
-  /** True for players the user created by hand. */
-  custom?: boolean;
+  /** Durable external identity for NHL catalog players; null for custom players. */
+  nhlPlayerId?: number | null;
+  /** Where the identity came from: the bundled NHL catalog, or created by the user. */
+  source?: PlayerSource;
 };
+
+export type PlayerSource = "NHL" | "CUSTOM";
 
 export type RosterStatus = "ACTIVE" | "BENCH" | "IR_PLUS";
 
