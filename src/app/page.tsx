@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { DayCard } from "@/components/planner/DayCard";
 import { MovePlayerDialog } from "@/components/planner/MovePlayerDialog";
 import { PlanMoveDialog } from "@/components/planner/PlanMoveDialog";
 import { WeeklyMovesPanel } from "@/components/planner/WeeklyMovesPanel";
+import { AddPlayerDialog } from "@/components/roster/PlayerDialogs";
 import { Button } from "@/components/ui/Button";
 import { addDays, formatDayShort, formatMonthDay, formatWeekRange, startOfWeek, todayISO } from "@/domain/dates";
 import { SCHEDULE_META } from "@/domain/schedule/staticProvider";
@@ -33,6 +35,8 @@ export default function WeeklyPlannerPage() {
   const [planOpen, setPlanOpen] = useState(false);
   const [editing, setEditing] = useState<PlannedTransaction | null>(null);
   const [moveTarget, setMoveTarget] = useState<{ player: Player; day: DailyLineup } | null>(null);
+  const [addingPlayer, setAddingPlayer] = useState(false);
+  const rosterEmpty = state.roster.length === 0;
 
   const weekEnd = addDays(weekStart, 6);
   const defaultMoveDate = today >= weekStart && today <= weekEnd ? today : weekStart;
@@ -66,6 +70,16 @@ export default function WeeklyPlannerPage() {
           </span>
         </nav>
       </div>
+
+      {state.needsRepair.length > 0 && (
+        <p role="alert" className="mb-4 rounded-lg border border-warn-line bg-warn-soft px-4 py-2.5 text-[13px] text-warn-strong">
+          {state.needsRepair.length === 1 ? "1 saved player couldn't be loaded" : `${state.needsRepair.length} saved players couldn't be loaded`}{" "}
+          and {state.needsRepair.length === 1 ? "is" : "are"} left out of the plan.{" "}
+          <Link href="/roster" className="font-semibold underline">
+            Fix on the Roster screen
+          </Link>
+        </p>
+      )}
 
       {(seasonNotStarted || seasonOver) && (
         <p className="mb-4 rounded-lg border border-brand/30 bg-brand-soft px-4 py-2.5 text-[13px] text-brand-strong">
@@ -134,20 +148,41 @@ export default function WeeklyPlannerPage() {
             setPlanOpen(true);
           }}
         />
-        <div className="overflow-x-auto pb-2">
-          <div className="grid min-w-[900px] grid-cols-7 gap-2">
-            {plan.days.map((day) => (
-              <DayCard
-                key={day.date}
-                day={day}
-                isToday={day.date === today}
-                isPast={day.date < today}
-                movesToday={state.transactions.filter((t) => t.status === "PLANNED" && t.effectiveDate === day.date)}
-                onMovePlayer={(player, d) => setMoveTarget({ player, day: d })}
-              />
-            ))}
+        {rosterEmpty ? (
+          <section className="flex flex-col items-center justify-center rounded-xl border border-dashed border-line-strong bg-surface px-6 py-16 text-center">
+            <h2 className="text-lg font-bold">Your roster is empty</h2>
+            <p className="mt-1 max-w-md text-ink-2">
+              Add your fantasy roster to generate this week&apos;s schedule. Each player&apos;s NHL team fills in their
+              games automatically.
+            </p>
+            <div className="mt-4 flex gap-2">
+              <Button variant="primary" onClick={() => setAddingPlayer(true)}>
+                <span aria-hidden>+</span> Add player
+              </Button>
+              <Link
+                href="/roster"
+                className="inline-flex h-9 items-center rounded-md border border-line-strong bg-surface px-3.5 text-[13px] font-medium hover:bg-canvas"
+              >
+                Go to Roster
+              </Link>
+            </div>
+          </section>
+        ) : (
+          <div className="overflow-x-auto pb-2">
+            <div className="grid min-w-[900px] grid-cols-7 gap-2">
+              {plan.days.map((day) => (
+                <DayCard
+                  key={day.date}
+                  day={day}
+                  isToday={day.date === today}
+                  isPast={day.date < today}
+                  movesToday={state.transactions.filter((t) => t.status === "PLANNED" && t.effectiveDate === day.date)}
+                  onMovePlayer={(player, d) => setMoveTarget({ player, day: d })}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {planOpen && (
@@ -163,6 +198,7 @@ export default function WeeklyPlannerPage() {
           defaultDate={defaultMoveDate}
         />
       )}
+      <AddPlayerDialog open={addingPlayer} onClose={() => setAddingPlayer(false)} />
       <MovePlayerDialog target={moveTarget} weekInput={input} onClose={() => setMoveTarget(null)} />
     </div>
   );

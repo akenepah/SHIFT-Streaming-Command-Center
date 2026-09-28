@@ -9,9 +9,16 @@ import { getScheduleProvider } from "@/domain/schedule/staticProvider";
 import type { Player, RosterStatus } from "@/domain/types";
 import { STATUS_LABEL, rosterCapacity, rosterCounts } from "@/state/selectors";
 import { useStore } from "@/state/store";
-import { AddPlayerDialog, DropPlayerDialog, EditPlayerDialog } from "./PlayerDialogs";
+import { AddPlayerDialog, DropPlayerDialog, EditPlayerDialog, RepairPlayersPanel } from "./PlayerDialogs";
 
 const SECTIONS: RosterStatus[] = ["ACTIVE", "BENCH", "IR_PLUS"];
+
+/** Roster status only sets priority; who starts each day is derived by the planner. */
+const SECTION_HINT: Record<RosterStatus, string> = {
+  ACTIVE: "first priority for open lineup slots",
+  BENCH: "starts whenever a legal slot is still open",
+  IR_PLUS: "never starts",
+};
 
 export function plural(n: number, word: string): string {
   return `${n} ${word}${n === 1 ? "" : "s"}`;
@@ -59,6 +66,13 @@ export function RosterTable() {
         </Button>
       </div>
 
+      <p className="mb-3 text-[12px] text-ink-2">
+        Roster status sets priority, not who plays. Each day the planner starts every player whose team has a game, as
+        long as a legal lineup slot is free. Active players get first pick when slots run out. IR+ players never start.
+      </p>
+
+      <RepairPlayersPanel />
+
       <div className="overflow-x-auto rounded-xl border border-line bg-surface">
         <table className="w-full min-w-[860px] text-left text-[13px]">
           <thead className="border-b border-line text-[11px] font-semibold uppercase tracking-wide text-ink-3">
@@ -79,6 +93,7 @@ export function RosterTable() {
                 <tr className="bg-canvas/60">
                   <th scope="rowgroup" colSpan={7} className="px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-2">
                     {STATUS_LABEL[section]} · {rows.length}
+                    <span className="ml-2 font-normal normal-case tracking-normal text-ink-3">{SECTION_HINT[section]}</span>
                   </th>
                 </tr>
                 {rows.length === 0 && (
@@ -97,9 +112,6 @@ export function RosterTable() {
                         <div className="flex items-center gap-2.5">
                           <Avatar src={p.headshot} name={p.name} />
                           <span className="font-medium">{p.name}</span>
-                          {p.custom && (
-                            <span className="rounded bg-canvas px-1.5 py-0.5 text-[10px] font-medium text-ink-3">Custom</span>
-                          )}
                         </div>
                       </td>
                       <td className="px-3 py-2">

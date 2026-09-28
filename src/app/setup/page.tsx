@@ -63,15 +63,16 @@ export default function SetupPage() {
         </>
       ) : (
         <>
-          <div className="mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-line bg-surface px-4 py-3 text-[13px]">
-            <p className="mr-auto text-ink-2">
-              {state.roster.length > 0
-                ? "A sample roster is loaded so you can explore. Replace it with your real roster: clear it, then add players."
-                : "Add the players on your fantasy roster. Choose from the list or create them manually."}
+          <div className="mb-4 rounded-xl border border-line bg-surface px-4 py-3 text-[13px]">
+            <p className="text-ink-2">
+              Add the players on your fantasy roster: name, NHL team and eligible positions. Their schedules fill in
+              automatically. You can open the planner with a partial roster and add the rest later.
             </p>
-            {state.roster.length > 0 && (
-              <Button onClick={() => dispatch({ type: "roster/clear" })}>Clear roster and start fresh</Button>
-            )}
+            <p className="mt-1 font-medium tabular-nums" role="status">
+              {state.roster.length === 0
+                ? "No players added yet."
+                : `${state.roster.length} ${state.roster.length === 1 ? "player" : "players"} added.`}
+            </p>
           </div>
           <RosterTable />
           <div className="mt-5 flex justify-between gap-2">

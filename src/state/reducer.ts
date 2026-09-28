@@ -1,8 +1,7 @@
 import { resetDay, removeOverride, setOverride } from "@/domain/lineup/overrides";
 import { cancelTransaction, createTransaction, updateTransaction, type TransactionDraft } from "@/domain/transactions/transactions";
 import type { DailyLineupOverride, LeagueSettings, Player, RosterStatus } from "@/domain/types";
-import type { AppState } from "./appState";
-import { createEmptyState, createSeedState } from "./seed";
+import { createInitialState, type AppState } from "./appState";
 
 export type Action =
   | { type: "hydrate"; state: AppState }
@@ -19,7 +18,9 @@ export type Action =
   | { type: "override/set"; override: DailyLineupOverride }
   | { type: "override/remove"; date: string; playerId: string }
   | { type: "override/resetDay"; date: string }
-  | { type: "data/reset"; mode: "sample" | "empty" };
+  | { type: "repair/resolve"; player: Player }
+  | { type: "repair/remove"; playerId: string }
+  | { type: "data/reset" };
 
 export function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {
@@ -65,8 +66,32 @@ export function reducer(state: AppState, action: Action): AppState {
       return { ...state, overrides: removeOverride(state.overrides, action.date, action.playerId) };
     case "override/resetDay":
       return { ...state, overrides: resetDay(state.overrides, action.date) };
+    case "repair/resolve": {
+      // A repaired player rejoins the roster with the status they had before.
+      const entry = state.needsRepair.find((r) => r.playerId === action.player.id);
+      if (!entry) return state;
+      const roster =
+        entry.rosterStatus && !state.roster.some((r) => r.playerId === action.player.id)
+          ? [...state.roster, { playerId: action.player.id, rosterStatus: entry.rosterStatus }]
+          : state.roster;
+      return {
+        ...state,
+        players: { ...state.players, [action.player.id]: action.player },
+        roster,
+        needsRepair: state.needsRepair.filter((r) => r.playerId !== action.player.id),
+      };
+    }
+    case "repair/remove":
+      return {
+        ...state,
+        needsRepair: state.needsRepair.filter((r) => r.playerId !== action.playerId),
+        transactions: state.transactions.filter(
+          (t) => t.addPlayerId !== action.playerId && t.dropPlayerId !== action.playerId,
+        ),
+        overrides: state.overrides.filter((o) => o.playerId !== action.playerId),
+      };
     case "data/reset":
-      return action.mode === "sample" ? createSeedState() : createEmptyState();
+      return createInitialState();
   }
 }
 

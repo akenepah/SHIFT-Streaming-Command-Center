@@ -1,12 +1,15 @@
-import type { AppState } from "./appState";
-import { parseAppState } from "./parse";
-import { createSeedState } from "./seed";
+import { createInitialState, type AppState } from "./appState";
+import { migrateV1, parseAppState } from "./parse";
 
-export const STORAGE_KEY = "shift.streaming.v1";
+export const STORAGE_KEY = "shift.streaming.v2";
+/** Key used by the first alpha build (schema v1, sample roster). Read once, migrated, then removed. */
+export const LEGACY_STORAGE_KEY = "shift.streaming.v1";
+export const LEGACY_BACKUP_KEY = "shift.streaming.v1.migrated-backup";
 
 export type LoadResult =
   | { status: "loaded"; state: AppState }
   | { status: "empty"; state: AppState }
+  | { status: "migrated"; state: AppState; removedDemoPlayers: number; keptPlayers: number }
   | { status: "corrupt"; state: AppState };
 
 /** Persistence boundary. Only this module touches browser storage. */
@@ -19,51 +22,69 @@ export interface AppStateRepository {
 type StorageLike = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 
 export class LocalStorageRepository implements AppStateRepository {
-  constructor(
-    private readonly storage: StorageLike | null,
-    private readonly key = STORAGE_KEY,
-  ) {}
+  constructor(private readonly storage: StorageLike | null) {}
 
-  load(): LoadResult {
-    let raw: string | null = null;
+  private get(key: string): string | null {
     try {
-      raw = this.storage?.getItem(this.key) ?? null;
+      return this.storage?.getItem(key) ?? null;
     } catch {
-      return { status: "empty", state: createSeedState() };
+      return null;
     }
-    if (raw === null) return { status: "empty", state: createSeedState() };
-
-    let parsed: AppState | null = null;
-    try {
-      parsed = parseAppState(JSON.parse(raw));
-    } catch {
-      parsed = null;
-    }
-    if (parsed) return { status: "loaded", state: parsed };
-
-    // Keep the unreadable payload aside instead of silently destroying it.
-    try {
-      this.storage?.setItem(`${this.key}.corrupt`, raw);
-    } catch {
-      /* storage full or blocked: nothing more to do */
-    }
-    return { status: "corrupt", state: createSeedState() };
   }
 
-  save(state: AppState): void {
+  private set(key: string, value: string): void {
     try {
-      this.storage?.setItem(this.key, JSON.stringify(state));
+      this.storage?.setItem(key, value);
     } catch {
       /* storage full or blocked: the app keeps working in memory */
     }
   }
 
-  clear(): void {
+  private remove(key: string): void {
     try {
-      this.storage?.removeItem(this.key);
+      this.storage?.removeItem(key);
     } catch {
       /* ignore */
     }
+  }
+
+  load(): LoadResult {
+    const raw = this.get(STORAGE_KEY);
+    if (raw !== null) {
+      const parsed = safeParse(raw, parseAppState);
+      if (parsed) return { status: "loaded", state: parsed };
+      // Keep the unreadable payload aside instead of silently destroying it.
+      this.set(`${STORAGE_KEY}.corrupt`, raw);
+      return { status: "corrupt", state: createInitialState() };
+    }
+
+    const legacy = this.get(LEGACY_STORAGE_KEY);
+    if (legacy === null) return { status: "empty", state: createInitialState() };
+
+    // One-time migration from the v1 alpha. The original payload is kept as a
+    // backup and the legacy key removed, so the sample roster can't come back.
+    this.set(LEGACY_BACKUP_KEY, legacy);
+    this.remove(LEGACY_STORAGE_KEY);
+    const migrated = safeParse(legacy, migrateV1);
+    if (!migrated) return { status: "corrupt", state: createInitialState() };
+    this.save(migrated.state);
+    return { status: "migrated", ...migrated };
+  }
+
+  save(state: AppState): void {
+    this.set(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  clear(): void {
+    this.remove(STORAGE_KEY);
+  }
+}
+
+function safeParse<T>(raw: string, f: (json: unknown) => T | null): T | null {
+  try {
+    return f(JSON.parse(raw));
+  } catch {
+    return null;
   }
 }
 

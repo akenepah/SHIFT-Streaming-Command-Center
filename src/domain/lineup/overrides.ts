@@ -38,8 +38,11 @@ export function legalTargets(day: DailyLineup, player: Player): OverrideTarget[]
     day.activeSlots.some((a) => a.playerId === player.id) || day.benchedGames.some((b) => b.playerId === player.id);
   if (!playing) return [];
 
-  const current = day.activeSlots.find((a) => a.playerId === player.id)?.slot.id;
-  const eligible = day.activeSlots.filter((a) => a.slot.id !== current && canPlaySlot(player.eligiblePositions, a.slot.type));
+  const currentSlot = day.activeSlots.find((a) => a.playerId === player.id)?.slot;
+  // Moving to another slot of the same position changes nothing, so it isn't offered.
+  const eligible = day.activeSlots.filter(
+    (a) => a.slot.type !== currentSlot?.type && canPlaySlot(player.eligiblePositions, a.slot.type),
+  );
   // One entry per slot type when an open slot exists; otherwise one per occupant to replace.
   const openTypes = new Set<string>();
   const targets: OverrideTarget[] = [];
@@ -51,7 +54,7 @@ export function legalTargets(day: DailyLineup, player: Player): OverrideTarget[]
     }
     targets.push({ targetSlotId: a.slot.id, label: slotLabel(a.slot), occupantId: a.playerId });
   }
-  if (current) targets.push({ targetSlotId: BENCH_TARGET, label: "Bench", occupantId: null });
+  if (currentSlot) targets.push({ targetSlotId: BENCH_TARGET, label: "Bench", occupantId: null });
   return targets;
 }
 

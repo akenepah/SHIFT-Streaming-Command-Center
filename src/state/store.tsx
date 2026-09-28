@@ -1,16 +1,17 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from "react";
-import type { AppState } from "./appState";
+import { createInitialState, type AppState } from "./appState";
 import { reducer, type Action } from "./reducer";
 import { browserRepository, type AppStateRepository, type LoadResult } from "./repository";
-import { createSeedState } from "./seed";
 
 type Store = {
   state: AppState;
   dispatch: (action: Action) => void;
   hydrated: boolean;
   loadStatus: LoadResult["status"] | null;
+  /** Set when legacy sample players were removed on this load. */
+  removedDemoPlayers: number;
 };
 
 const StoreContext = createContext<Store | null>(null);
@@ -21,15 +22,23 @@ const StoreContext = createContext<Store | null>(null);
  */
 export function StoreProvider({ children, repository }: { children: ReactNode; repository?: AppStateRepository }) {
   const repo = useRef<AppStateRepository | null>(repository ?? null);
-  const [state, dispatch] = useReducer(reducer, undefined, createSeedState);
+  const [state, dispatch] = useReducer(reducer, undefined, createInitialState);
   const [hydrated, setHydrated] = useState(false);
   const [loadStatus, setLoadStatus] = useState<LoadResult["status"] | null>(null);
+  const [removedDemoPlayers, setRemovedDemoPlayers] = useState(0);
+
+  const loaded = useRef(false);
 
   useEffect(() => {
+    // Load exactly once: a second load (React StrictMode re-runs effects in
+    // development) would see already-migrated data and lose the load status.
+    if (loaded.current) return;
+    loaded.current = true;
     repo.current ??= browserRepository();
     const result = repo.current.load();
     dispatch({ type: "hydrate", state: result.state });
     setLoadStatus(result.status);
+    if (result.status === "migrated") setRemovedDemoPlayers(result.removedDemoPlayers);
     setHydrated(true);
   }, []);
 
@@ -37,7 +46,10 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
     if (hydrated) repo.current?.save(state);
   }, [state, hydrated]);
 
-  const value = useMemo(() => ({ state, dispatch, hydrated, loadStatus }), [state, hydrated, loadStatus]);
+  const value = useMemo(
+    () => ({ state, dispatch, hydrated, loadStatus, removedDemoPlayers }),
+    [state, hydrated, loadStatus, removedDemoPlayers],
+  );
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
 }
 

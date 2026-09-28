@@ -235,7 +235,7 @@ export function PlanMoveDialog({
                   className="max-h-64 overflow-y-auto rounded-md border border-line"
                 >
                   {addOptions.length === 0 && (
-                    <p className="px-3 py-3 text-[13px] text-ink-3">Every known player is on your roster. Create a new one.</p>
+                    <p className="px-3 py-3 text-[13px] text-ink-3">No other saved players yet. Use Create new player to plan an add.</p>
                   )}
                   {addOptions.map(({ player: p, games, delta }) => (
                     <label
