@@ -1,0 +1,6255 @@
+{
+  "season": "2026-27",
+  "source": "Requested player list (curated 2026-27 fantasy eligibility)",
+  "players": [
+    {
+      "nhlPlayerId": 8470613,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8470621,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8471214,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8471215,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8471675,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8471724,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8473419,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8473422,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8473512,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8473533,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8473986,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8473994,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8474013,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8474141,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8474150,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8474151,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8474189,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8474563,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8474564,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8474567,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8474574,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8474578,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8474586,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8474590,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8474593,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8474596,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8474600,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8474716,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475151,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475158,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475166,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475167,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475168,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475170,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475171,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475172,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475179,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475184,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475188,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475200,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475208,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475218,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475220,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475231,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475279,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475287,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475311,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475314,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475324,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475343,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475462,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475683,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475690,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475692,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475722,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475726,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475745,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475753,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475754,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475760,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475764,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475768,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475786,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475791,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475794,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475798,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475799,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475809,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475810,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475831,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475842,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475883,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8475913,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476278,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476292,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476312,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476331,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476341,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476372,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476374,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476389,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476392,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476393,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476399,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476412,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476419,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476429,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476432,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476434,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476441,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476448,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476453,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476454,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476455,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476456,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476457,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476458,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476459,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476460,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476461,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476462,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476463,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476467,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476468,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476469,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476473,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476474,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476479,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476480,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476483,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476539,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476826,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476853,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476854,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476869,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476872,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476873,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476874,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476875,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476878,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476879,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476880,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476881,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476882,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476883,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476885,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476887,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476889,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476892,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476902,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476905,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476906,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476914,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476917,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476921,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476923,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476925,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476927,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476931,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476932,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476945,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476958,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476967,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476981,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8476999,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477015,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477021,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477070,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477220,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477346,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477402,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477404,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477407,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477409,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477416,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477424,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477425,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477426,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477429,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477435,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477444,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477446,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477447,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477450,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477451,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477456,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477465,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477476,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477478,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477479,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477488,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477492,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477493,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477494,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477495,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477496,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477497,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477498,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477499,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477500,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477501,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477503,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477504,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477505,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477506,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477507,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477511,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477810,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477845,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477903,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477919,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477932,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477933,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477934,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477935,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477939,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477940,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477942,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477946,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477948,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477949,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477950,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477951,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477953,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477955,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477956,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477960,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477964,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477967,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477968,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477969,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477970,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477986,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477987,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477989,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477993,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8477998,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478007,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478009,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478010,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478013,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478020,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478024,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478038,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478042,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478048,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478055,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478057,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478109,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478133,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478136,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478178,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478233,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478366,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478396,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478397,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478398,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478399,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478401,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478402,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478403,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478406,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478407,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478414,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478416,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478420,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478427,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478434,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478435,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478438,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478439,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478440,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478443,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478444,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478445,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478449,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478450,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478458,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478460,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478462,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478463,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478468,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478469,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478474,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478483,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478493,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478498,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478499,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478500,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478507,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478508,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478519,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478542,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478550,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478569,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478840,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478851,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478854,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478856,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478859,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478864,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478872,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478873,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478874,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478882,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478891,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478904,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478911,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478916,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478970,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8478975,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479193,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479292,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479293,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479312,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479314,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479318,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479323,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479324,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479325,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479337,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479343,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479345,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479351,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479353,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479361,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479365,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479371,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479372,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479385,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479390,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479394,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479398,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479400,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479406,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479407,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479410,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479420,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479425,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479520,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479525,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479542,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479576,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479591,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479619,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479638,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479661,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479671,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479675,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479705,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479973,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479979,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479980,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479981,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479982,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479983,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479987,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479992,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479996,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479998,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8479999,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480002,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480003,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480007,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480012,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480014,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480015,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480018,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480022,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480023,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480027,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480028,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480035,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480036,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480039,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480043,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480045,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480049,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480064,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480068,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480069,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480074,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480078,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480113,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480145,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480185,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480188,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480192,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480193,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480208,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480220,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480246,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480280,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480281,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480289,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480313,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480336,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480355,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480426,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480434,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480448,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480459,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480727,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480748,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480762,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480796,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480797,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480800,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480801,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480802,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480803,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480806,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480807,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480813,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480817,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480830,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480834,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480835,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480839,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480840,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480842,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480843,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480849,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480855,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480860,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480865,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480871,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480873,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480878,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480879,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480891,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480893,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480947,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480980,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480981,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480990,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8480995,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481006,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481013,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481014,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481020,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481024,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481028,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481032,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481033,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481035,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481043,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481056,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481068,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481122,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481161,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481186,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481219,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481477,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481481,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481519,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481522,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481523,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481524,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481525,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481527,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481528,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481532,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481533,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481535,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481540,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481542,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481546,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481553,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481554,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481557,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481559,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481563,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481568,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481580,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481581,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481582,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481593,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481596,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481598,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481601,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481604,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481605,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481606,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481607,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481611,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481617,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481618,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481624,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481656,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481668,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481692,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481711,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481716,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481721,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481725,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481726,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481789,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8481806,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482055,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482073,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482074,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482076,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482077,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482078,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482079,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482087,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482088,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482089,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482092,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482093,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482095,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482097,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482100,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482103,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482105,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482109,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482110,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482111,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482113,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482116,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482122,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482124,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482125,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482126,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482137,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482142,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482145,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482146,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482148,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482149,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482155,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482157,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482159,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482166,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482172,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482175,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482176,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482177,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482178,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482201,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482245,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482259,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482408,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482445,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482460,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482475,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482476,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482482,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482487,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482511,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482634,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482655,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482657,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482659,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482660,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482661,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482665,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482667,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482671,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482679,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482684,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482691,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482699,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482702,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482703,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482705,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482713,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482720,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482726,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482730,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482733,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482737,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482740,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482742,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482745,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482751,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482762,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482765,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482768,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482775,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482803,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482809,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482821,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482858,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482859,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482861,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482877,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482929,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8482982,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483425,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483431,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483445,
+      "eligiblePositions": [
+        "C",
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483447,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483450,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483455,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483457,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483464,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483468,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483471,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483472,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483476,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483482,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483485,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483489,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483490,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483493,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483495,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483499,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483500,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483506,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483510,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483512,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483513,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483515,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483516,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483524,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483525,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483548,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483570,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483573,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483609,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483678,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483690,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483703,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483710,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483731,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483733,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483752,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8483890,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484136,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484142,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484144,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484145,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484150,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484152,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484153,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484158,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484160,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484164,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484166,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484170,
+      "eligiblePositions": [
+        "G"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484177,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484185,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484186,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484188,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484197,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484210,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484221,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484227,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484230,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484240,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484241,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484258,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484304,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484321,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484386,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484387,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484388,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484390,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484471,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484509,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484762,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484768,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484783,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484797,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484798,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484800,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484801,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484806,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484829,
+      "eligiblePositions": [
+        "C",
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484860,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484873,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484901,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484911,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484938,
+      "eligiblePositions": [
+        "C",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484958,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484984,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484994,
+      "eligiblePositions": [
+        "LW",
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8484999,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8485366,
+      "eligiblePositions": [
+        "D"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8485391,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8485395,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8485402,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8485406,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8485414,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8485512,
+      "eligiblePositions": [
+        "C"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8485702,
+      "eligiblePositions": [
+        "RW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8486067,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    },
+    {
+      "nhlPlayerId": 8486103,
+      "eligiblePositions": [
+        "LW"
+      ],
+      "eligibilitySource": "MANUAL",
+      "eligibilitySeason": "2026-27",
+      "yahooPlayerId": null
+    }
+  ]
+}

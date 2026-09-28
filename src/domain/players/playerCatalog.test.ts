@@ -50,7 +50,7 @@ describe("bundled 2026-27 Player Catalog", () => {
     expect(CATALOG_ENTRIES).toHaveLength(raw.playerCount);
     expect(raw).toMatchObject({
       season: "2026-27",
-      membershipSource: "NHL active season rosters",
+      membershipSource: expect.stringContaining("NHL active season rosters"),
       membershipSourceUrl: expect.stringMatching(/^https:\/\/api-web\.nhle\.com\//),
     });
   });
@@ -66,7 +66,8 @@ describe("bundled 2026-27 Player Catalog", () => {
   });
 
   it("uses only canonical teams that all appear in the bundled schedule", () => {
-    for (const p of raw.players) {
+    // Requested players without a current NHL team stay listed (teamAbbrev null) but are never offered.
+    for (const p of raw.players.filter((x) => x.teamAbbrev !== null)) {
       expect(NHL_TEAM_IDS).toContain(p.teamAbbrev);
       expect(SCHEDULE_TEAMS).toContain(p.teamAbbrev);
     }
@@ -149,10 +150,10 @@ describe("catalog players", () => {
     expect(getCatalogEntry(8484801)).toMatchObject({ fullName: "Macklin Celebrini", teamAbbrev: "SJS", primaryPosition: "C" });
   });
 
-  it("initialize fantasy eligibility from the NHL primary position, and it stays editable", () => {
-    const lw = getCatalogEntry(8480801)!; // Brady Tkachuk, NHL primary LW
+  it("use listed fantasy eligibility (NHL position only as a labeled fallback), and it stays editable", () => {
+    const lw = getCatalogEntry(8480801)!; // Brady Tkachuk, NHL primary LW; list: C/LW
     const player = playerFromCatalogEntry(lw)!;
-    expect(player.eligiblePositions).toEqual(["LW"]);
+    expect(player).toMatchObject({ eligiblePositions: ["C", "LW"], eligibilitySource: "MANUAL" });
     const edited = playerFromDraft(
       { name: player.name, nhlTeamId: player.nhlTeamId, eligiblePositions: ["C", "LW"], headshot: player.headshot ?? "" },
       player.id,

@@ -88,7 +88,7 @@ function parsePlayer(v: unknown): PlayerParse {
       ...(typeof v.yahooPlayerId === "string" ? {yahooPlayerId: v.yahooPlayerId} : {}),
       ...(POSITIONS.includes(v.primaryPosition as Position) ? {primaryPosition: v.primaryPosition as Position} : {}),
       ...(typeof v.eligibilitySeason === "string" ? {eligibilitySeason: v.eligibilitySeason} : {}),
-      ...(v.eligibilitySource === "YAHOO" || v.eligibilitySource === "NHL_PRIMARY_FALLBACK" || v.eligibilitySource === "USER" ? {eligibilitySource: v.eligibilitySource} : {}),
+      ...(v.eligibilitySource === "YAHOO" || v.eligibilitySource === "MANUAL" || v.eligibilitySource === "NHL_PRIMARY_FALLBACK" || v.eligibilitySource === "USER" ? {eligibilitySource: v.eligibilitySource} : {}),
     },
   };
 }

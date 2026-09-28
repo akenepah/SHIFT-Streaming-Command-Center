@@ -42,7 +42,8 @@ export type Player = {
   lastName?: string;
   primaryPosition?: Position;
   yahooPlayerId?: string | null;
-  eligibilitySource?: "YAHOO" | "NHL_PRIMARY_FALLBACK" | "USER";
+  /** YAHOO = verified Yahoo import; MANUAL = curated requested-player list; USER = edited in SHIFT. */
+  eligibilitySource?: "YAHOO" | "MANUAL" | "NHL_PRIMARY_FALLBACK" | "USER";
   eligibilitySeason?: string;
   active?: boolean;
 };

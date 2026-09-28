@@ -1,11 +1,11 @@
 {
   "season": "2026-27",
-  "playerCount": 857,
-  "membershipSource": "NHL active season rosters",
+  "playerCount": 884,
+  "membershipSource": "NHL active season rosters + requested player list",
   "membershipSourceUrl": "https://api-web.nhle.com/v1/roster/{TEAM}/20262027",
   "membershipSourcePublishedAt": null,
   "membershipSourceModifiedAt": null,
-  "generatedAt": "2026-09-28T20:09:25.960Z",
+  "generatedAt": "2026-09-28T22:45:36.913Z",
   "players": [
     {
       "nhlPlayerId": 8483569,
@@ -308,6 +308,16 @@
       "active": true
     },
     {
+      "nhlPlayerId": 8478445,
+      "firstName": "Mathew",
+      "lastName": "Barzal",
+      "fullName": "Mathew Barzal",
+      "teamAbbrev": "NYI",
+      "primaryPosition": "C",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/NYI/8478445.png",
+      "active": true
+    },
+    {
       "nhlPlayerId": 8479414,
       "firstName": "Nathan",
       "lastName": "Bastian",
@@ -355,6 +365,16 @@
       "teamAbbrev": "COL",
       "primaryPosition": "LW",
       "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/COL/8481550.png",
+      "active": true
+    },
+    {
+      "nhlPlayerId": 8484144,
+      "firstName": "Connor",
+      "lastName": "Bedard",
+      "fullName": "Connor Bedard",
+      "teamAbbrev": "CHI",
+      "primaryPosition": "C",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/CHI/8484144.png",
       "active": true
     },
     {
@@ -636,6 +656,16 @@
       "primaryPosition": "LW",
       "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/MIN/8481557.png",
       "active": true
+    },
+    {
+      "nhlPlayerId": 8480871,
+      "firstName": "Adam",
+      "lastName": "Boqvist",
+      "fullName": "Adam Boqvist",
+      "teamAbbrev": null,
+      "primaryPosition": "D",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/latest/8480871.png",
+      "active": false
     },
     {
       "nhlPlayerId": 8480003,
@@ -1738,6 +1768,16 @@
       "active": true
     },
     {
+      "nhlPlayerId": 8477450,
+      "firstName": "Jason",
+      "lastName": "Dickinson",
+      "fullName": "Jason Dickinson",
+      "teamAbbrev": "EDM",
+      "primaryPosition": "C",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/EDM/8477450.png",
+      "active": true
+    },
+    {
       "nhlPlayerId": 8484806,
       "firstName": "Sam",
       "lastName": "Dickinson",
@@ -1805,6 +1845,16 @@
       "teamAbbrev": "MTL",
       "primaryPosition": "D",
       "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/MTL/8480865.png",
+      "active": true
+    },
+    {
+      "nhlPlayerId": 8477503,
+      "firstName": "Max",
+      "lastName": "Domi",
+      "fullName": "Max Domi",
+      "teamAbbrev": "TOR",
+      "primaryPosition": "C",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/TOR/8477503.png",
       "active": true
     },
     {
@@ -1876,6 +1926,16 @@
       "primaryPosition": "C",
       "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/EDM/8477934.png",
       "active": true
+    },
+    {
+      "nhlPlayerId": 8477494,
+      "firstName": "Jonathan",
+      "lastName": "Drouin",
+      "fullName": "Jonathan Drouin",
+      "teamAbbrev": null,
+      "primaryPosition": "LW",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/latest/8477494.png",
+      "active": false
     },
     {
       "nhlPlayerId": 8480835,
@@ -2025,6 +2085,16 @@
       "teamAbbrev": "NSH",
       "primaryPosition": "C",
       "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/NSH/8481726.png",
+      "active": true
+    },
+    {
+      "nhlPlayerId": 8482762,
+      "firstName": "Simon",
+      "lastName": "Edvinsson",
+      "fullName": "Simon Edvinsson",
+      "teamAbbrev": "DET",
+      "primaryPosition": "D",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/DET/8482762.png",
       "active": true
     },
     {
@@ -2418,6 +2488,16 @@
       "active": true
     },
     {
+      "nhlPlayerId": 8484170,
+      "firstName": "Jacob",
+      "lastName": "Fowler",
+      "fullName": "Jacob Fowler",
+      "teamAbbrev": "MTL",
+      "primaryPosition": "G",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/MTL/8484170.png",
+      "active": true
+    },
+    {
       "nhlPlayerId": 8479323,
       "firstName": "Adam",
       "lastName": "Fox",
@@ -2718,6 +2798,16 @@
       "active": true
     },
     {
+      "nhlPlayerId": 8477435,
+      "firstName": "Ryan",
+      "lastName": "Graves",
+      "fullName": "Ryan Graves",
+      "teamAbbrev": "PIT",
+      "primaryPosition": "D",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/PIT/8477435.png",
+      "active": true
+    },
+    {
       "nhlPlayerId": 8482982,
       "firstName": "Jet",
       "lastName": "Greaves",
@@ -2888,6 +2978,16 @@
       "active": true
     },
     {
+      "nhlPlayerId": 8482087,
+      "firstName": "Kaiden",
+      "lastName": "Guhle",
+      "fullName": "Kaiden Guhle",
+      "teamAbbrev": "MTL",
+      "primaryPosition": "D",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/MTL/8482087.png",
+      "active": true
+    },
+    {
       "nhlPlayerId": 8481019,
       "firstName": "David",
       "lastName": "Gustafsson",
@@ -2915,6 +3015,16 @@
       "teamAbbrev": "MIN",
       "primaryPosition": "D",
       "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/MIN/8486166.png",
+      "active": true
+    },
+    {
+      "nhlPlayerId": 8479406,
+      "firstName": "Filip",
+      "lastName": "Gustavsson",
+      "fullName": "Filip Gustavsson",
+      "teamAbbrev": "MIN",
+      "primaryPosition": "G",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/MIN/8479406.png",
       "active": true
     },
     {
@@ -2985,6 +3095,16 @@
       "teamAbbrev": "ANA",
       "primaryPosition": "LW",
       "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/ANA/8480468.png",
+      "active": true
+    },
+    {
+      "nhlPlayerId": 8484177,
+      "firstName": "Lenni",
+      "lastName": "Hameenaho",
+      "fullName": "Lenni Hameenaho",
+      "teamAbbrev": "NJD",
+      "primaryPosition": "RW",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/NJD/8484177.png",
       "active": true
     },
     {
@@ -3588,6 +3708,16 @@
       "active": true
     },
     {
+      "nhlPlayerId": 8482093,
+      "firstName": "Seth",
+      "lastName": "Jarvis",
+      "fullName": "Seth Jarvis",
+      "teamAbbrev": "CAR",
+      "primaryPosition": "RW",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/CAR/8482093.png",
+      "active": true
+    },
+    {
       "nhlPlayerId": 8479661,
       "firstName": "Tanner",
       "lastName": "Jeannot",
@@ -3725,6 +3855,16 @@
       "teamAbbrev": "EDM",
       "primaryPosition": "RW",
       "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/EDM/8478472.png",
+      "active": true
+    },
+    {
+      "nhlPlayerId": 8478057,
+      "firstName": "Dakota",
+      "lastName": "Joshua",
+      "fullName": "Dakota Joshua",
+      "teamAbbrev": "TOR",
+      "primaryPosition": "C",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/TOR/8478057.png",
       "active": true
     },
     {
@@ -3995,6 +4135,16 @@
       "teamAbbrev": "PIT",
       "primaryPosition": "C",
       "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/PIT/8485414.png",
+      "active": true
+    },
+    {
+      "nhlPlayerId": 8477993,
+      "firstName": "Justin",
+      "lastName": "Kirkland",
+      "fullName": "Justin Kirkland",
+      "teamAbbrev": "MIN",
+      "primaryPosition": "C",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/MIN/8477993.png",
       "active": true
     },
     {
@@ -4718,6 +4868,16 @@
       "active": true
     },
     {
+      "nhlPlayerId": 8478904,
+      "firstName": "Steven",
+      "lastName": "Lorentz",
+      "fullName": "Steven Lorentz",
+      "teamAbbrev": "TOR",
+      "primaryPosition": "C",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/TOR/8478904.png",
+      "active": true
+    },
+    {
       "nhlPlayerId": 8476392,
       "firstName": "Adam",
       "lastName": "Lowry",
@@ -4745,6 +4905,16 @@
       "teamAbbrev": "FLA",
       "primaryPosition": "C",
       "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/FLA/8482113.png",
+      "active": true
+    },
+    {
+      "nhlPlayerId": 8480806,
+      "firstName": "Isac",
+      "lastName": "Lundeström",
+      "fullName": "Isac Lundeström",
+      "teamAbbrev": "CBJ",
+      "primaryPosition": "C",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/CBJ/8480806.png",
       "active": true
     },
     {
@@ -5378,6 +5548,16 @@
       "active": true
     },
     {
+      "nhlPlayerId": 8478007,
+      "firstName": "Elvis",
+      "lastName": "Merzlikins",
+      "fullName": "Elvis Merzlikins",
+      "teamAbbrev": "CBJ",
+      "primaryPosition": "G",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/CBJ/8478007.png",
+      "active": true
+    },
+    {
       "nhlPlayerId": 8484305,
       "firstName": "Zach",
       "lastName": "Metsa",
@@ -5785,6 +5965,16 @@
       "teamAbbrev": "WPG",
       "primaryPosition": "RW",
       "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/WPG/8475799.png",
+      "active": true
+    },
+    {
+      "nhlPlayerId": 8482100,
+      "firstName": "Alexander",
+      "lastName": "Nikishin",
+      "fullName": "Alexander Nikishin",
+      "teamAbbrev": "CAR",
+      "primaryPosition": "D",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/CAR/8482100.png",
       "active": true
     },
     {
@@ -6408,6 +6598,16 @@
       "active": true
     },
     {
+      "nhlPlayerId": 8484901,
+      "firstName": "Jacob",
+      "lastName": "Quillan",
+      "fullName": "Jacob Quillan",
+      "teamAbbrev": "TOR",
+      "primaryPosition": "C",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/TOR/8484901.png",
+      "active": true
+    },
+    {
       "nhlPlayerId": 8482097,
       "firstName": "Jack",
       "lastName": "Quinn",
@@ -6748,6 +6948,26 @@
       "active": true
     },
     {
+      "nhlPlayerId": 8483510,
+      "firstName": "Elias",
+      "lastName": "Salomonsson",
+      "fullName": "Elias Salomonsson",
+      "teamAbbrev": "WPG",
+      "primaryPosition": "D",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/WPG/8483510.png",
+      "active": true
+    },
+    {
+      "nhlPlayerId": 8484509,
+      "firstName": "Josh",
+      "lastName": "Samanski",
+      "fullName": "Josh Samanski",
+      "teamAbbrev": "EDM",
+      "primaryPosition": "C",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/EDM/8484509.png",
+      "active": true
+    },
+    {
       "nhlPlayerId": 8480049,
       "firstName": "Dylan",
       "lastName": "Samberg",
@@ -6805,6 +7025,16 @@
       "teamAbbrev": "OTT",
       "primaryPosition": "D",
       "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/OTT/8482105.png",
+      "active": true
+    },
+    {
+      "nhlPlayerId": 8480873,
+      "firstName": "Rasmus",
+      "lastName": "Sandin",
+      "fullName": "Rasmus Sandin",
+      "teamAbbrev": "WSH",
+      "primaryPosition": "D",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/WSH/8480873.png",
       "active": true
     },
     {
@@ -7428,6 +7658,16 @@
       "active": true
     },
     {
+      "nhlPlayerId": 8482634,
+      "firstName": "Alex",
+      "lastName": "Steeves",
+      "fullName": "Alex Steeves",
+      "teamAbbrev": "BOS",
+      "primaryPosition": "C",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/BOS/8482634.png",
+      "active": true
+    },
+    {
       "nhlPlayerId": 8486103,
       "firstName": "Ivar",
       "lastName": "Stenberg",
@@ -7435,6 +7675,16 @@
       "teamAbbrev": "SJS",
       "primaryPosition": "LW",
       "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/SJS/8486103.png",
+      "active": true
+    },
+    {
+      "nhlPlayerId": 8484230,
+      "firstName": "Otto",
+      "lastName": "Stenberg",
+      "fullName": "Otto Stenberg",
+      "teamAbbrev": "STL",
+      "primaryPosition": "C",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/STL/8484230.png",
       "active": true
     },
     {
@@ -7635,6 +7885,16 @@
       "teamAbbrev": "CBJ",
       "primaryPosition": "G",
       "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/CBJ/8475660.png",
+      "active": true
+    },
+    {
+      "nhlPlayerId": 8479293,
+      "firstName": "Brandon",
+      "lastName": "Tanev",
+      "fullName": "Brandon Tanev",
+      "teamAbbrev": "UTA",
+      "primaryPosition": "LW",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/UTA/8479293.png",
       "active": true
     },
     {
@@ -8265,6 +8525,16 @@
       "teamAbbrev": "CGY",
       "primaryPosition": "D",
       "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/CGY/8483709.png",
+      "active": true
+    },
+    {
+      "nhlPlayerId": 8482103,
+      "firstName": "Ozzy",
+      "lastName": "Wiesblatt",
+      "fullName": "Ozzy Wiesblatt",
+      "teamAbbrev": "NSH",
+      "primaryPosition": "C",
+      "headshotUrl": "https://assets.nhle.com/mugs/nhl/20262027/NSH/8482103.png",
       "active": true
     },
     {
