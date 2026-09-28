@@ -9,27 +9,13 @@ import { PlanMoveDialog } from "@/components/planner/PlanMoveDialog";
 import { WeeklyMovesPanel } from "@/components/planner/WeeklyMovesPanel";
 import { AddPlayerDialog } from "@/components/roster/PlayerDialogs";
 import { Button } from "@/components/ui/Button";
-import { addDays, formatDayLong, formatDayShort, formatMonthDay, startOfWeek, todayISO } from "@/domain/dates";
+import { addDays, formatDayShort, formatMonthDay, startOfWeek, todayISO } from "@/domain/dates";
+import { openSlotContext, openSlotEffectiveDate, type OpenSlotContext } from "@/domain/lineup/openSlot";
 import { SCHEDULE_META } from "@/domain/schedule/staticProvider";
 import { activeSlotCount } from "@/domain/config";
 import type { DailyLineup, ISODate, PlannedTransaction, TransactionType } from "@/domain/types";
 import { useStore } from "@/state/store";
 import { useWeekPlan } from "@/state/usePlanner";
-
-/** Density tiers for the NHL games strip. Counts always come from the schedule. */
-function densityClass(count: number, max: number): string {
-  if (count === 0) return "border border-line bg-surface-muted text-ink-3";
-  if (count === max && count >= 12) return "border border-accent-line bg-accent-soft font-medium text-accent-strong";
-  if (count >= 8) return "bg-nav text-nav-ink";
-  return "border border-line bg-surface-muted text-ink-2";
-}
-
-function densityLabel(count: number, max: number): string {
-  if (count === 0) return "no games";
-  if (count === max && count >= 12) return "heaviest night";
-  if (count >= 8) return "heavy";
-  return "light";
-}
 
 function formatRange(weekStart: ISODate): string {
   const end = addDays(weekStart, 6);
@@ -51,12 +37,13 @@ export default function WeeklyPlannerPage() {
   const [moveTarget, setMoveTarget] = useState<MoveTarget | null>(null);
   const [addingPlayer, setAddingPlayer] = useState(false);
   const [planType, setPlanType] = useState<TransactionType>("ADD_DROP");
+  /** Set when the Add flow starts from an empty active slot on a day card. */
+  const [slotContext, setSlotContext] = useState<OpenSlotContext | null>(null);
   const rosterEmpty = state.roster.length === 0;
 
   const weekEnd = addDays(weekStart, 6);
   const preferred = settings.defaultMoveTiming === "TODAY" ? today : addDays(today, 1);
   const defaultMoveDate = preferred >= weekStart && preferred <= weekEnd ? preferred : weekStart;
-  const maxGames = Math.max(0, ...plan.days.map((d) => d.nhlGameCount));
   const seasonNotStarted = weekEnd < SCHEDULE_META.regularSeasonStart;
   const seasonOver = weekStart > SCHEDULE_META.regularSeasonEnd;
   const { summary } = plan;
@@ -64,16 +51,21 @@ export default function WeeklyPlannerPage() {
   const openMove = (player: MoveTarget["player"], day: DailyLineup, anchor: HTMLElement) =>
     setMoveTarget((t) => (t?.anchor === anchor ? null : { player, day, anchor }));
 
+  // Add Player on the planner is a planned move: Add when the roster has room, else Add + Drop.
+  const regular = state.roster.filter((r) => r.rosterStatus !== "IR_PLUS").length;
+  const addType: TransactionType = regular < activeSlotCount(settings.roster) + settings.roster.benchSlots ? "ADD" : "ADD_DROP";
+  const openAdd = (context: OpenSlotContext | null) => {
+    setSlotContext(context);
+    setPlanType(addType);
+    setEditing(null);
+    setPlanOpen(true);
+  };
+
   return (
     <div>
-      <div className="border-b border-line bg-surface px-6 pb-6 pt-6">
-        <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
-          <div className="min-w-0">
-            <h1 className="font-display text-page-title text-ink">{settings.teamName}</h1>
-            <p className="mt-2 text-body text-ink-2">
-              {settings.leagueName} · {settings.season.replace("-", "–")} · Bundled NHL schedule
-            </p>
-          </div>
+      <div className="px-6 pt-6">
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
+          <h1 className="min-w-0 truncate font-display text-page-title text-ink">{settings.teamName}</h1>
           <nav aria-label="Week navigation" className="flex items-center gap-3">
             <Button size="icon" onClick={() => setWeekStart(addDays(weekStart, -7))} aria-label="Previous week">
               <ChevronLeft aria-hidden />
@@ -90,55 +82,10 @@ export default function WeeklyPlannerPage() {
             <Button onClick={() => setWeekStart(thisWeek)} aria-pressed={weekStart === thisWeek}>
               This Week
             </Button>
-            <Button
-              variant="primary"
-              onClick={() => {
-                // On the planner, adding a player is a planned move: Add when the roster has room, else Add + Drop.
-                if (rosterEmpty) {
-                  setAddingPlayer(true);
-                  return;
-                }
-                const regular = state.roster.filter((r) => r.rosterStatus !== "IR_PLUS").length;
-                setPlanType(regular < activeSlotCount(settings.roster) + settings.roster.benchSlots ? "ADD" : "ADD_DROP");
-                setEditing(null);
-                setPlanOpen(true);
-              }}
-            >
+            <Button variant="primary" onClick={() => (rosterEmpty ? setAddingPlayer(true) : openAdd(null))}>
               <Plus aria-hidden /> Add Player
             </Button>
           </nav>
-        </div>
-
-        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <div className="flex items-center gap-3">
-            <h2 className="text-body text-ink-2">NHL games this week</h2>
-            <ol className="flex gap-2">
-              {plan.days.map((d) => (
-                <li
-                  key={d.date}
-                  className={`flex h-7 min-w-20 items-center justify-center gap-2 rounded-control px-3 text-caption tabular-nums ${densityClass(
-                    d.nhlGameCount,
-                    maxGames,
-                  )} ${d.date === today ? "ring-2 ring-focus ring-offset-1" : ""}`}
-                  title={`${formatDayLong(d.date)}: ${d.nhlGameCount} NHL games (${densityLabel(d.nhlGameCount, maxGames)})`}
-                >
-                  <span>{formatDayShort(d.date)}</span>
-                  <span className="font-semibold">{d.nhlGameCount}</span>
-                  <span className="sr-only">
-                    NHL games, {densityLabel(d.nhlGameCount, maxGames)}
-                    {d.date === today ? ", today" : ""}
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </div>
-          {!rosterEmpty && (
-            <p className="ml-auto text-body-sm text-ink-2 tabular-nums">
-              <span className="font-semibold text-ink">{summary.gamesStarted}</span> games started ·{" "}
-              <span className={summary.benchedGames ? "font-semibold text-warn" : ""}>{summary.benchedGames} benched</span> ·{" "}
-              {summary.openSlotDays} open slot-days
-            </p>
-          )}
         </div>
 
         {(seasonNotStarted || seasonOver) && (
@@ -171,16 +118,18 @@ export default function WeeklyPlannerPage() {
         )}
       </div>
 
-      <div className="grid grid-cols-[224px_minmax(0,1fr)] gap-4 px-6 py-6 2xl:grid-cols-[240px_minmax(0,1fr)]">
+      <div className="grid grid-cols-[224px_minmax(0,1fr)] gap-4 px-6 pb-6 pt-5 2xl:grid-cols-[240px_minmax(0,1fr)]">
         <WeeklyMovesPanel
           weekStart={weekStart}
           summary={summary}
           onPlan={() => {
+            setSlotContext(null);
             setPlanType("ADD_DROP");
             setEditing(null);
             setPlanOpen(true);
           }}
           onEdit={(t) => {
+            setSlotContext(null);
             setEditing(t);
             setPlanOpen(true);
           }}
@@ -214,7 +163,9 @@ export default function WeeklyPlannerPage() {
                   isToday={day.date === today}
                   isPast={day.date < today}
                   movesToday={state.transactions.filter((t) => t.status === "PLANNED" && t.effectiveDate === day.date)}
+                  players={input.players}
                   onMovePlayer={openMove}
+                  onAddToSlot={(d, position) => openAdd(openSlotContext(d.date, position))}
                 />
               ))}
             </div>
@@ -224,7 +175,7 @@ export default function WeeklyPlannerPage() {
 
       {planOpen && (
         <PlanMoveDialog
-          key={editing?.id ?? `new-${planType}`}
+          key={editing?.id ?? `new-${planType}-${slotContext?.date ?? ""}-${slotContext?.position ?? ""}`}
           open={planOpen}
           onClose={() => {
             setPlanOpen(false);
@@ -232,8 +183,9 @@ export default function WeeklyPlannerPage() {
           }}
           weekInput={input}
           editing={editing}
-          defaultDate={defaultMoveDate}
+          defaultDate={slotContext ? openSlotEffectiveDate(slotContext, settings.defaultMoveTiming, today) : defaultMoveDate}
           initialType={planType}
+          slotContext={slotContext}
         />
       )}
       <AddPlayerDialog open={addingPlayer} onClose={() => setAddingPlayer(false)} />

@@ -31,7 +31,7 @@ Stack: Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, Vitest.
 
 | Route | Screen |
 |---|---|
-| `/` | **Weekly Planner**: week navigation, NHL game density, day cards, Weekly Moves, Plan a move, one-day lineup overrides |
+| `/` | **Weekly Planner**: week navigation, day cards (every active slot, bench, IR+), open slots that start an Add, Weekly Moves, Plan a move, one-day lineup overrides |
 | `/roster` | Roster: add from list, create manually, edit team/positions/headshot, Active / Bench / IR+, drop |
 | `/settings` | League Settings: names, lineup slots, bench/IR+, acquisition limit and reset day, goalie minimum, reset local data |
 | `/setup` | First run: League & Lineup → Add Roster → Weekly Planner |
@@ -99,25 +99,28 @@ NHL public web API, retrieved 2026-09-27. See `src/data/nhl/README.md`. Refresh 
 
 ## Design system
 
-The UI follows the Weekly Streaming Planner Figma layout, in the SHIFT brand palette. Retheming is centralized in
+The UI follows the Weekly Streaming Planner Figma in the locked **Powerplay** direction. Retheming is centralized in
 `src/app/globals.css`, in three tiers:
 
-- **Brand anchors:** SHIFT Teal `#14B8B0` (primary), Rink Navy `#0B1B28` (navigation, dark surfaces, app icon),
-  Deep Teal `#0E6B7A` (secondary, info, goalies), Ice Copper `#C6925B` (sparing accent: the heaviest schedule
-  night, the mark), Frost White `#F4F7F8` (background) and Steel Gray `#94A3AE` (borders, inactive).
-- **Tonal ramps** derived from each anchor (`--shift-teal-50…800`, `--shift-navy-*`, `--shift-neutral-*`, …).
-  Teal fills carry navy text, because white on SHIFT Teal is only 2.5:1. Teal text uses `teal-800` and muted text
-  uses a darker steel (`neutral-500`), so body text stays at 4.5:1 or better.
-- **Semantic roles** (`--shift-bg`, `--shift-text-muted`, `--shift-primary`, `--shift-on-primary`,
-  `--shift-focus`, `--shift-accent`, …) point at ramp steps.
-  `src/app/tokens.test.ts` checks the anchors and the contrast of every pairing the UI uses.
+- **Brand anchors:** Powerplay Blue `#2563EB` (primary interaction), Deep Powerplay Navy `#0B1425` (header),
+  Slate `#334155` (secondary structure), Energy Coral `#FB7185` (sparing accent, never danger) with readable
+  Coral `#9F2346` for small text, a `#F7F7F7` canvas and white surfaces.
+- **Tonal ramps** derived from each anchor (`--shift-blue-*`, `--shift-navy-*`, `--shift-slate-*`, `--shift-coral-*`).
+- **Semantic roles** (`--shift-bg`, `--shift-text-muted`, `--shift-primary`, `--shift-on-primary`, `--shift-focus`,
+  `--shift-accent`, the `--shift-opp-*` streaming-opportunity scale, …) point at ramp steps. Position colors
+  (C blue, LW green, RW amber, D rose, UTIL purple, G cyan, BN slate, IR+ red) and success/warning/danger are
+  independent of the brand. `src/app/tokens.test.ts` checks the anchors and WCAG contrast of every pairing the UI
+  uses.
+- **Type:** Montserrat ExtraBold Italic for the SHIFT wordmark only, Barlow for headings, Poppins for UI and body
+  (loaded with `next/font` in `src/app/layout.tsx`, mapped to `font-wordmark`, `font-display`, `font-body`).
+
 - **Semantic Tailwind tokens** (`@theme inline`) map the roles to utilities: `bg-surface`, `text-ink-2`, `border-line`,
   `bg-pos-c-soft`, type roles (`text-page-title`, `text-section-title`, `text-card-title`, `text-body`,
   `text-body-sm`, `text-label`, `text-data`, `text-caption`, `text-overline`), radii (`rounded-badge`,
   `rounded-control`, `rounded-card`, `rounded-panel`, `rounded-pill`), elevation (`shadow-popover`,
   `shadow-overlay`), `max-w-page` and the `layout-form-rail` two-column utility.
 - Components use only those names. Changing the palette or typeface means editing the `--shift-*` values.
-  `src/app/icon.svg` is a static file, so its three brand colors are written literally.
+  `src/app/icon.svg` is a static file, so its two brand colors are written literally.
 
 Shared primitives live in `src/components/ui/`: Button (44px baseline), Field/Input/Select/Stepper, position and
 status badges, Dialog, AnchoredPopover/ActionMenu, Toast, and PageHeader/SectionCard. Icons come from

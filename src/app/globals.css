@@ -8,105 +8,98 @@
  * (bg-surface, text-ink-2, rounded-card, text-page-title, ...). Components use
  * only the semantic names, never raw hex values or font families.
  *
- * Three tiers: (1) the six approved SHIFT brand anchors, (2) tonal ramps
+ * Three tiers: (1) the locked Powerplay brand anchors, (2) tonal ramps
  * derived from them, (3) semantic roles. Rebrand by editing tiers 1–2;
  * restyle a role by pointing it at a different ramp step.
  */
 :root {
-  /* ── 1. Brand anchors (approved SHIFT palette) ─────────────────────────── */
-  --shift-brand-teal: #14b8b0; /* SHIFT Teal: primary accent */
-  --shift-brand-navy: #0b1b28; /* Rink Navy: core dark surface */
-  --shift-brand-deep-teal: #0e6b7a; /* Deep Teal: secondary */
-  --shift-brand-copper: #c6925b; /* Ice Copper: sparing accent */
-  --shift-brand-frost: #f4f7f8; /* Frost White: light neutral */
-  --shift-brand-steel: #94a3ae; /* Steel Gray: supporting neutral */
+  /* ── 1. Brand anchors (locked Powerplay palette) ───────────────────────── */
+  --shift-brand-blue: #2563eb; /* Powerplay Blue: primary interaction */
+  --shift-brand-navy: #0b1425; /* Deep Powerplay Navy: header, strong structure */
+  --shift-brand-slate: #334155; /* Slate: secondary structure */
+  --shift-brand-coral: #fb7185; /* Energy Coral: sparing, non-semantic accent */
+  --shift-brand-coral-text: #9f2346; /* readable Coral for small text (eyebrows) */
+  --shift-brand-canvas: #f7f7f7; /* light neutral canvas */
+  --shift-brand-white: #ffffff; /* working surfaces */
 
   /* ── 2. Tonal ramps derived from the anchors ───────────────────────────── */
-  --shift-teal-50: #e8f8f7;
-  --shift-teal-100: #cdf0ee;
-  --shift-teal-200: #9ce1dc;
-  --shift-teal-300: #5fcec7;
-  --shift-teal-500: var(--shift-brand-teal);
-  --shift-teal-600: #0fa39c;
-  --shift-teal-700: #0d8e88; /* ≥3:1 on white: focus rings, non-text accents */
-  --shift-teal-800: #0a7570; /* ≥4.5:1 on white: teal text */
+  --shift-blue-50: #eff4ff;
+  --shift-blue-100: #dbe6fe;
+  --shift-blue-200: #bfd2fd;
+  --shift-blue-500: var(--shift-brand-blue);
+  --shift-blue-600: #1d4ed8;
+  --shift-blue-700: #1e40af;
+  --shift-blue-800: #1e3a8a;
 
-  --shift-navy-950: #07121b;
+  --shift-navy-950: #070d19;
   --shift-navy-900: var(--shift-brand-navy);
-  --shift-navy-800: #13293a;
-  --shift-navy-700: #1d3a4f;
-  --shift-navy-600: #2c4d64;
+  --shift-navy-800: #16223a;
+  --shift-navy-700: #22304d;
 
-  --shift-deep-teal-50: #e6f1f3;
-  --shift-deep-teal-100: #cce3e7;
-  --shift-deep-teal-200: #a3ccd3;
-  --shift-deep-teal-600: var(--shift-brand-deep-teal);
-  --shift-deep-teal-700: #0b5663;
+  --shift-slate-50: #f8fafc;
+  --shift-slate-100: #f1f5f9;
+  --shift-slate-200: #e2e8f0;
+  --shift-slate-300: #cbd5e1;
+  --shift-slate-400: #94a3b8; /* borders, icons, inactive: not body text */
+  --shift-slate-500: #5b6a7f; /* ≥4.5:1 on white and canvas: muted text */
+  --shift-slate-600: #475569;
+  --shift-slate-700: var(--shift-brand-slate);
+  --shift-slate-900: #0f172a;
 
-  --shift-copper-50: #f9f1e8;
-  --shift-copper-100: #f1e0cc;
-  --shift-copper-300: #dcb68c;
-  --shift-copper-500: var(--shift-brand-copper);
-  --shift-copper-800: #8a5a2b; /* ≥4.5:1 on white: copper text */
-
-  --shift-neutral-0: #ffffff;
-  --shift-neutral-50: var(--shift-brand-frost);
-  --shift-neutral-100: #edf1f3;
-  --shift-neutral-200: #dfe5e9;
-  --shift-neutral-300: #c7d0d6;
-  --shift-neutral-400: var(--shift-brand-steel); /* borders, icons, inactive, not body text */
-  --shift-neutral-500: #5f7180; /* ≥4.5:1 on white and frost: muted text */
-  --shift-neutral-600: #44566a; /* secondary text */
-  --shift-neutral-900: var(--shift-brand-navy); /* primary text */
+  --shift-coral-50: #fff1f3;
+  --shift-coral-100: #ffe0e6;
+  --shift-coral-400: var(--shift-brand-coral);
+  --shift-coral-800: var(--shift-brand-coral-text);
 
   /* ── 3. Semantic roles (components use these via Tailwind tokens) ──────── */
-  --shift-font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --shift-font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --shift-font-wordmark: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --shift-font-display: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
+  --shift-font-body: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 
   /* background / surfaces / borders / text */
-  --shift-bg: var(--shift-neutral-50);
-  --shift-surface: var(--shift-neutral-0);
-  --shift-surface-muted: #f7f9fa;
-  --shift-surface-raised: var(--shift-neutral-0);
-  --shift-border: var(--shift-neutral-200);
-  --shift-border-strong: var(--shift-neutral-300);
-  --shift-text: var(--shift-neutral-900);
-  --shift-text-secondary: var(--shift-neutral-600);
-  --shift-text-muted: var(--shift-neutral-500);
-  --shift-text-inverse: var(--shift-neutral-0);
+  --shift-bg: var(--shift-brand-canvas);
+  --shift-surface: var(--shift-brand-white);
+  --shift-surface-muted: var(--shift-slate-50);
+  --shift-surface-raised: var(--shift-brand-white);
+  --shift-border: var(--shift-slate-200);
+  --shift-border-strong: var(--shift-slate-300);
+  --shift-text: var(--shift-slate-900);
+  --shift-text-secondary: var(--shift-slate-700);
+  --shift-text-muted: var(--shift-slate-500);
+  --shift-text-inverse: var(--shift-brand-white);
 
   /* navigation */
   --shift-nav: var(--shift-navy-900);
   --shift-nav-active: var(--shift-navy-800);
   --shift-nav-hover: var(--shift-navy-800);
-  --shift-nav-text: var(--shift-neutral-0);
-  --shift-nav-text-muted: #a7b6c1;
-  --shift-nav-accent: var(--shift-teal-500);
+  --shift-nav-text: var(--shift-brand-white);
+  --shift-nav-text-muted: #c3cbd8;
+  --shift-nav-accent: var(--shift-blue-500);
 
-  /* primary (SHIFT Teal). Text on teal fills is navy: white on teal fails contrast. */
-  --shift-primary: var(--shift-teal-500);
-  --shift-primary-hover: var(--shift-teal-600);
-  --shift-primary-pressed: var(--shift-teal-700);
-  --shift-primary-strong: var(--shift-teal-800);
-  --shift-primary-soft: var(--shift-teal-50);
-  --shift-primary-border: var(--shift-teal-200);
-  --shift-on-primary: var(--shift-navy-900);
+  /* primary (Powerplay Blue): white text passes AA on every fill step */
+  --shift-primary: var(--shift-blue-500);
+  --shift-primary-hover: var(--shift-blue-600);
+  --shift-primary-pressed: var(--shift-blue-700);
+  --shift-primary-strong: var(--shift-blue-700);
+  --shift-primary-soft: var(--shift-blue-50);
+  --shift-primary-border: var(--shift-blue-200);
+  --shift-on-primary: var(--shift-brand-white);
 
-  /* secondary (Deep Teal) and accent (Ice Copper, sparing) */
-  --shift-secondary: var(--shift-deep-teal-600);
-  --shift-secondary-hover: var(--shift-deep-teal-700);
-  --shift-secondary-soft: var(--shift-deep-teal-50);
-  --shift-accent: var(--shift-copper-500);
-  --shift-accent-soft: var(--shift-copper-50);
-  --shift-accent-border: var(--shift-copper-100);
-  --shift-accent-strong: var(--shift-copper-800);
+  /* secondary (Slate) and accent (Energy Coral: never danger) */
+  --shift-secondary: var(--shift-slate-700);
+  --shift-secondary-hover: var(--shift-slate-900);
+  --shift-secondary-soft: var(--shift-slate-100);
+  --shift-accent: var(--shift-coral-400);
+  --shift-accent-soft: var(--shift-coral-50);
+  --shift-accent-border: var(--shift-coral-100);
+  --shift-accent-strong: var(--shift-coral-800);
 
-  --shift-focus: var(--shift-teal-700);
+  --shift-focus: var(--shift-blue-500);
 
-  /* feedback */
-  --shift-danger: #c2333d;
-  --shift-danger-soft: #fdeeef;
-  --shift-danger-line: #f3c5c9;
+  /* feedback (independent of the brand) */
+  --shift-danger: #c42b2b;
+  --shift-danger-soft: #fdeeee;
+  --shift-danger-line: #f4c7c7;
   --shift-warning: #b45309;
   --shift-warning-strong: #92400e;
   --shift-warning-soft: #fff7e8;
@@ -114,10 +107,18 @@
   --shift-success: #11743f;
   --shift-success-soft: #e8f6ee;
   --shift-success-line: #b6dfc7;
-  --shift-info: var(--shift-deep-teal-600);
-  --shift-info-soft: var(--shift-deep-teal-50);
+  --shift-info: var(--shift-blue-500);
+  --shift-info-soft: var(--shift-blue-50);
 
-  /* Position semantics: accent/text, soft tint, border. G uses the Deep Teal ramp. */
+  /* Streaming opportunity (daily lineup fill; low fill = high opportunity) */
+  --shift-opp-very-high: #16a34a;
+  --shift-opp-strong: #0d9488;
+  --shift-opp-moderate: #d97706;
+  --shift-opp-limited: #e8475f;
+  --shift-opp-none: #c42b2b;
+  --shift-opp-na: var(--shift-slate-300);
+
+  /* Position semantics (independent of the brand): accent/text, soft tint, border */
   --shift-pos-c: #2563eb;
   --shift-pos-c-soft: #eef4ff;
   --shift-pos-c-line: #d3e1fd;
@@ -133,18 +134,19 @@
   --shift-pos-util: #7c3aed;
   --shift-pos-util-soft: #f4effe;
   --shift-pos-util-line: #e1d4fb;
-  --shift-pos-g: var(--shift-deep-teal-600);
-  --shift-pos-g-soft: var(--shift-deep-teal-50);
-  --shift-pos-g-line: var(--shift-deep-teal-100);
-  --shift-pos-bn: var(--shift-neutral-600);
-  --shift-pos-bn-soft: var(--shift-neutral-100);
-  --shift-pos-bn-line: var(--shift-neutral-200);
+  --shift-pos-g: #0e7490;
+  --shift-pos-g-soft: #ecfbfd;
+  --shift-pos-g-line: #b9e9f1;
+  --shift-pos-bn: var(--shift-slate-600);
+  --shift-pos-bn-soft: var(--shift-slate-100);
+  --shift-pos-bn-line: var(--shift-slate-200);
   --shift-pos-ir: var(--shift-danger);
   --shift-pos-ir-soft: #fdf0f0;
   --shift-pos-ir-line: var(--shift-danger-line);
 }
 
 @theme inline {
+  --font-wordmark: var(--shift-font-wordmark);
   --font-display: var(--shift-font-display);
   --font-body: var(--shift-font-body);
   --font-sans: var(--shift-font-body);
@@ -182,6 +184,12 @@
   --color-accent-line: var(--shift-accent-border);
   --color-accent-strong: var(--shift-accent-strong);
   --color-focus: var(--shift-focus);
+  --color-opp-very-high: var(--shift-opp-very-high);
+  --color-opp-strong: var(--shift-opp-strong);
+  --color-opp-moderate: var(--shift-opp-moderate);
+  --color-opp-limited: var(--shift-opp-limited);
+  --color-opp-none: var(--shift-opp-none);
+  --color-opp-na: var(--shift-opp-na);
   --color-danger: var(--shift-danger);
   --color-danger-soft: var(--shift-danger-soft);
   --color-danger-line: var(--shift-danger-line);
@@ -221,6 +229,8 @@
   --color-pos-ir-line: var(--shift-pos-ir-line);
 
   /* Type roles */
+  --text-wordmark: 1.625rem;
+  --text-wordmark--line-height: 1;
   --text-page-title: 2rem;
   --text-page-title--line-height: 2.5rem;
   --text-page-title--letter-spacing: -0.02em;
@@ -233,7 +243,7 @@
   --text-card-title--line-height: 1.5rem;
   --text-card-title--font-weight: 600;
   --text-body: 0.875rem;
-  --text-body--line-height: 1.25rem;
+  --text-body--line-height: 1.375rem;
   --text-body-sm: 0.8125rem;
   --text-body-sm--line-height: 1.125rem;
   --text-label: 0.8125rem;
@@ -242,8 +252,8 @@
   --text-data: 0.875rem;
   --text-data--line-height: 1.25rem;
   --text-caption: 0.75rem;
-  --text-caption--line-height: 1rem;
-  --text-overline: 0.6875rem;
+  --text-caption--line-height: 1.125rem;
+  --text-overline: 0.75rem;
   --text-overline--line-height: 1rem;
   --text-overline--letter-spacing: 0.06em;
   --text-overline--font-weight: 600;
@@ -260,8 +270,8 @@
   --container-page: 100rem; /* 1600px canonical desktop frame */
 
   /* Elevation: borders do most of the work */
-  --shadow-popover: 0 8px 24px -6px rgb(11 27 40 / 0.18), 0 2px 6px rgb(11 27 40 / 0.06);
-  --shadow-overlay: 0 24px 48px -12px rgb(11 27 40 / 0.3);
+  --shadow-popover: 0 8px 24px -6px rgb(11 20 37 / 0.18), 0 2px 6px rgb(11 20 37 / 0.06);
+  --shadow-overlay: 0 24px 48px -12px rgb(11 20 37 / 0.3);
 }
 
 /* Main column + summary rail (League Settings, Setup): 976 / 24 / 520 at desktop. */
@@ -285,7 +295,7 @@ body {
 }
 
 dialog::backdrop {
-  background: rgb(11 27 40 / 0.45); /* Rink Navy scrim */
+  background: rgb(11 20 37 / 0.45); /* Powerplay Navy scrim */
 }
 
 dialog {

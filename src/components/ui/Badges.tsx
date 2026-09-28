@@ -19,7 +19,9 @@ export const POSITION_TONE: Record<BadgeKind, { badge: string; tile: string }> =
 export function PositionBadge({ kind, compact = false, className = "" }: { kind: BadgeKind; compact?: boolean; className?: string }) {
   return (
     <span
-      className={`inline-flex h-6 shrink-0 items-center justify-center rounded-badge border px-1.5 text-overline leading-none ${compact ? "min-w-7 2xl:min-w-8" : "min-w-8"} ${POSITION_TONE[kind].badge} ${className}`}
+      className={`inline-flex h-6 shrink-0 items-center justify-center rounded-badge border text-overline leading-none ${
+        compact ? "min-w-7 px-1 tracking-normal 2xl:min-w-8 2xl:px-1.5 2xl:tracking-wider" : "min-w-8 px-1.5"
+      } ${POSITION_TONE[kind].badge} ${className}`}
     >
       {kind}
     </span>

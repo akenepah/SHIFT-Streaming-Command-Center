@@ -42,10 +42,11 @@ export function WeeklyMovesPanel({
     <aside aria-label="Weekly moves" className="self-start rounded-panel border border-line bg-surface p-4">
       <h2 className="font-display text-card-title text-ink">Weekly Moves</h2>
       <p className={`mt-3 text-body font-semibold tabular-nums ${over ? "text-warn" : "text-primary-strong"}`}>
-        {used} / {limit} weekly adds
-        {over && <span className="ml-1 font-medium">· over limit</span>}
+        {over ? `${used - limit} over the limit` : `${limit - used} ${limit - used === 1 ? "add" : "adds"} remaining`}
       </p>
-      <p className="mt-1 text-caption text-ink-3">Resets {weekdayName(settings.weekStartsOn)} · drops don&apos;t count</p>
+      <p className="mt-0.5 text-caption text-ink-3 tabular-nums">
+        {used} of {limit} used · Resets {weekdayName(settings.weekStartsOn)}
+      </p>
       <Button variant="primary" className="mt-4 w-full" onClick={onPlan}>
         <Plus aria-hidden /> Plan a move
       </Button>
@@ -105,7 +106,7 @@ export function WeeklyMovesPanel({
 
       <Divider />
 
-      <h3 className="text-body font-semibold text-ink">Fantasy roster</h3>
+      <h3 className="font-display text-body font-semibold text-ink">Opening roster</h3>
       <p className="mt-1.5 text-body-sm text-ink-2 tabular-nums">
         {inventory.rostered} rostered · IR+ {inventory.irPlus} / {inventory.irPlusCapacity}
       </p>
@@ -120,19 +121,23 @@ export function WeeklyMovesPanel({
       )}
 
       {goalieMin > 0 && state.roster.length > 0 && (
-        <div className="mt-4 rounded-card bg-secondary-soft px-3.5 py-3">
-          <p className="text-body-sm font-semibold text-secondary">Goalie appearances</p>
-          <p className="mt-1 text-body-sm text-ink tabular-nums">
-            {summary.goalieStarts} projected · minimum {goalieMin}
+        <div className="mt-4 border-t border-line pt-4">
+          <p className="text-body-sm font-semibold text-primary-strong">Goalie appearances</p>
+          <p className="mt-1 text-body-sm font-medium text-ink">Minimum {goalieMin} per week</p>
+          <p className="mt-1 text-body-sm text-ink-2 tabular-nums">
+            {summary.goalieStarts} goalie {summary.goalieStarts === 1 ? "game" : "games"} available this week
           </p>
-          <p className={`mt-1 flex items-center gap-1.5 text-caption ${goalieMet ? "text-success" : "text-ink-2"}`}>
+          <p className={`mt-0.5 flex items-center gap-1.5 text-caption ${goalieMet ? "text-success" : "text-warn-strong"}`}>
             {goalieMet ? (
               <>
-                <CircleCheck aria-hidden className="size-3.5" /> Minimum met
+                <CircleCheck aria-hidden className="size-3.5" /> Enough games to reach the minimum
               </>
             ) : (
-              `Short by ${goalieMin - summary.goalieStarts}. Consider streaming a goalie.`
+              `${goalieMin - summary.goalieStarts} short of the minimum on the current schedule`
             )}
+          </p>
+          <p className="mt-2 text-caption text-ink-3">
+            Goalie games show team availability only. Goalie starts are not confirmed.
           </p>
         </div>
       )}

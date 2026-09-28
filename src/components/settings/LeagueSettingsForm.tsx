@@ -160,7 +160,7 @@ export function LineupSummary({
       {variant === "setup" ? (
         <>
           <p className="mt-4 text-body text-ink-2">Monday through Sunday, with independent daily lineup cards.</p>
-          <p className="mt-5 text-body font-semibold text-ink tabular-nums">
+          <p className="mt-5 text-body font-medium text-primary tabular-nums">
             {n(active)} active · {n(value.roster.benchSlots)} bench · {n(value.roster.irPlusSlots)} IR+
           </p>
           <p className="mt-5 text-body text-ink-2">

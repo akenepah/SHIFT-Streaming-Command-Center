@@ -14,8 +14,9 @@ export default function RosterPage() {
   return (
     <div className="mx-auto grid max-w-page gap-8 px-10 py-10">
       <PageHeader
+        eyebrow={`${state.settings.leagueName} · ${state.settings.season.replace("-", "–")}`}
         title="Roster"
-        subtitle={`${state.settings.teamName} · ${state.settings.leagueName}`}
+        subtitle={state.settings.teamName}
         actions={
           <Button variant="primary" onClick={() => setAdding(true)}>
             <Plus aria-hidden /> Add Player
