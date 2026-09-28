@@ -44,16 +44,19 @@ export const LEGACY_DEMO_PLAYERS: readonly (Player & { rosterStatus?: RosterStat
 const BY_ID = new Map(LEGACY_DEMO_PLAYERS.map((p) => [p.id, p]));
 
 /**
- * True when a stored player is exactly one of the legacy sample players, never
- * edited. A sample player the user changed (team, positions, name, headshot)
- * counts as the user's own data and is kept.
+ * True when a stored (raw v1) player record is exactly one of the legacy sample
+ * players, never edited. A sample player the user changed (team, positions,
+ * name, headshot) counts as the user's own data and is kept.
  */
-export function isUntouchedDemoPlayer(p: Player): boolean {
-  const seed = BY_ID.get(p.id);
-  if (!seed || p.custom || p.headshot) return false;
+export function isUntouchedDemoPlayer(raw: unknown): boolean {
+  if (typeof raw !== "object" || raw === null) return false;
+  const p = raw as Partial<Player> & { custom?: unknown };
+  const seed = typeof p.id === "string" ? BY_ID.get(p.id) : undefined;
+  if (!seed || p.custom === true || p.headshot) return false;
   return (
     p.name === seed.name &&
     p.nhlTeamId === seed.nhlTeamId &&
+    Array.isArray(p.eligiblePositions) &&
     p.eligiblePositions.length === seed.eligiblePositions.length &&
     p.eligiblePositions.every((pos, i) => pos === seed.eligiblePositions[i])
   );

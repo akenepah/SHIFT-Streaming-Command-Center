@@ -11,7 +11,8 @@ import { AddPlayerDialog } from "@/components/roster/PlayerDialogs";
 import { Button } from "@/components/ui/Button";
 import { addDays, formatDayLong, formatDayShort, formatMonthDay, startOfWeek, todayISO } from "@/domain/dates";
 import { SCHEDULE_META } from "@/domain/schedule/staticProvider";
-import type { DailyLineup, ISODate, PlannedTransaction } from "@/domain/types";
+import { activeSlotCount } from "@/domain/config";
+import type { DailyLineup, ISODate, PlannedTransaction, TransactionType } from "@/domain/types";
 import { useStore } from "@/state/store";
 import { useWeekPlan } from "@/state/usePlanner";
 
@@ -49,6 +50,7 @@ export default function WeeklyPlannerPage() {
   const [editing, setEditing] = useState<PlannedTransaction | null>(null);
   const [moveTarget, setMoveTarget] = useState<MoveTarget | null>(null);
   const [addingPlayer, setAddingPlayer] = useState(false);
+  const [planType, setPlanType] = useState<TransactionType>("ADD_DROP");
   const rosterEmpty = state.roster.length === 0;
 
   const weekEnd = addDays(weekStart, 6);
@@ -88,7 +90,20 @@ export default function WeeklyPlannerPage() {
             <Button onClick={() => setWeekStart(thisWeek)} aria-pressed={weekStart === thisWeek}>
               This Week
             </Button>
-            <Button variant="primary" onClick={() => setAddingPlayer(true)}>
+            <Button
+              variant="primary"
+              onClick={() => {
+                // On the planner, adding a player is a planned move: Add when the roster has room, else Add + Drop.
+                if (rosterEmpty) {
+                  setAddingPlayer(true);
+                  return;
+                }
+                const regular = state.roster.filter((r) => r.rosterStatus !== "IR_PLUS").length;
+                setPlanType(regular < activeSlotCount(settings.roster) + settings.roster.benchSlots ? "ADD" : "ADD_DROP");
+                setEditing(null);
+                setPlanOpen(true);
+              }}
+            >
               <Plus aria-hidden /> Add Player
             </Button>
           </nav>
@@ -161,6 +176,7 @@ export default function WeeklyPlannerPage() {
           weekStart={weekStart}
           summary={summary}
           onPlan={() => {
+            setPlanType("ADD_DROP");
             setEditing(null);
             setPlanOpen(true);
           }}
@@ -208,7 +224,7 @@ export default function WeeklyPlannerPage() {
 
       {planOpen && (
         <PlanMoveDialog
-          key={editing?.id ?? "new"}
+          key={editing?.id ?? `new-${planType}`}
           open={planOpen}
           onClose={() => {
             setPlanOpen(false);
@@ -217,6 +233,7 @@ export default function WeeklyPlannerPage() {
           weekInput={input}
           editing={editing}
           defaultDate={defaultMoveDate}
+          initialType={planType}
         />
       )}
       <AddPlayerDialog open={addingPlayer} onClose={() => setAddingPlayer(false)} />

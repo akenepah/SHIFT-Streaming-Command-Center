@@ -1,0 +1,1508 @@
+{
+  "note": "Membership snapshot only (listed order, name, listed team, F/D/G). No article prose. Dev reference; the app never reads this file.",
+  "membershipSourceUrl": "https://www.nhl.com/news/topic/fantasy/nhl-fantasy-hockey-top-250-200-rankings-drafts-players-big-board-281505474",
+  "publishedAt": "2026-09-27T16:00:00Z",
+  "modifiedAt": "2026-09-28T04:48:34.317Z",
+  "players": [
+    {
+      "rank": 1,
+      "name": "Connor McDavid",
+      "group": "F",
+      "team": "EDM"
+    },
+    {
+      "rank": 2,
+      "name": "Nathan MacKinnon",
+      "group": "F",
+      "team": "COL"
+    },
+    {
+      "rank": 3,
+      "name": "Nikita Kucherov",
+      "group": "F",
+      "team": "TBL"
+    },
+    {
+      "rank": 4,
+      "name": "Macklin Celebrini",
+      "group": "F",
+      "team": "SJS"
+    },
+    {
+      "rank": 5,
+      "name": "Leon Draisaitl",
+      "group": "F",
+      "team": "EDM"
+    },
+    {
+      "rank": 6,
+      "name": "David Pastrnak",
+      "group": "F",
+      "team": "BOS"
+    },
+    {
+      "rank": 7,
+      "name": "Cale Makar",
+      "group": "D",
+      "team": "COL"
+    },
+    {
+      "rank": 8,
+      "name": "Kirill Kaprizov",
+      "group": "F",
+      "team": "MIN"
+    },
+    {
+      "rank": 9,
+      "name": "Jason Robertson",
+      "group": "F",
+      "team": "DAL"
+    },
+    {
+      "rank": 10,
+      "name": "Evan Bouchard",
+      "group": "D",
+      "team": "EDM"
+    },
+    {
+      "rank": 11,
+      "name": "Andrei Vasilevskiy",
+      "group": "G",
+      "team": "TBL"
+    },
+    {
+      "rank": 12,
+      "name": "Quinn Hughes",
+      "group": "D",
+      "team": "MIN"
+    },
+    {
+      "rank": 13,
+      "name": "Matt Boldy",
+      "group": "F",
+      "team": "MIN"
+    },
+    {
+      "rank": 14,
+      "name": "Wyatt Johnston",
+      "group": "F",
+      "team": "DAL"
+    },
+    {
+      "rank": 15,
+      "name": "Zach Werenski",
+      "group": "D",
+      "team": "CBJ"
+    },
+    {
+      "rank": 16,
+      "name": "Nick Suzuki",
+      "group": "F",
+      "team": "MTL"
+    },
+    {
+      "rank": 17,
+      "name": "Auston Matthews",
+      "group": "F",
+      "team": "TOR"
+    },
+    {
+      "rank": 18,
+      "name": "Jack Hughes",
+      "group": "F",
+      "team": "NJD"
+    },
+    {
+      "rank": 19,
+      "name": "Jack Eichel",
+      "group": "F",
+      "team": "VGK"
+    },
+    {
+      "rank": 20,
+      "name": "Cole Caufield",
+      "group": "F",
+      "team": "MTL"
+    },
+    {
+      "rank": 21,
+      "name": "Brady Tkachuk",
+      "group": "F",
+      "team": "FLA"
+    },
+    {
+      "rank": 22,
+      "name": "Martin Necas",
+      "group": "F",
+      "team": "COL"
+    },
+    {
+      "rank": 23,
+      "name": "Mikko Rantanen",
+      "group": "F",
+      "team": "DAL"
+    },
+    {
+      "rank": 24,
+      "name": "Matthew Tkachuk",
+      "group": "F",
+      "team": "FLA"
+    },
+    {
+      "rank": 25,
+      "name": "Lane Hutson",
+      "group": "D",
+      "team": "MTL"
+    },
+    {
+      "rank": 26,
+      "name": "Logan Thompson",
+      "group": "G",
+      "team": "WSH"
+    },
+    {
+      "rank": 27,
+      "name": "Ilya Sorokin",
+      "group": "G",
+      "team": "NYI"
+    },
+    {
+      "rank": 28,
+      "name": "Jake Oettinger",
+      "group": "G",
+      "team": "DAL"
+    },
+    {
+      "rank": 29,
+      "name": "Rasmus Dahlin",
+      "group": "D",
+      "team": "BUF"
+    },
+    {
+      "rank": 30,
+      "name": "Kyle Connor",
+      "group": "F",
+      "team": "WPG"
+    },
+    {
+      "rank": 31,
+      "name": "Tage Thompson",
+      "group": "F",
+      "team": "BUF"
+    },
+    {
+      "rank": 32,
+      "name": "Cutter Gauthier",
+      "group": "F",
+      "team": "ANA"
+    },
+    {
+      "rank": 33,
+      "name": "Dylan Guenther",
+      "group": "F",
+      "team": "UTA"
+    },
+    {
+      "rank": 34,
+      "name": "Jake Guentzel",
+      "group": "F",
+      "team": "TBL"
+    },
+    {
+      "rank": 35,
+      "name": "William Nylander",
+      "group": "F",
+      "team": "TOR"
+    },
+    {
+      "rank": 36,
+      "name": "Sam Reinhart",
+      "group": "F",
+      "team": "FLA"
+    },
+    {
+      "rank": 37,
+      "name": "Filip Forsberg",
+      "group": "F",
+      "team": "NSH"
+    },
+    {
+      "rank": 38,
+      "name": "Matthew Schaefer",
+      "group": "D",
+      "team": "NYI"
+    },
+    {
+      "rank": 39,
+      "name": "Igor Shesterkin",
+      "group": "G",
+      "team": "NYR"
+    },
+    {
+      "rank": 40,
+      "name": "Connor Hellebuyck",
+      "group": "G",
+      "team": "WPG"
+    },
+    {
+      "rank": 41,
+      "name": "Mark Scheifele",
+      "group": "F",
+      "team": "WPG"
+    },
+    {
+      "rank": 42,
+      "name": "Leo Carlsson",
+      "group": "F",
+      "team": "ANA"
+    },
+    {
+      "rank": 43,
+      "name": "Brandon Hagel",
+      "group": "F",
+      "team": "TBL"
+    },
+    {
+      "rank": 44,
+      "name": "Alex DeBrincat",
+      "group": "F",
+      "team": "DET"
+    },
+    {
+      "rank": 45,
+      "name": "Moritz Seider",
+      "group": "D",
+      "team": "DET"
+    },
+    {
+      "rank": 46,
+      "name": "Clayton Keller",
+      "group": "F",
+      "team": "UTA"
+    },
+    {
+      "rank": 47,
+      "name": "Sidney Crosby",
+      "group": "F",
+      "team": "PIT"
+    },
+    {
+      "rank": 48,
+      "name": "Aleksander Barkov",
+      "group": "F",
+      "team": "FLA"
+    },
+    {
+      "rank": 49,
+      "name": "Tim Stützle",
+      "group": "F",
+      "team": "OTT"
+    },
+    {
+      "rank": 50,
+      "name": "Juraj Slafkovsky",
+      "group": "F",
+      "team": "MTL"
+    },
+    {
+      "rank": 51,
+      "name": "Artemi Panarin",
+      "group": "F",
+      "team": "LAK"
+    },
+    {
+      "rank": 52,
+      "name": "Adrian Kempe",
+      "group": "F",
+      "team": "LAK"
+    },
+    {
+      "rank": 53,
+      "name": "Scott Wedgewood",
+      "group": "G",
+      "team": "COL"
+    },
+    {
+      "rank": 54,
+      "name": "Jesper Wallstedt",
+      "group": "G",
+      "team": "MIN"
+    },
+    {
+      "rank": 55,
+      "name": "Darren Raddysh",
+      "group": "D",
+      "team": "TOR"
+    },
+    {
+      "rank": 56,
+      "name": "Jakob Chychrun",
+      "group": "D",
+      "team": "WSH"
+    },
+    {
+      "rank": 57,
+      "name": "Jake Sanderson",
+      "group": "D",
+      "team": "OTT"
+    },
+    {
+      "rank": 58,
+      "name": "Mitch Marner",
+      "group": "F",
+      "team": "VGK"
+    },
+    {
+      "rank": 59,
+      "name": "Kirill Marchenko",
+      "group": "F",
+      "team": "CBJ"
+    },
+    {
+      "rank": 60,
+      "name": "Robert Thomas",
+      "group": "F",
+      "team": "STL"
+    },
+    {
+      "rank": 61,
+      "name": "Dylan Holloway",
+      "group": "F",
+      "team": "STL"
+    },
+    {
+      "rank": 62,
+      "name": "Will Smith",
+      "group": "F",
+      "team": "SJS"
+    },
+    {
+      "rank": 63,
+      "name": "Brayden Point",
+      "group": "F",
+      "team": "TBL"
+    },
+    {
+      "rank": 64,
+      "name": "Jeremy Swayman",
+      "group": "G",
+      "team": "BOS"
+    },
+    {
+      "rank": 65,
+      "name": "Connor Bedard",
+      "group": "F",
+      "team": "CHI"
+    },
+    {
+      "rank": 66,
+      "name": "Mika Zibanejad",
+      "group": "F",
+      "team": "NYR"
+    },
+    {
+      "rank": 67,
+      "name": "Nico Hischier",
+      "group": "F",
+      "team": "NJD"
+    },
+    {
+      "rank": 68,
+      "name": "Bo Horvat",
+      "group": "F",
+      "team": "NYI"
+    },
+    {
+      "rank": 69,
+      "name": "Sebastian Aho",
+      "group": "F",
+      "team": "CAR"
+    },
+    {
+      "rank": 70,
+      "name": "Adam Fantilli",
+      "group": "F",
+      "team": "CBJ"
+    },
+    {
+      "rank": 71,
+      "name": "Pavel Dorofeyev",
+      "group": "F",
+      "team": "NYR"
+    },
+    {
+      "rank": 72,
+      "name": "Drake Batherson",
+      "group": "F",
+      "team": "OTT"
+    },
+    {
+      "rank": 73,
+      "name": "Porter Martone",
+      "group": "F",
+      "team": "PHI"
+    },
+    {
+      "rank": 74,
+      "name": "Adam Fox",
+      "group": "D",
+      "team": "NYR"
+    },
+    {
+      "rank": 75,
+      "name": "Brandon Bussi",
+      "group": "G",
+      "team": "CAR"
+    },
+    {
+      "rank": 76,
+      "name": "Jacob Markstrom",
+      "group": "G",
+      "team": "FLA"
+    },
+    {
+      "rank": 77,
+      "name": "Miro Heiskanen",
+      "group": "D",
+      "team": "DAL"
+    },
+    {
+      "rank": 78,
+      "name": "Lucas Raymond",
+      "group": "F",
+      "team": "DET"
+    },
+    {
+      "rank": 79,
+      "name": "Jesper Bratt",
+      "group": "F",
+      "team": "NJD"
+    },
+    {
+      "rank": 80,
+      "name": "Logan Cooley",
+      "group": "F",
+      "team": "UTA"
+    },
+    {
+      "rank": 81,
+      "name": "Beckett Sennecke",
+      "group": "F",
+      "team": "ANA"
+    },
+    {
+      "rank": 82,
+      "name": "Tom Wilson",
+      "group": "F",
+      "team": "WSH"
+    },
+    {
+      "rank": 83,
+      "name": "Dylan Larkin",
+      "group": "F",
+      "team": "DET"
+    },
+    {
+      "rank": 84,
+      "name": "John Tavares",
+      "group": "F",
+      "team": "TOR"
+    },
+    {
+      "rank": 85,
+      "name": "J.T. Miller",
+      "group": "F",
+      "team": "NYR"
+    },
+    {
+      "rank": 86,
+      "name": "Timo Meier",
+      "group": "F",
+      "team": "NJD"
+    },
+    {
+      "rank": 87,
+      "name": "Andrei Svechnikov",
+      "group": "F",
+      "team": "CAR"
+    },
+    {
+      "rank": 88,
+      "name": "Zach Hyman",
+      "group": "F",
+      "team": "EDM"
+    },
+    {
+      "rank": 89,
+      "name": "Roope Hintz",
+      "group": "F",
+      "team": "DAL"
+    },
+    {
+      "rank": 90,
+      "name": "Ivan Demidov",
+      "group": "F",
+      "team": "MTL"
+    },
+    {
+      "rank": 91,
+      "name": "Jackson LaCombe",
+      "group": "D",
+      "team": "ANA"
+    },
+    {
+      "rank": 92,
+      "name": "Erik Karlsson",
+      "group": "D",
+      "team": "PIT"
+    },
+    {
+      "rank": 93,
+      "name": "Jakub Dobes",
+      "group": "G",
+      "team": "MTL"
+    },
+    {
+      "rank": 94,
+      "name": "Karel Vejmelka",
+      "group": "G",
+      "team": "UTA"
+    },
+    {
+      "rank": 95,
+      "name": "Roman Josi",
+      "group": "D",
+      "team": "NSH"
+    },
+    {
+      "rank": 96,
+      "name": "Brock Faber",
+      "group": "D",
+      "team": "MIN"
+    },
+    {
+      "rank": 97,
+      "name": "John Carlson",
+      "group": "D",
+      "team": "TBL"
+    },
+    {
+      "rank": 98,
+      "name": "Jimmy Snuggerud",
+      "group": "F",
+      "team": "STL"
+    },
+    {
+      "rank": 99,
+      "name": "Alex Ovechkin",
+      "group": "F",
+      "team": "WSH"
+    },
+    {
+      "rank": 100,
+      "name": "Gavin McKenna",
+      "group": "F",
+      "team": "TOR"
+    },
+    {
+      "rank": 101,
+      "name": "Nick Schmaltz",
+      "group": "F",
+      "team": "UTA"
+    },
+    {
+      "rank": 102,
+      "name": "Steven Stamkos",
+      "group": "F",
+      "team": "NSH"
+    },
+    {
+      "rank": 103,
+      "name": "Rickard Rakell",
+      "group": "F",
+      "team": "PIT"
+    },
+    {
+      "rank": 104,
+      "name": "Travis Konecny",
+      "group": "F",
+      "team": "PHI"
+    },
+    {
+      "rank": 105,
+      "name": "Mark Stone",
+      "group": "F",
+      "team": "VGK"
+    },
+    {
+      "rank": 106,
+      "name": "Ivar Stenberg",
+      "group": "F",
+      "team": "SJS"
+    },
+    {
+      "rank": 107,
+      "name": "Nikolaj Ehlers",
+      "group": "F",
+      "team": "CAR"
+    },
+    {
+      "rank": 108,
+      "name": "Bryan Rust",
+      "group": "F",
+      "team": "PIT"
+    },
+    {
+      "rank": 109,
+      "name": "Alex Tuch",
+      "group": "F",
+      "team": "WSH"
+    },
+    {
+      "rank": 110,
+      "name": "Morgan Geekie",
+      "group": "F",
+      "team": "BOS"
+    },
+    {
+      "rank": 111,
+      "name": "Quinton Byfield",
+      "group": "F",
+      "team": "LAK"
+    },
+    {
+      "rank": 112,
+      "name": "Nazem Kadri",
+      "group": "F",
+      "team": "COL"
+    },
+    {
+      "rank": 113,
+      "name": "Sam Bennett",
+      "group": "F",
+      "team": "FLA"
+    },
+    {
+      "rank": 114,
+      "name": "Mikhail Sergachev",
+      "group": "D",
+      "team": "UTA"
+    },
+    {
+      "rank": 115,
+      "name": "Charlie McAvoy",
+      "group": "D",
+      "team": "BOS"
+    },
+    {
+      "rank": 116,
+      "name": "Mackenzie Blackwood",
+      "group": "G",
+      "team": "COL"
+    },
+    {
+      "rank": 117,
+      "name": "Sergei Bobrovsky",
+      "group": "G",
+      "team": "TOR"
+    },
+    {
+      "rank": 118,
+      "name": "Cole Hutson",
+      "group": "D",
+      "team": "WSH"
+    },
+    {
+      "rank": 119,
+      "name": "Victor Hedman",
+      "group": "D",
+      "team": "TBL"
+    },
+    {
+      "rank": 120,
+      "name": "Shayne Gostisbehere",
+      "group": "D",
+      "team": "CAR"
+    },
+    {
+      "rank": 121,
+      "name": "Dylan Strome",
+      "group": "F",
+      "team": "WSH"
+    },
+    {
+      "rank": 122,
+      "name": "Brock Nelson",
+      "group": "F",
+      "team": "COL"
+    },
+    {
+      "rank": 123,
+      "name": "Dylan Cozens",
+      "group": "F",
+      "team": "OTT"
+    },
+    {
+      "rank": 124,
+      "name": "Joel Eriksson Ek",
+      "group": "F",
+      "team": "MIN"
+    },
+    {
+      "rank": 125,
+      "name": "Anton Frondell",
+      "group": "F",
+      "team": "CHI"
+    },
+    {
+      "rank": 126,
+      "name": "Vincent Trocheck",
+      "group": "F",
+      "team": "UTA"
+    },
+    {
+      "rank": 127,
+      "name": "Ryan O'Reilly",
+      "group": "F",
+      "team": "NSH"
+    },
+    {
+      "rank": 128,
+      "name": "Matthew Knies",
+      "group": "F",
+      "team": "TOR"
+    },
+    {
+      "rank": 129,
+      "name": "Jordan Kyrou",
+      "group": "F",
+      "team": "WSH"
+    },
+    {
+      "rank": 130,
+      "name": "Logan Stankoven",
+      "group": "F",
+      "team": "CAR"
+    },
+    {
+      "rank": 131,
+      "name": "Jackson Blake",
+      "group": "F",
+      "team": "CAR"
+    },
+    {
+      "rank": 132,
+      "name": "Trevor Zegras",
+      "group": "F",
+      "team": "PHI"
+    },
+    {
+      "rank": 133,
+      "name": "Evgeni Malkin",
+      "group": "F",
+      "team": "PIT"
+    },
+    {
+      "rank": 134,
+      "name": "Patrick Kane",
+      "group": "F",
+      "team": "CHI"
+    },
+    {
+      "rank": 135,
+      "name": "Josh Doan",
+      "group": "F",
+      "team": "BUF"
+    },
+    {
+      "rank": 136,
+      "name": "Mathew Barzal",
+      "group": "F",
+      "team": "NYI"
+    },
+    {
+      "rank": 137,
+      "name": "Ryan Nugent-Hopkins",
+      "group": "F",
+      "team": "EDM"
+    },
+    {
+      "rank": 138,
+      "name": "Carter Verhaeghe",
+      "group": "F",
+      "team": "FLA"
+    },
+    {
+      "rank": 139,
+      "name": "Mikael Granlund",
+      "group": "F",
+      "team": "ANA"
+    },
+    {
+      "rank": 140,
+      "name": "Elias Pettersson",
+      "group": "F",
+      "team": "VAN"
+    },
+    {
+      "rank": 141,
+      "name": "Gabriel Vilardi",
+      "group": "F",
+      "team": "WPG"
+    },
+    {
+      "rank": 142,
+      "name": "William Eklund",
+      "group": "F",
+      "team": "OTT"
+    },
+    {
+      "rank": 143,
+      "name": "Alexis Lafreniere",
+      "group": "F",
+      "team": "NYR"
+    },
+    {
+      "rank": 144,
+      "name": "Owen Tippett",
+      "group": "F",
+      "team": "PHI"
+    },
+    {
+      "rank": 145,
+      "name": "Pavel Zacha",
+      "group": "F",
+      "team": "BOS"
+    },
+    {
+      "rank": 146,
+      "name": "Ukko-Pekka Luukkonen",
+      "group": "G",
+      "team": "BUF"
+    },
+    {
+      "rank": 147,
+      "name": "Linus Ullmark",
+      "group": "G",
+      "team": "OTT"
+    },
+    {
+      "rank": 148,
+      "name": "Carter Hart",
+      "group": "G",
+      "team": "VGK"
+    },
+    {
+      "rank": 149,
+      "name": "Brandt Clarke",
+      "group": "D",
+      "team": "LAK"
+    },
+    {
+      "rank": 150,
+      "name": "Noah Dobson",
+      "group": "D",
+      "team": "MTL"
+    },
+    {
+      "rank": 151,
+      "name": "Josh Morrissey",
+      "group": "D",
+      "team": "WPG"
+    },
+    {
+      "rank": 152,
+      "name": "Dougie Hamilton",
+      "group": "D",
+      "team": "NJD"
+    },
+    {
+      "rank": 153,
+      "name": "Mason Marchment",
+      "group": "F",
+      "team": "SJS"
+    },
+    {
+      "rank": 154,
+      "name": "JJ Peterka",
+      "group": "F",
+      "team": "BOS"
+    },
+    {
+      "rank": 155,
+      "name": "Gabriel Landeskog",
+      "group": "F",
+      "team": "COL"
+    },
+    {
+      "rank": 156,
+      "name": "Frank Nazar",
+      "group": "F",
+      "team": "CHI"
+    },
+    {
+      "rank": 157,
+      "name": "Egor Chinakhov",
+      "group": "F",
+      "team": "PIT"
+    },
+    {
+      "rank": 158,
+      "name": "Luke Evangelista",
+      "group": "F",
+      "team": "NJD"
+    },
+    {
+      "rank": 159,
+      "name": "Ryan Leonard",
+      "group": "F",
+      "team": "WSH"
+    },
+    {
+      "rank": 160,
+      "name": "Anthony Mantha",
+      "group": "F",
+      "team": "NJD"
+    },
+    {
+      "rank": 161,
+      "name": "Gabe Perreault",
+      "group": "F",
+      "team": "NYR"
+    },
+    {
+      "rank": 162,
+      "name": "Michael Misa",
+      "group": "F",
+      "team": "SJS"
+    },
+    {
+      "rank": 163,
+      "name": "Igor Chernyshov",
+      "group": "F",
+      "team": "SJS"
+    },
+    {
+      "rank": 164,
+      "name": "Joel Hofer",
+      "group": "G",
+      "team": "STL"
+    },
+    {
+      "rank": 165,
+      "name": "Dan Vladar",
+      "group": "G",
+      "team": "PHI"
+    },
+    {
+      "rank": 166,
+      "name": "Shea Theodore",
+      "group": "D",
+      "team": "VGK"
+    },
+    {
+      "rank": 167,
+      "name": "Bowen Byram",
+      "group": "D",
+      "team": "CHI"
+    },
+    {
+      "rank": 168,
+      "name": "MacKenzie Weegar",
+      "group": "D",
+      "team": "UTA"
+    },
+    {
+      "rank": 169,
+      "name": "Brandon Montour",
+      "group": "D",
+      "team": "SEA"
+    },
+    {
+      "rank": 170,
+      "name": "Spencer Knight",
+      "group": "G",
+      "team": "CHI"
+    },
+    {
+      "rank": 171,
+      "name": "Jet Greaves",
+      "group": "G",
+      "team": "CBJ"
+    },
+    {
+      "rank": 172,
+      "name": "Juuse Saros",
+      "group": "G",
+      "team": "NSH"
+    },
+    {
+      "rank": 173,
+      "name": "Filip Hronek",
+      "group": "D",
+      "team": "VAN"
+    },
+    {
+      "rank": 174,
+      "name": "Seth Jones",
+      "group": "D",
+      "team": "FLA"
+    },
+    {
+      "rank": 175,
+      "name": "Tomas Hertl",
+      "group": "F",
+      "team": "VGK"
+    },
+    {
+      "rank": 176,
+      "name": "Blake Coleman",
+      "group": "F",
+      "team": "MIN"
+    },
+    {
+      "rank": 177,
+      "name": "Ryan Hartman",
+      "group": "F",
+      "team": "MIN"
+    },
+    {
+      "rank": 178,
+      "name": "Mats Zuccarello",
+      "group": "F",
+      "team": "LAK"
+    },
+    {
+      "rank": 179,
+      "name": "Valeri Nichushkin",
+      "group": "F",
+      "team": "CBJ"
+    },
+    {
+      "rank": 180,
+      "name": "Roman Kantserov",
+      "group": "F",
+      "team": "CHI"
+    },
+    {
+      "rank": 181,
+      "name": "Marco Rossi",
+      "group": "F",
+      "team": "VAN"
+    },
+    {
+      "rank": 182,
+      "name": "Anthony Cirelli",
+      "group": "F",
+      "team": "TBL"
+    },
+    {
+      "rank": 183,
+      "name": "Matt Duchene",
+      "group": "F",
+      "team": "DAL"
+    },
+    {
+      "rank": 184,
+      "name": "Jake DeBrusk",
+      "group": "F",
+      "team": "VAN"
+    },
+    {
+      "rank": 185,
+      "name": "Brock Boeser",
+      "group": "F",
+      "team": "VAN"
+    },
+    {
+      "rank": 186,
+      "name": "Chris Kreider",
+      "group": "F",
+      "team": "MTL"
+    },
+    {
+      "rank": 187,
+      "name": "Zach Benson",
+      "group": "F",
+      "team": "BUF"
+    },
+    {
+      "rank": 188,
+      "name": "Tyson Foerster",
+      "group": "F",
+      "team": "PHI"
+    },
+    {
+      "rank": 189,
+      "name": "Konsta Helenius",
+      "group": "F",
+      "team": "BUF"
+    },
+    {
+      "rank": 190,
+      "name": "James Hagens",
+      "group": "F",
+      "team": "BOS"
+    },
+    {
+      "rank": 191,
+      "name": "Collin Graf",
+      "group": "F",
+      "team": "SJS"
+    },
+    {
+      "rank": 192,
+      "name": "Mason McTavish",
+      "group": "F",
+      "team": "STL"
+    },
+    {
+      "rank": 193,
+      "name": "Tyler Bertuzzi",
+      "group": "F",
+      "team": "CHI"
+    },
+    {
+      "rank": 194,
+      "name": "Fraser Minten",
+      "group": "F",
+      "team": "BOS"
+    },
+    {
+      "rank": 195,
+      "name": "Vince Dunn",
+      "group": "D",
+      "team": "SEA"
+    },
+    {
+      "rank": 196,
+      "name": "Thomas Harley",
+      "group": "D",
+      "team": "DAL"
+    },
+    {
+      "rank": 197,
+      "name": "Philip Broberg",
+      "group": "D",
+      "team": "STL"
+    },
+    {
+      "rank": 198,
+      "name": "Rasmus Andersson",
+      "group": "D",
+      "team": "VGK"
+    },
+    {
+      "rank": 199,
+      "name": "Yaroslav Askarov",
+      "group": "G",
+      "team": "SJS"
+    },
+    {
+      "rank": 200,
+      "name": "Lukas Dostal",
+      "group": "G",
+      "team": "ANA"
+    },
+    {
+      "rank": 201,
+      "name": "Jake Allen",
+      "group": "G",
+      "team": "NJD"
+    },
+    {
+      "rank": 202,
+      "name": "Luke Hughes",
+      "group": "D",
+      "team": "NJD"
+    },
+    {
+      "rank": 203,
+      "name": "Aaron Ekblad",
+      "group": "D",
+      "team": "FLA"
+    },
+    {
+      "rank": 204,
+      "name": "Simon Nemec",
+      "group": "D",
+      "team": "CGY"
+    },
+    {
+      "rank": 205,
+      "name": "Zayne Parekh",
+      "group": "D",
+      "team": "CGY"
+    },
+    {
+      "rank": 206,
+      "name": "Kiefer Sherwood",
+      "group": "F",
+      "team": "SJS"
+    },
+    {
+      "rank": 207,
+      "name": "Bobby McMann",
+      "group": "F",
+      "team": "SEA"
+    },
+    {
+      "rank": 208,
+      "name": "Artturi Lehkonen",
+      "group": "F",
+      "team": "COL"
+    },
+    {
+      "rank": 209,
+      "name": "Matvei Michkov",
+      "group": "F",
+      "team": "PHI"
+    },
+    {
+      "rank": 210,
+      "name": "Aliaksei Protas",
+      "group": "F",
+      "team": "WSH"
+    },
+    {
+      "rank": 211,
+      "name": "Mavrik Bourque",
+      "group": "F",
+      "team": "NSH"
+    },
+    {
+      "rank": 212,
+      "name": "Matvei Gridin",
+      "group": "F",
+      "team": "CGY"
+    },
+    {
+      "rank": 213,
+      "name": "Matt Coronato",
+      "group": "F",
+      "team": "CGY"
+    },
+    {
+      "rank": 214,
+      "name": "Charlie Coyle",
+      "group": "F",
+      "team": "CBJ"
+    },
+    {
+      "rank": 215,
+      "name": "Mackie Samoskevich",
+      "group": "F",
+      "team": "SEA"
+    },
+    {
+      "rank": 216,
+      "name": "Matthew Wood",
+      "group": "F",
+      "team": "NSH"
+    },
+    {
+      "rank": 217,
+      "name": "Jacob Trouba",
+      "group": "D",
+      "team": "SJS"
+    },
+    {
+      "rank": 218,
+      "name": "Darnell Nurse",
+      "group": "D",
+      "team": "SJS"
+    },
+    {
+      "rank": 219,
+      "name": "Darcy Kuemper",
+      "group": "G",
+      "team": "LAK"
+    },
+    {
+      "rank": 220,
+      "name": "Dustin Wolf",
+      "group": "G",
+      "team": "CGY"
+    },
+    {
+      "rank": 221,
+      "name": "Viggo Bjorck",
+      "group": "F",
+      "team": "WPG"
+    },
+    {
+      "rank": 222,
+      "name": "Victor Eklund",
+      "group": "F",
+      "team": "NYI"
+    },
+    {
+      "rank": 223,
+      "name": "Thomas Chabot",
+      "group": "D",
+      "team": "OTT"
+    },
+    {
+      "rank": 224,
+      "name": "Justin Faulk",
+      "group": "D",
+      "team": "DET"
+    },
+    {
+      "rank": 225,
+      "name": "John Gibson",
+      "group": "G",
+      "team": "DET"
+    },
+    {
+      "rank": 226,
+      "name": "Arturs Silovs",
+      "group": "G",
+      "team": "PIT"
+    },
+    {
+      "rank": 227,
+      "name": "Elias Lindholm",
+      "group": "F",
+      "team": "BOS"
+    },
+    {
+      "rank": 228,
+      "name": "Jared McCann",
+      "group": "F",
+      "team": "SEA"
+    },
+    {
+      "rank": 229,
+      "name": "Jack Roslovic",
+      "group": "F",
+      "team": "TOR"
+    },
+    {
+      "rank": 230,
+      "name": "Brett Howden",
+      "group": "F",
+      "team": "VGK"
+    },
+    {
+      "rank": 231,
+      "name": "Taylor Hall",
+      "group": "F",
+      "team": "CAR"
+    },
+    {
+      "rank": 232,
+      "name": "Ivan Barbashev",
+      "group": "F",
+      "team": "VGK"
+    },
+    {
+      "rank": 233,
+      "name": "Cole Perfetti",
+      "group": "F",
+      "team": "WPG"
+    },
+    {
+      "rank": 234,
+      "name": "Nikita Klepov",
+      "group": "F",
+      "team": "ANA"
+    },
+    {
+      "rank": 235,
+      "name": "Ilya Protas",
+      "group": "F",
+      "team": "WSH"
+    },
+    {
+      "rank": 236,
+      "name": "Zeev Buium",
+      "group": "D",
+      "team": "VAN"
+    },
+    {
+      "rank": 237,
+      "name": "Luca Cagnoni",
+      "group": "D",
+      "team": "SJS"
+    },
+    {
+      "rank": 238,
+      "name": "Akira Schmid",
+      "group": "G",
+      "team": "FLA"
+    },
+    {
+      "rank": 239,
+      "name": "Tristan Jarry",
+      "group": "G",
+      "team": "EDM"
+    },
+    {
+      "rank": 240,
+      "name": "Pierre-Luc Dubois",
+      "group": "F",
+      "team": "WSH"
+    },
+    {
+      "rank": 241,
+      "name": "William Karlsson",
+      "group": "F",
+      "team": "VGK"
+    },
+    {
+      "rank": 242,
+      "name": "Vasily Podkolzin",
+      "group": "F",
+      "team": "EDM"
+    },
+    {
+      "rank": 243,
+      "name": "Calum Ritchie",
+      "group": "F",
+      "team": "NYI"
+    },
+    {
+      "rank": 244,
+      "name": "Pavel Buchnevich",
+      "group": "F",
+      "team": "STL"
+    },
+    {
+      "rank": 245,
+      "name": "Sam Rinzel",
+      "group": "D",
+      "team": "CHI"
+    },
+    {
+      "rank": 246,
+      "name": "Artyom Levshunov",
+      "group": "D",
+      "team": "CHI"
+    },
+    {
+      "rank": 247,
+      "name": "Samuel Montembeault",
+      "group": "G",
+      "team": "MTL"
+    },
+    {
+      "rank": 248,
+      "name": "Joseph Woll",
+      "group": "G",
+      "team": "PHI"
+    },
+    {
+      "rank": 249,
+      "name": "Sergei Murashov",
+      "group": "G",
+      "team": "PIT"
+    },
+    {
+      "rank": 250,
+      "name": "Stuart Skinner",
+      "group": "G",
+      "team": "WPG"
+    }
+  ]
+}

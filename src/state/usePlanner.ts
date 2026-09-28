@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { generateWeek, type WeekInput, type WeekPlan } from "@/domain/lineup/generateWeek";
-import { withCatalog } from "@/domain/players/catalog";
+import { withCatalog } from "@/domain/players/playerCatalog";
 import { getScheduleProvider } from "@/domain/schedule/staticProvider";
 import type { ISODate } from "@/domain/types";
 import { useStore } from "./store";

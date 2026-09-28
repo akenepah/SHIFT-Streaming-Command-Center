@@ -68,6 +68,10 @@ function parsePlayer(v: unknown): PlayerParse {
       },
     };
   }
+  // NHL identity: current field, or `nhlId` from the first catalog build. Legacy
+  // records (including `custom: true`) have neither and become CUSTOM players.
+  const rawNhlId = v.nhlPlayerId ?? v.nhlId;
+  const nhlPlayerId = typeof rawNhlId === "number" && Number.isInteger(rawNhlId) && rawNhlId > 0 ? rawNhlId : null;
   return {
     player: {
       id: v.id,
@@ -75,8 +79,8 @@ function parsePlayer(v: unknown): PlayerParse {
       nhlTeamId: v.nhlTeamId as Player["nhlTeamId"],
       eligiblePositions: positions,
       ...(typeof v.headshot === "string" && v.headshot ? { headshot: v.headshot } : {}),
-      ...(typeof v.nhlId === "number" && Number.isInteger(v.nhlId) ? { nhlId: v.nhlId } : {}),
-      ...(v.custom === true ? { custom: true } : {}),
+      nhlPlayerId,
+      source: nhlPlayerId ? "NHL" : "CUSTOM",
     },
   };
 }
@@ -183,7 +187,8 @@ export type MigrationResult = { state: AppState; removedDemoPlayers: number; kep
 export function migrateV1(raw: unknown): MigrationResult | null {
   if (!isObj(raw) || raw.version !== 1) return null;
   const body = parseBody(raw);
-  const demo = new Set(Object.values(body.players).filter(isUntouchedDemoPlayer).map((p) => p.id));
+  const rawPlayers = isObj(raw.players) ? Object.values(raw.players) : [];
+  const demo = new Set(rawPlayers.filter(isUntouchedDemoPlayer).map((p) => (p as { id: string }).id));
   const keep = (id?: string) => !id || !demo.has(id);
 
   const players = Object.fromEntries(Object.entries(body.players).filter(([id]) => !demo.has(id)));

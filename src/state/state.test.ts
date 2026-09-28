@@ -27,7 +27,8 @@ const skater = (id: string, name: string, team: Player["nhlTeamId"] = "BOS"): Pl
   name,
   nhlTeamId: team,
   eligiblePositions: ["C", "RW"],
-  custom: true,
+  nhlPlayerId: null,
+  source: "CUSTOM",
 });
 
 /** A user who created two players and rostered them. */
@@ -217,7 +218,7 @@ describe("legacy demo migration (v1 → v2)", () => {
     const mcdavid = demoRecord("seed-mcdavid");
     expect(isUntouchedDemoPlayer(mcdavid)).toBe(true);
     expect(isUntouchedDemoPlayer({ ...mcdavid, nhlTeamId: "NYR" })).toBe(false);
-    expect(isUntouchedDemoPlayer({ ...mcdavid, custom: true })).toBe(false);
+    expect(isUntouchedDemoPlayer({ ...mcdavid, custom: true })).toBe(false); // raw v1 flag for user-created players
     expect(isUntouchedDemoPlayer({ ...mcdavid, id: "player-123" })).toBe(false);
   });
 
@@ -295,7 +296,8 @@ describe("legacy demo migration (v1 → v2)", () => {
 
   it("never treats current (v2) user data as demo, even with legacy-looking ids", () => {
     const storage = new MemoryStorage();
-    const record = demoRecord("seed-mcdavid");
+    // A current (v2) record always carries its identity fields.
+    const record: Player = { ...demoRecord("seed-mcdavid"), nhlPlayerId: null, source: "CUSTOM" };
     let s = reducer(createInitialState(), { type: "player/upsert", player: record });
     s = reducer(s, { type: "roster/add", playerId: record.id });
     storage.setItem(STORAGE_KEY, JSON.stringify(s));

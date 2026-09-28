@@ -39,8 +39,16 @@ export function validatePlayerDraft(d: PlayerDraft): string[] {
   return errors;
 }
 
-/** Build a Player from a valid draft. Positions are stored in canonical order. */
-export function playerFromDraft(d: PlayerDraft, id: string, custom: boolean): Player {
+/**
+ * Build a Player from a valid draft. Positions are stored in canonical order.
+ * `identity` carries an existing player's source and NHL id through an edit;
+ * new manual players are CUSTOM with no NHL id.
+ */
+export function playerFromDraft(
+  d: PlayerDraft,
+  id: string,
+  identity: Pick<Player, "source" | "nhlPlayerId"> = { source: "CUSTOM", nhlPlayerId: null },
+): Player {
   const headshot = d.headshot.trim();
   return {
     id,
@@ -48,6 +56,7 @@ export function playerFromDraft(d: PlayerDraft, id: string, custom: boolean): Pl
     nhlTeamId: d.nhlTeamId as NHLTeamId,
     eligiblePositions: POSITIONS.filter((p) => d.eligiblePositions.includes(p)),
     ...(headshot ? { headshot } : {}),
-    ...(custom ? { custom: true } : {}),
+    nhlPlayerId: identity.nhlPlayerId ?? null,
+    source: identity.source ?? "CUSTOM",
   };
 }

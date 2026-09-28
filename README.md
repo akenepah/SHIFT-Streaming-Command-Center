@@ -136,15 +136,18 @@ Two different things, deliberately kept apart:
 So a player marked Bench still starts on any day their team plays and a legal slot is free. The planner's
 roster summary reports inventory ("24 rostered · IR+ 1/4"), not starters.
 
-## Player catalog
+## Player Catalog
 
-Add Player and Plan a Move search a bundled catalog of 250 fantasy-relevant NHL players
-(`src/data/players/2026-27.json`): NHL id, name, current team, primary position and NHL headshot. Membership
-comes from NHL.com's 2026-27 fantasy Top 250; ranks and analysis are not stored or shown. Player data was
-resolved against the NHL player API at build time, and every resolution is recorded in
-`src/data/players/2026-27.audit.json`. Adding a catalog player saves a copy to your players, so edits (for
-example extra position eligibility) stick. Manual creation remains the fallback for anyone not in the catalog.
-Refresh with `node scripts/fetch-player-catalog.mjs`. See `src/data/players/README.md`.
+Every "pick a player" flow (Add Player on the Roster and in setup, and Plan a Move) searches one bundled
+**Player Catalog** of 250 fantasy-relevant NHL players (`src/data/players/2026-27.json`), plus the user's own
+saved and manually created players. Selecting a player brings their NHL id, current team, primary position and
+official headshot. Fantasy eligibility starts as the primary position and stays user-editable. On the Weekly
+Planner, Add Player is a planned move: Add when the roster has room, Add + Drop when it's full. Manual creation
+is the fallback, with a check that points to an existing catalog or custom player first.
+
+Membership comes from NHL.com's 2026-27 fantasy Top 250; the ranking itself is never stored or shown. Data is
+resolved against the NHL player API at development time only: `npm run catalog:refresh`
+(`scripts/refresh-player-catalog.mjs`). See `src/data/players/README.md` and `docs/player-catalog/`.
 
 ## Local data
 
