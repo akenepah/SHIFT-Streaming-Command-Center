@@ -18,7 +18,7 @@ import { useWeekPlan } from "@/state/usePlanner";
 /** Density tiers for the NHL games strip. Counts always come from the schedule. */
 function densityClass(count: number, max: number): string {
   if (count === 0) return "border border-line bg-surface-muted text-ink-3";
-  if (count === max && count >= 12) return "border border-danger-line bg-danger-soft text-danger";
+  if (count === max && count >= 12) return "border border-accent-line bg-accent-soft font-medium text-accent-strong";
   if (count >= 8) return "bg-nav text-nav-ink";
   return "border border-line bg-surface-muted text-ink-2";
 }
@@ -104,7 +104,7 @@ export default function WeeklyPlannerPage() {
                   className={`flex h-7 min-w-20 items-center justify-center gap-2 rounded-control px-3 text-caption tabular-nums ${densityClass(
                     d.nhlGameCount,
                     maxGames,
-                  )} ${d.date === today ? "ring-2 ring-primary ring-offset-1" : ""}`}
+                  )} ${d.date === today ? "ring-2 ring-focus ring-offset-1" : ""}`}
                   title={`${formatDayLong(d.date)}: ${d.nhlGameCount} NHL games (${densityLabel(d.nhlGameCount, maxGames)})`}
                 >
                   <span>{formatDayShort(d.date)}</span>

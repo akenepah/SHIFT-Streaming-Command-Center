@@ -32,7 +32,7 @@ function StepIndicator({ step, onSelect }: { step: number; onSelect: (i: number)
             onClick={() => onSelect(i)}
             disabled={i > step}
             className={`flex h-11 min-w-48 items-center justify-center gap-2 rounded-control border px-5 text-body font-semibold ${
-              i === step ? "border-primary bg-primary text-white" : "border-line bg-surface text-ink disabled:cursor-default"
+              i === step ? "border-primary bg-primary text-on-primary" : "border-line bg-surface text-ink disabled:cursor-default"
             }`}
           >
             <span className="tabular-nums">{i + 1}</span> {label}

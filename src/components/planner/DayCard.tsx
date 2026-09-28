@@ -47,7 +47,7 @@ export function DayCard({ day, isToday, isPast, movesToday, onMovePlayer }: Prop
       <header className="px-4 pb-3 pt-4">
         <div className="flex items-baseline justify-between gap-2">
           <h3 className="truncate font-display text-card-title text-ink">{formatDayLong(day.date)}</h3>
-          {isToday && <span className="rounded-pill bg-primary px-2 py-0.5 text-overline uppercase text-white">Today</span>}
+          {isToday && <span className="rounded-pill bg-primary px-2 py-0.5 text-overline uppercase text-on-primary">Today</span>}
         </div>
         <p className="mt-0.5 text-caption text-ink-3 tabular-nums">
           {formatMonthDay(day.date)} · {day.nhlGameCount} NHL {day.nhlGameCount === 1 ? "game" : "games"}
@@ -106,7 +106,7 @@ export function DayCard({ day, isToday, isPast, movesToday, onMovePlayer }: Prop
                         </span>
                         <span className="block truncate text-caption leading-tight text-ink-3">
                           {a.game ? matchupText(a.game) : ""}
-                          {a.overridden && <span className="font-semibold text-primary"> · Manual</span>}
+                          {a.overridden && <span className="font-semibold text-primary-strong"> · Manual</span>}
                         </span>
                       </span>
                     </button>
@@ -203,7 +203,7 @@ export function DayCard({ day, isToday, isPast, movesToday, onMovePlayer }: Prop
           <button
             type="button"
             onClick={() => dispatch({ type: "override/resetDay", date: day.date })}
-            className="mt-auto inline-flex h-8 items-center gap-1.5 self-start rounded-control px-1 text-caption font-semibold text-primary hover:bg-primary-soft"
+            className="mt-auto inline-flex h-8 items-center gap-1.5 self-start rounded-control px-1 text-caption font-semibold text-primary-strong hover:bg-primary-soft"
           >
             <RotateCcw aria-hidden className="size-3.5" /> Reset day lineup
           </button>
