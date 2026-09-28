@@ -51,8 +51,9 @@ export default function SettingsPage() {
   return (
     <div className="mx-auto max-w-page px-10 py-10">
       <PageHeader
+        eyebrow={`${s.leagueName} · ${s.season.replace("-", "–")}`}
         title="League Settings"
-        subtitle={`${s.leagueName} · ${s.teamName} · ${s.season.replace("-", "–")} · ${s.numberOfTeams} teams`}
+        subtitle={`${s.teamName} · ${s.numberOfTeams} teams`}
       />
 
       <div className="mt-8 layout-form-rail">

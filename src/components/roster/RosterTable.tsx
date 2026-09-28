@@ -9,7 +9,7 @@ import { ActionMenu, MenuDivider, MenuItem } from "@/components/ui/Popover";
 import { useToast } from "@/components/ui/Toast";
 import { rosterLayout, type RosterGroupKey } from "@/domain/roster/rosterLayout";
 import { POSITIONS, type Player, type Position, type RosterStatus } from "@/domain/types";
-import { rosterSummary } from "@/state/selectors";
+import { rosterCounts, rosterSummary } from "@/state/selectors";
 import { useStore } from "@/state/store";
 import { DropPlayerDialog, ManagePlayerDialog, RepairPlayersPanel } from "./PlayerDialogs";
 
@@ -32,6 +32,7 @@ export function RosterTable() {
   const [dropping, setDropping] = useState<Player | null>(null);
 
   const summary = rosterSummary(state.roster, state.settings);
+  const counts = rosterCounts(state.roster);
   const groups = rosterLayout(state.roster, state.players, state.settings.roster);
   const matches = (p: Player | null) => filter === "ALL" || (!!p && p.eligiblePositions.includes(filter));
 
@@ -68,15 +69,25 @@ export function RosterTable() {
             ))}
           </Select>
         </div>
-        <p className="text-body text-ink-3 tabular-nums">
-          {summary.regular} / {summary.regularCapacity} rostered · {summary.irPlus} / {summary.irPlusCapacity} IR+
-        </p>
         {summary.regular > summary.regularCapacity && (
           <p className="flex items-center gap-1.5 text-body-sm font-medium text-warn">
             <AlertTriangle aria-hidden className="size-4" />
             Over by {summary.regular - summary.regularCapacity}
           </p>
         )}
+        <dl className="ml-auto flex divide-x divide-line" aria-label="Roster capacity">
+          {[
+            { label: "Rostered", value: `${summary.regular} / ${summary.regularCapacity}`, strong: true },
+            { label: "Active", value: String(counts.ACTIVE) },
+            { label: "Bench", value: String(counts.BENCH) },
+            { label: "IR+", value: `${summary.irPlus} / ${summary.irPlusCapacity}` },
+          ].map((stat) => (
+            <div key={stat.label} className="flex flex-col-reverse px-5 last:pr-0">
+              <dt className="text-overline uppercase tracking-widest text-ink-3">{stat.label}</dt>
+              <dd className={`font-display text-card-title tabular-nums ${stat.strong ? "text-primary" : "text-ink"}`}>{stat.value}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
 
       <div className="overflow-x-auto rounded-panel border border-line bg-surface">

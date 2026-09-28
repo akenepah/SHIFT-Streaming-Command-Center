@@ -69,7 +69,7 @@ export default function SetupPage() {
   if (step === 0) {
     return (
       <div className="mx-auto max-w-page px-10 py-10">
-        <PageHeader title="Set up your league" subtitle="Set your roster rules once. Start planning your week." />
+        <PageHeader eyebrow="Get started" title="Set up your league" subtitle="Set your roster rules once. Start planning your week." />
         <div className="mt-6">
           <StepIndicator step={step} onSelect={setStep} />
         </div>
@@ -101,8 +101,9 @@ export default function SetupPage() {
   return (
     <div className="mx-auto grid max-w-page gap-8 px-10 py-10">
       <PageHeader
+        eyebrow="Step 2 of 2"
         title="Add your roster"
-        subtitle={`Step 2 of 2 · ${state.settings.leagueName} · ${summary.regular} / ${summary.regularCapacity} rostered · ${summary.irPlus} / ${summary.irPlusCapacity} IR+`}
+        subtitle={`${state.settings.leagueName} · ${summary.regular} / ${summary.regularCapacity} rostered · ${summary.irPlus} / ${summary.irPlusCapacity} IR+`}
         actions={
           <Button variant="primary" onClick={() => setAdding(true)}>
             <Plus aria-hidden /> Add Player
