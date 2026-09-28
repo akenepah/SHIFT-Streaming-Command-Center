@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
 import { initials } from "@/components/player/PlayerBits";
+import { ShiftMark } from "@/components/ui/ShiftMark";
 import { useStore } from "@/state/store";
 
 const NAV = [
@@ -28,9 +29,12 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-30 bg-nav text-nav-ink">
         <div className="flex h-16 items-center gap-10 px-6">
-          <Link href={inSetup ? "/setup" : "/"} className="shrink-0 leading-tight">
-            <span className="block font-display text-body font-bold tracking-wide">SHIFT</span>
-            <span className="block text-overline uppercase text-nav-ink-muted">Streaming Command Center</span>
+          <Link href={inSetup ? "/setup" : "/"} className="flex shrink-0 items-center gap-3 leading-tight">
+            <ShiftMark className="size-8" />
+            <span>
+              <span className="block font-display text-body font-bold tracking-widest">SHIFT</span>
+              <span className="block text-overline uppercase text-nav-ink-muted">Streaming Command Center</span>
+            </span>
           </Link>
           {!inSetup && (
             <nav aria-label="Main" className="flex h-full items-center gap-2">
@@ -44,7 +48,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                     className={`relative flex h-11 items-center rounded-control px-4 text-body font-medium ${
                       active
                         ? "bg-nav-active text-nav-ink after:absolute after:inset-x-3 after:-bottom-0.5 after:h-0.5 after:rounded-pill after:bg-nav-accent"
-                        : "text-nav-ink-muted hover:bg-nav-active/60 hover:text-nav-ink"
+                        : "text-nav-ink-muted hover:bg-nav-hover hover:text-nav-ink"
                     }`}
                   >
                     {item.label}
@@ -60,12 +64,12 @@ export function AppShell({ children }: { children: ReactNode }) {
             {!inSetup && hydrated && (
               <Link
                 href="/settings"
-                className="flex h-11 items-center gap-2.5 rounded-control px-2 hover:bg-nav-active/60"
+                className="flex h-11 items-center gap-2.5 rounded-control px-2 hover:bg-nav-hover"
                 title="League Settings"
               >
                 <span
                   aria-hidden
-                  className="flex size-8 items-center justify-center rounded-pill bg-nav-accent text-caption font-semibold text-white"
+                  className="flex size-8 items-center justify-center rounded-pill bg-nav-accent text-caption font-semibold text-on-primary"
                 >
                   {initials(state.settings.teamName)}
                 </span>
@@ -82,7 +86,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       )}
       {loadStatus === "migrated" && removedDemoPlayers > 0 && (
-        <div role="status" className="border-b border-line bg-info-soft px-6 py-2.5 text-body-sm text-primary-strong">
+        <div role="status" className="border-b border-line bg-secondary-soft px-6 py-2.5 text-body-sm text-secondary">
           This version no longer includes the sample roster. {removedDemoPlayers} sample players were removed. Players you
           created or edited were kept.
         </div>

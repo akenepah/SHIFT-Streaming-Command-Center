@@ -41,7 +41,7 @@ export function WeeklyMovesPanel({
   return (
     <aside aria-label="Weekly moves" className="self-start rounded-panel border border-line bg-surface p-4">
       <h2 className="font-display text-card-title text-ink">Weekly Moves</h2>
-      <p className={`mt-3 text-body font-semibold tabular-nums ${over ? "text-warn" : "text-primary"}`}>
+      <p className={`mt-3 text-body font-semibold tabular-nums ${over ? "text-warn" : "text-primary-strong"}`}>
         {used} / {limit} weekly adds
         {over && <span className="ml-1 font-medium">· over limit</span>}
       </p>
@@ -120,8 +120,8 @@ export function WeeklyMovesPanel({
       )}
 
       {goalieMin > 0 && state.roster.length > 0 && (
-        <div className="mt-4 rounded-card bg-info-soft px-3.5 py-3">
-          <p className="text-body-sm font-semibold text-primary-strong">Goalie appearances</p>
+        <div className="mt-4 rounded-card bg-secondary-soft px-3.5 py-3">
+          <p className="text-body-sm font-semibold text-secondary">Goalie appearances</p>
           <p className="mt-1 text-body-sm text-ink tabular-nums">
             {summary.goalieStarts} projected · minimum {goalieMin}
           </p>

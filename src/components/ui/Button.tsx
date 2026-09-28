@@ -5,11 +5,11 @@ type Size = "sm" | "md" | "icon" | "icon-sm";
 
 const VARIANT: Record<Variant, string> = {
   primary:
-    "bg-primary text-white hover:bg-primary-hover active:bg-primary-pressed disabled:bg-primary/45 disabled:text-white",
+    "bg-primary text-on-primary hover:bg-primary-hover active:bg-primary-pressed disabled:bg-primary/40 disabled:text-on-primary/60",
   secondary:
     "border border-line bg-surface text-ink hover:border-line-strong hover:bg-surface-muted disabled:text-ink-3",
   ghost: "text-ink-2 hover:bg-surface-muted hover:text-ink disabled:text-ink-3",
-  danger: "bg-danger text-white hover:bg-danger/90 disabled:bg-danger/45",
+  danger: "bg-danger text-ink-inverse hover:bg-danger/90 disabled:bg-danger/45",
   "quiet-danger": "text-danger hover:bg-danger-soft disabled:text-ink-3",
 };
 

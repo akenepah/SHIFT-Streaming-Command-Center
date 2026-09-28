@@ -211,7 +211,7 @@ export function PlanMoveDialog({
                 </span>
                 <button
                   type="button"
-                  className="inline-flex items-center gap-1 text-body-sm font-medium text-primary hover:underline"
+                  className="inline-flex items-center gap-1 text-body-sm font-medium text-primary-strong hover:underline"
                   onClick={() => setCreating((c) => !c)}
                   aria-expanded={creating}
                 >

@@ -219,7 +219,7 @@ export function AddPlayerDialog({ open, onClose }: { open: boolean; onClose: () 
               {available.length === 0 && (
                 <li className="px-4 py-4 text-body-sm text-ink-3">
                   No matching players.{" "}
-                  <button type="button" className="font-medium text-primary hover:underline" onClick={() => setMode("create")}>
+                  <button type="button" className="font-medium text-primary-strong hover:underline" onClick={() => setMode("create")}>
                     Create one
                   </button>
                 </li>

@@ -8,51 +8,116 @@
  * (bg-surface, text-ink-2, rounded-card, text-page-title, ...). Components use
  * only the semantic names, never raw hex values or font families.
  *
- * Current values follow the Weekly Streaming Planner Figma baseline.
+ * Three tiers: (1) the six approved SHIFT brand anchors, (2) tonal ramps
+ * derived from them, (3) semantic roles. Rebrand by editing tiers 1–2;
+ * restyle a role by pointing it at a different ramp step.
  */
 :root {
-  /* Typography: families (font files are loaded in app/layout.tsx) */
+  /* ── 1. Brand anchors (approved SHIFT palette) ─────────────────────────── */
+  --shift-brand-teal: #14b8b0; /* SHIFT Teal: primary accent */
+  --shift-brand-navy: #0b1b28; /* Rink Navy: core dark surface */
+  --shift-brand-deep-teal: #0e6b7a; /* Deep Teal: secondary */
+  --shift-brand-copper: #c6925b; /* Ice Copper: sparing accent */
+  --shift-brand-frost: #f4f7f8; /* Frost White: light neutral */
+  --shift-brand-steel: #94a3ae; /* Steel Gray: supporting neutral */
+
+  /* ── 2. Tonal ramps derived from the anchors ───────────────────────────── */
+  --shift-teal-50: #e8f8f7;
+  --shift-teal-100: #cdf0ee;
+  --shift-teal-200: #9ce1dc;
+  --shift-teal-300: #5fcec7;
+  --shift-teal-500: var(--shift-brand-teal);
+  --shift-teal-600: #0fa39c;
+  --shift-teal-700: #0d8e88; /* ≥3:1 on white: focus rings, non-text accents */
+  --shift-teal-800: #0a7570; /* ≥4.5:1 on white: teal text */
+
+  --shift-navy-950: #07121b;
+  --shift-navy-900: var(--shift-brand-navy);
+  --shift-navy-800: #13293a;
+  --shift-navy-700: #1d3a4f;
+  --shift-navy-600: #2c4d64;
+
+  --shift-deep-teal-50: #e6f1f3;
+  --shift-deep-teal-100: #cce3e7;
+  --shift-deep-teal-200: #a3ccd3;
+  --shift-deep-teal-600: var(--shift-brand-deep-teal);
+  --shift-deep-teal-700: #0b5663;
+
+  --shift-copper-50: #f9f1e8;
+  --shift-copper-100: #f1e0cc;
+  --shift-copper-300: #dcb68c;
+  --shift-copper-500: var(--shift-brand-copper);
+  --shift-copper-800: #8a5a2b; /* ≥4.5:1 on white: copper text */
+
+  --shift-neutral-0: #ffffff;
+  --shift-neutral-50: var(--shift-brand-frost);
+  --shift-neutral-100: #edf1f3;
+  --shift-neutral-200: #dfe5e9;
+  --shift-neutral-300: #c7d0d6;
+  --shift-neutral-400: var(--shift-brand-steel); /* borders, icons, inactive, not body text */
+  --shift-neutral-500: #5f7180; /* ≥4.5:1 on white and frost: muted text */
+  --shift-neutral-600: #44566a; /* secondary text */
+  --shift-neutral-900: var(--shift-brand-navy); /* primary text */
+
+  /* ── 3. Semantic roles (components use these via Tailwind tokens) ──────── */
   --shift-font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --shift-font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
-  /* Neutrals */
-  --shift-bg: #f5f7fa;
-  --shift-surface: #ffffff;
-  --shift-surface-muted: #f7f8fa;
-  --shift-surface-raised: #ffffff;
-  --shift-border: #e4e7ec;
-  --shift-border-strong: #cfd5de;
-  --shift-text: #0f172a;
-  --shift-text-secondary: #475467;
-  --shift-text-muted: #7b8698;
+  /* background / surfaces / borders / text */
+  --shift-bg: var(--shift-neutral-50);
+  --shift-surface: var(--shift-neutral-0);
+  --shift-surface-muted: #f7f9fa;
+  --shift-surface-raised: var(--shift-neutral-0);
+  --shift-border: var(--shift-neutral-200);
+  --shift-border-strong: var(--shift-neutral-300);
+  --shift-text: var(--shift-neutral-900);
+  --shift-text-secondary: var(--shift-neutral-600);
+  --shift-text-muted: var(--shift-neutral-500);
+  --shift-text-inverse: var(--shift-neutral-0);
 
-  /* Navigation */
-  --shift-nav: #0f172a;
-  --shift-nav-active: #1e293b;
-  --shift-nav-text: #ffffff;
-  --shift-nav-text-muted: #cbd5e1;
-  --shift-nav-accent: #2f6fed;
+  /* navigation */
+  --shift-nav: var(--shift-navy-900);
+  --shift-nav-active: var(--shift-navy-800);
+  --shift-nav-hover: var(--shift-navy-800);
+  --shift-nav-text: var(--shift-neutral-0);
+  --shift-nav-text-muted: #a7b6c1;
+  --shift-nav-accent: var(--shift-teal-500);
 
-  /* Actions & feedback */
-  --shift-primary: #2463eb;
-  --shift-primary-hover: #1d53cc;
-  --shift-primary-pressed: #1946ad;
-  --shift-primary-strong: #1a4bb8;
-  --shift-primary-soft: #eaf1ff;
-  --shift-danger: #c8323b;
-  --shift-danger-soft: #fdeeee;
-  --shift-danger-line: #f3c4c7;
+  /* primary (SHIFT Teal). Text on teal fills is navy: white on teal fails contrast. */
+  --shift-primary: var(--shift-teal-500);
+  --shift-primary-hover: var(--shift-teal-600);
+  --shift-primary-pressed: var(--shift-teal-700);
+  --shift-primary-strong: var(--shift-teal-800);
+  --shift-primary-soft: var(--shift-teal-50);
+  --shift-primary-border: var(--shift-teal-200);
+  --shift-on-primary: var(--shift-navy-900);
+
+  /* secondary (Deep Teal) and accent (Ice Copper, sparing) */
+  --shift-secondary: var(--shift-deep-teal-600);
+  --shift-secondary-hover: var(--shift-deep-teal-700);
+  --shift-secondary-soft: var(--shift-deep-teal-50);
+  --shift-accent: var(--shift-copper-500);
+  --shift-accent-soft: var(--shift-copper-50);
+  --shift-accent-border: var(--shift-copper-100);
+  --shift-accent-strong: var(--shift-copper-800);
+
+  --shift-focus: var(--shift-teal-700);
+
+  /* feedback */
+  --shift-danger: #c2333d;
+  --shift-danger-soft: #fdeeef;
+  --shift-danger-line: #f3c5c9;
   --shift-warning: #b45309;
   --shift-warning-strong: #92400e;
   --shift-warning-soft: #fff7e8;
   --shift-warning-line: #f6d38f;
-  --shift-success: #15803d;
-  --shift-success-soft: #eaf7ee;
-  --shift-success-line: #b7e1c4;
-  --shift-info: #2463eb;
-  --shift-info-soft: #eef4ff;
+  --shift-success: #11743f;
+  --shift-success-soft: #e8f6ee;
+  --shift-success-line: #b6dfc7;
+  --shift-info: var(--shift-deep-teal-600);
+  --shift-info-soft: var(--shift-deep-teal-50);
 
-  /* Position semantics: text/accent, soft tint, border */
+  /* Position semantics: accent/text, soft tint, border. G uses the Deep Teal ramp. */
   --shift-pos-c: #2563eb;
   --shift-pos-c-soft: #eef4ff;
   --shift-pos-c-line: #d3e1fd;
@@ -68,15 +133,15 @@
   --shift-pos-util: #7c3aed;
   --shift-pos-util-soft: #f4effe;
   --shift-pos-util-line: #e1d4fb;
-  --shift-pos-g: #0e7490;
-  --shift-pos-g-soft: #ebf7fa;
-  --shift-pos-g-line: #c5e6ee;
-  --shift-pos-bn: #475467;
-  --shift-pos-bn-soft: #f2f4f7;
-  --shift-pos-bn-line: #e1e5eb;
-  --shift-pos-ir: #c8323b;
+  --shift-pos-g: var(--shift-deep-teal-600);
+  --shift-pos-g-soft: var(--shift-deep-teal-50);
+  --shift-pos-g-line: var(--shift-deep-teal-100);
+  --shift-pos-bn: var(--shift-neutral-600);
+  --shift-pos-bn-soft: var(--shift-neutral-100);
+  --shift-pos-bn-line: var(--shift-neutral-200);
+  --shift-pos-ir: var(--shift-danger);
   --shift-pos-ir-soft: #fdf0f0;
-  --shift-pos-ir-line: #f3c4c7;
+  --shift-pos-ir-line: var(--shift-danger-line);
 }
 
 @theme inline {
@@ -93,9 +158,11 @@
   --color-ink: var(--shift-text);
   --color-ink-2: var(--shift-text-secondary);
   --color-ink-3: var(--shift-text-muted);
+  --color-ink-inverse: var(--shift-text-inverse);
 
   --color-nav: var(--shift-nav);
   --color-nav-active: var(--shift-nav-active);
+  --color-nav-hover: var(--shift-nav-hover);
   --color-nav-ink: var(--shift-nav-text);
   --color-nav-ink-muted: var(--shift-nav-text-muted);
   --color-nav-accent: var(--shift-nav-accent);
@@ -105,6 +172,16 @@
   --color-primary-pressed: var(--shift-primary-pressed);
   --color-primary-strong: var(--shift-primary-strong);
   --color-primary-soft: var(--shift-primary-soft);
+  --color-primary-line: var(--shift-primary-border);
+  --color-on-primary: var(--shift-on-primary);
+  --color-secondary: var(--shift-secondary);
+  --color-secondary-hover: var(--shift-secondary-hover);
+  --color-secondary-soft: var(--shift-secondary-soft);
+  --color-accent: var(--shift-accent);
+  --color-accent-soft: var(--shift-accent-soft);
+  --color-accent-line: var(--shift-accent-border);
+  --color-accent-strong: var(--shift-accent-strong);
+  --color-focus: var(--shift-focus);
   --color-danger: var(--shift-danger);
   --color-danger-soft: var(--shift-danger-soft);
   --color-danger-line: var(--shift-danger-line);
@@ -183,8 +260,8 @@
   --container-page: 100rem; /* 1600px canonical desktop frame */
 
   /* Elevation: borders do most of the work */
-  --shadow-popover: 0 8px 24px -6px rgb(15 23 42 / 0.18), 0 2px 6px rgb(15 23 42 / 0.06);
-  --shadow-overlay: 0 24px 48px -12px rgb(15 23 42 / 0.28);
+  --shadow-popover: 0 8px 24px -6px rgb(11 27 40 / 0.18), 0 2px 6px rgb(11 27 40 / 0.06);
+  --shadow-overlay: 0 24px 48px -12px rgb(11 27 40 / 0.3);
 }
 
 /* Main column + summary rail (League Settings, Setup): 976 / 24 / 520 at desktop. */
@@ -203,12 +280,12 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--shift-primary);
+  outline: 2px solid var(--shift-focus);
   outline-offset: 2px;
 }
 
 dialog::backdrop {
-  background: rgb(15 23 42 / 0.4);
+  background: rgb(11 27 40 / 0.45); /* Rink Navy scrim */
 }
 
 dialog {
