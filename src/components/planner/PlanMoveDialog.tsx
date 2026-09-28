@@ -14,6 +14,8 @@ import { generateDailyLineup } from "@/domain/lineup/generateDailyLineup";
 import type { OpenSlotContext } from "@/domain/lineup/openSlot";
 import { findTeamGame } from "@/domain/schedule/provider";
 import type { WeekInput } from "@/domain/lineup/generateWeek";
+import { TEAMS_SORTED, teamFullName } from "@/domain/nhl/teams";
+import type { NHLTeamId } from "@/domain/types";
 import { activeSlotCount, canPlaySlot } from "@/domain/config";
 import { findExistingIdentity, isRostered, type ExistingIdentity } from "@/domain/players/searchPlayers";
 import { projectRoster } from "@/domain/roster/projectedRoster";
@@ -47,6 +49,7 @@ export function PlanMoveDialog({
   defaultDate,
   initialType = "ADD_DROP",
   slotContext = null,
+  initialTeam = "",
 }: {
   open: boolean;
   onClose: () => void;
@@ -57,6 +60,7 @@ export function PlanMoveDialog({
   initialType?: TransactionType;
   /** Set when the flow starts from an empty active slot on the Weekly Planner. */
   slotContext?: OpenSlotContext | null;
+  initialTeam?: NHLTeamId | "";
 }) {
   const { state, dispatch } = useStore();
   const toast = useToast();
@@ -71,6 +75,7 @@ export function PlanMoveDialog({
   const [playerDraft, setPlayerDraft] = useState<PlayerDraft>(emptyPlayerDraft);
   const [playerErrors, setPlayerErrors] = useState<string[]>([]);
   const [showErrors, setShowErrors] = useState(false);
+  const [teamFilter, setTeamFilter] = useState<NHLTeamId | "">(initialTeam);
   const [addQuery, setAddQuery] = useState("");
   const [existing, setExisting] = useState<ExistingIdentity>(null);
   const [typeTouched, setTypeTouched] = useState(false);
@@ -108,7 +113,9 @@ export function PlanMoveDialog({
     !!slotContext &&
     canPlaySlot(p.eligiblePositions, slotContext.position) &&
     !!findTeamGame(weekInput.scheduleProvider, p.nhlTeamId, draft.effectiveDate);
-  const pool = slotContext && fitSlot ? fullPool.filter(fitsContext) : fullPool;
+  const contextPool = slotContext && fitSlot ? fullPool.filter(fitsContext) : fullPool;
+  const pool = teamFilter ? contextPool.filter(p => p.nhlTeamId === teamFilter && (!initialTeam || !p.eligiblePositions.includes("G"))) : contextPool;
+  const teamIdle = teamFilter ? pool.filter(p => !rosteredThen(p)).sort((a, b) => a.name.localeCompare(b.name)) : null;
   const contextIdle =
     slotContext && fitSlot
       ? pool
@@ -335,6 +342,13 @@ export function PlanMoveDialog({
                       Showing {slotContext.position}-eligible players with a game {slotDayLabel}
                     </label>
                   )}
+                  <Field label="NHL team" id="move-team">
+                    <Select id="move-team" value={teamFilter} onChange={e => { setTeamFilter(e.target.value as NHLTeamId | ""); setDraft(d => ({ ...d, addPlayerId: undefined })); }}>
+                      <option value="">All teams</option>
+                      {TEAMS_SORTED.map(t => <option key={t.id} value={t.id}>{teamFullName(t.id)}</option>)}
+                    </Select>
+                  </Field>
+                  {teamFilter && <p className="text-caption text-ink-2">{initialTeam ? "Skaters" : "Players"} from {teamFullName(teamFilter)} · change to All teams to clear.</p>}
                   <PlayerSearch
                     inputId="move-add-search"
                     query={addQuery}
@@ -348,7 +362,7 @@ export function PlanMoveDialog({
                       setCreating(true);
                     }}
                     idle={
-                      contextIdle
+                      teamIdle ? { label: `${teamFilter} ${initialTeam ? "skaters" : "players"}`, players: teamIdle } : contextIdle
                         ? { label: `${slotContext!.position}-eligible · playing ${slotDayLabel}`, players: contextIdle }
                         : { label: "Your saved players", players: savedIdle }
                     }
