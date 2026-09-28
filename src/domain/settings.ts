@@ -16,5 +16,6 @@ export function validateSettings(s: LeagueSettings): string[] {
   if (!whole(s.weeklyAcquisitionLimit, 0, 50)) errors.push("Weekly acquisition limit must be a whole number from 0 to 50.");
   if (!whole(s.weekStartsOn, 0, 6)) errors.push("Choose the day acquisitions reset.");
   if (!whole(s.minGoalieAppearances, 0, 14)) errors.push("Minimum goalie appearances must be a whole number from 0 to 14.");
+  if (s.roster.slots.G === 0 && s.minGoalieAppearances > 0) errors.push("Add a G slot or set minimum goalie appearances to None.");
   return errors;
 }

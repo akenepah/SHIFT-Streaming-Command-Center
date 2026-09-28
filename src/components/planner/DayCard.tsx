@@ -14,6 +14,7 @@ type Props = {
   isToday: boolean;
   isPast: boolean;
   movesToday: PlannedTransaction[];
+  statusRows: number;
   players: Readonly<Record<string, Player>>;
   onMovePlayer: (player: Player, day: DailyLineup, anchor: HTMLElement) => void;
   onAddToSlot: (day: DailyLineup, position: SlotType) => void;
@@ -47,10 +48,10 @@ const SLOT_NAME: Record<SlotType, string> = {
 };
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return <h4 className="mb-1.5 mt-4 px-0.5 text-overline uppercase text-ink-2">{children}</h4>;
+  return <h4 className="mb-1.5 mt-4 px-0.5 font-display text-overline uppercase text-ink-2">{children}</h4>;
 }
 
-export function DayCard({ day, isToday, isPast, movesToday, players, onMovePlayer, onAddToSlot }: Props) {
+export function DayCard({ day, isToday, isPast, movesToday, statusRows, players, onMovePlayer, onAddToSlot }: Props) {
   const { state, dispatch } = useStore();
   const { benchSlots, irPlusSlots } = state.settings.roster;
   const slotCount = day.activeSlots.length;
@@ -64,7 +65,7 @@ export function DayCard({ day, isToday, isPast, movesToday, players, onMovePlaye
     if (row.kind === "open") return <SlotTile key={key} kind="open" badge={badge} />;
     const p = players[row.playerId];
     if (!p) return null;
-    const secondary = row.game ? matchupText(row.game) : "No game";
+    const secondary = row.starting ? "Starting today" : row.game ? matchupText(row.game) : "No game";
     return (
       <SlotTile
         key={key}
@@ -84,28 +85,31 @@ export function DayCard({ day, isToday, isPast, movesToday, players, onMovePlaye
     <section
       aria-label={`${dayName} ${formatMonthDay(day.date)}`}
       className={`flex min-w-0 flex-col rounded-panel border bg-surface ${isToday ? "border-primary ring-1 ring-primary" : "border-line"} ${
-        isPast ? "opacity-70" : ""
+        isPast ? "border-dashed" : ""
       }`}
     >
       <header className="px-3 pb-3 pt-4 2xl:px-4">
-        <div className="flex items-baseline justify-between gap-2">
-          <h3 className="truncate font-display text-card-title uppercase tracking-wide text-ink">{dayName}</h3>
-          {isToday && <span className="rounded-pill bg-primary px-2 py-0.5 text-overline uppercase text-on-primary">Today</span>}
+        <div className="flex flex-wrap items-baseline justify-between gap-1">
+          <h3 className="font-display text-card-title uppercase tracking-wide text-ink">{dayName}</h3>
+          {isPast && <span className="text-caption text-ink-2">Past</span>}
+          {isToday && <span className="rounded-pill bg-primary px-2 py-0.5 font-display text-overline uppercase text-on-primary">Today</span>}
         </div>
         <p className="text-caption text-ink-3 tabular-nums">
           {formatMonthDay(day.date)} · {day.nhlGameCount} NHL {day.nhlGameCount === 1 ? "game" : "games"}
         </p>
         <div
           className="mt-2.5 h-1 overflow-hidden rounded-pill bg-surface-muted"
+          title={`Active slots filled · ${OPPORTUNITY_LABEL[tone]}`}
           role="img"
           aria-label={`${filled} of ${slotCount} active slots filled: ${OPPORTUNITY_LABEL[tone]}`}
         >
           <div
             className={`h-full rounded-pill ${OPPORTUNITY_BAR[tone]}`}
-            style={{ width: `${tone === "na" ? 100 : slotCount ? (filled / slotCount) * 100 : 0}%` }}
+            style={{ width: `${slotCount ? (filled / slotCount) * 100 : 0}%` }}
           />
         </div>
-        <p className="mt-2 text-body-sm text-ink tabular-nums">
+        <p className="mt-2 flex items-center gap-1 text-body-sm text-ink tabular-nums">
+          {filled === 0 && tone === "very-high" && <span aria-label="Very high opportunity" className="size-1.5 rounded-full bg-opp-very-high" />}
           {filled} / {slotCount} with games
         </p>
         <p className="text-caption text-ink-3 tabular-nums">
@@ -117,25 +121,29 @@ export function DayCard({ day, isToday, isPast, movesToday, players, onMovePlaye
       </header>
 
       <div className="flex flex-1 flex-col px-2 pb-3 2xl:px-2.5">
-        {movesToday.length > 0 && (
-          <div className="mb-2 rounded-control border border-primary-line bg-primary-soft px-2.5 py-2 text-caption text-primary-strong">
+        {statusRows > 0 && (
+          <div style={{height: 40 + statusRows * 36}} className="mb-2 overflow-y-auto rounded-control px-2 py-2 text-caption text-primary-strong">
+            {movesToday.length > 0 && <>
             <span className="flex items-center gap-1.5 font-semibold">
               <ArrowLeftRight aria-hidden className="size-3.5" /> Planned move
             </span>
             {movesToday.map((t) => (
-              <span key={t.id} className="mt-0.5 block truncate">
+              <span key={t.id} className="mt-0.5 block">
                 {t.addPlayerId && <>+ {shortName(name(t.addPlayerId))} </>}
                 {t.dropPlayerId && <>− {shortName(name(t.dropPlayerId))}</>}
               </span>
-            ))}
+            ))}</>}
           </div>
         )}
 
         <ul className="flex flex-col gap-1.5" aria-label={`${dayName} active lineup`}>
-          {day.activeSlots.map((a) => {
+          {day.activeSlots.map((a, index) => {
+            const group = (t: SlotType) => ["C", "LW", "RW"].includes(t) ? "FORWARDS" : t === "D" ? "DEFENSE" : t === "UTIL" ? "UTILITY" : "GOALTENDER";
+            const startsGroup = index === 0 || group(day.activeSlots[index - 1].slot.type) !== group(a.slot.type);
             const p = a.playerId ? players[a.playerId] : undefined;
             return (
               <li key={a.slot.id}>
+                {startsGroup && <SectionLabel>{group(a.slot.type)} · {day.activeSlots.filter(b => group(b.slot.type) === group(a.slot.type)).length}</SectionLabel>}
                 {p ? (
                   <SlotTile
                     kind="player"
@@ -143,14 +151,14 @@ export function DayCard({ day, isToday, isPast, movesToday, players, onMovePlaye
                     player={p}
                     secondary={a.game ? matchupText(a.game) : ""}
                     overridden={a.overridden}
-                    onSelect={(anchor) => onMovePlayer(p, day, anchor)}
+                    onSelect={isPast ? undefined : (anchor) => onMovePlayer(p, day, anchor)}
                     ariaLabel={`${p.name}, ${a.slot.type}, ${a.game ? matchupText(a.game) : ""}${a.overridden ? ", set manually" : ""}. Change lineup spot`}
                   />
-                ) : (
+                ) : isPast || day.nhlGameCount === 0 ? <SlotTile kind="open" badge={a.slot.type} label={day.nhlGameCount === 0 ? "No games" : "Open slot"} /> : (
                   <SlotTile
                     kind="add"
                     badge={a.slot.type}
-                    ariaLabel={`Add a player for ${dayName} at ${SLOT_NAME[a.slot.type]}`}
+                    ariaLabel={`Add a player for ${dayName} at ${SLOT_NAME[a.slot.type]}, slot ${day.activeSlots.slice(0, index + 1).filter(b => b.slot.type === a.slot.type).length} of ${day.activeSlots.filter(b => b.slot.type === a.slot.type).length}`}
                     onAdd={() => onAddToSlot(day, a.slot.type)}
                   />
                 )}
@@ -169,7 +177,8 @@ export function DayCard({ day, isToday, isPast, movesToday, players, onMovePlaye
           </>
         )}
 
-        {hasOverrides && (
+        {day.noGame.some(e => day.roster.some(r => r.playerId === e.playerId && r.rosterStatus === "ACTIVE")) && <details className="mt-4 text-body-sm text-ink-2"><summary className="cursor-pointer font-display">NOT PLAYING · {day.noGame.filter(e => day.roster.some(r => r.playerId === e.playerId && r.rosterStatus === "ACTIVE")).length}</summary><ul>{day.noGame.filter(e => day.roster.some(r => r.playerId === e.playerId && r.rosterStatus === "ACTIVE")).map(e => <li key={e.playerId} className="py-1">{name(e.playerId)}</li>)}</ul></details>}
+        {hasOverrides && !isPast && (
           <button
             type="button"
             onClick={() => dispatch({ type: "override/resetDay", date: day.date })}

@@ -140,9 +140,9 @@
   --shift-pos-bn: var(--shift-slate-600);
   --shift-pos-bn-soft: var(--shift-slate-100);
   --shift-pos-bn-line: var(--shift-slate-200);
-  --shift-pos-ir: var(--shift-danger);
-  --shift-pos-ir-soft: #fdf0f0;
-  --shift-pos-ir-line: var(--shift-danger-line);
+  --shift-pos-ir: #65506c;
+  --shift-pos-ir-soft: #f4f0f5;
+  --shift-pos-ir-line: #dfd3e3;
 }
 
 @theme inline {
@@ -301,3 +301,5 @@ dialog::backdrop {
 dialog {
   margin: auto;
 }
+
+@media (max-width: 1023px) { .layout-form-rail { grid-template-columns: minmax(0, 1fr); } }

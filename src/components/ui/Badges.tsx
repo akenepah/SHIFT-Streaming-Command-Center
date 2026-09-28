@@ -31,7 +31,7 @@ export function PositionBadge({ kind, compact = false, className = "" }: { kind:
 const STATUS: Record<RosterStatus, { label: string; className: string; Icon: typeof CircleCheck }> = {
   ACTIVE: { label: "Active", className: "bg-success-soft text-success border-success-line", Icon: CircleCheck },
   BENCH: { label: "Bench", className: "bg-pos-bn-soft text-pos-bn border-pos-bn-line", Icon: Pause },
-  IR_PLUS: { label: "IR+", className: "bg-danger-soft text-danger border-danger-line", Icon: ShieldPlus },
+  IR_PLUS: { label: "IR+", className: "bg-pos-ir-soft text-pos-ir border-pos-ir-line", Icon: ShieldPlus },
 };
 
 /** Roster status as icon + text, never color alone. */

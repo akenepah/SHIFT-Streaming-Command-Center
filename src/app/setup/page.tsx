@@ -1,8 +1,8 @@
 "use client";
 
 import { ArrowRight, Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import { AddPlayerDialog } from "@/components/roster/PlayerDialogs";
 import { RosterTable } from "@/components/roster/RosterTable";
 import {
@@ -23,7 +23,7 @@ const STEPS = ["League & lineup", "Add your roster"];
 
 function StepIndicator({ step, onSelect }: { step: number; onSelect: (i: number) => void }) {
   return (
-    <ol aria-label="Setup steps" className="flex gap-4">
+    <ol aria-label="Setup steps" className="flex flex-wrap gap-3">
       {STEPS.map((label, i) => (
         <li key={label}>
           <button
@@ -31,8 +31,8 @@ function StepIndicator({ step, onSelect }: { step: number; onSelect: (i: number)
             aria-current={i === step ? "step" : undefined}
             onClick={() => onSelect(i)}
             disabled={i > step}
-            className={`flex h-11 min-w-48 items-center justify-center gap-2 rounded-control border px-5 text-body font-semibold ${
-              i === step ? "border-primary bg-primary text-on-primary" : "border-line bg-surface text-ink disabled:cursor-default"
+            className={`flex h-11 min-w-0 items-center justify-center gap-2 rounded-control border px-5 text-body font-semibold ${
+              i === step ? "border-primary bg-primary text-on-primary" : "border-line bg-surface text-ink disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-ink-3"
             }`}
           >
             <span className="tabular-nums">{i + 1}</span> {label}
@@ -44,10 +44,16 @@ function StepIndicator({ step, onSelect }: { step: number; onSelect: (i: number)
 }
 
 export default function SetupPage() {
+  return <Suspense fallback={<p>Loading setup…</p>}><SetupFlow /></Suspense>;
+}
+
+function SetupFlow() {
   const { state, dispatch } = useStore();
   const router = useRouter();
   const toast = useToast();
-  const [step, setStep] = useState(0);
+  const params = useSearchParams();
+  const step = params.get("step") === "2" ? 1 : 0;
+  const setStep = (n: number) => router.push(`/setup?step=${n + 1}`);
   const [draft, setDraft] = useState(state.settings);
   const [errors, setErrors] = useState<string[]>([]);
   const [adding, setAdding] = useState(false);
@@ -55,7 +61,7 @@ export default function SetupPage() {
   const next = () => {
     const errs = validateSettings(draft);
     setErrors(errs);
-    if (errs.length) return;
+    if (errs.length) { requestAnimationFrame(() => (document.querySelector("[aria-invalid=true]") as HTMLElement | null)?.focus()); return; }
     dispatch({ type: "settings/update", settings: draft });
     setStep(1);
   };
@@ -68,7 +74,7 @@ export default function SetupPage() {
 
   if (step === 0) {
     return (
-      <div className="mx-auto max-w-page px-10 py-10">
+      <div className="mx-auto max-w-page px-4 py-6 sm:px-10 sm:py-10">
         <PageHeader eyebrow="Get started" title="Set up your league" subtitle="Set your roster rules once. Start planning your week." />
         <div className="mt-6">
           <StepIndicator step={step} onSelect={setStep} />
@@ -77,12 +83,12 @@ export default function SetupPage() {
           <section className="rounded-panel border border-line bg-surface p-6">
             <h2 className="font-display text-section-title text-ink">League &amp; lineup</h2>
             <div className="mt-6 grid gap-6">
-              <LeagueTeamFields value={draft} onChange={setDraft} withSeason />
+              <LeagueTeamFields showErrors={errors.length > 0} value={draft} onChange={setDraft} withSeason />
               <div>
                 <h3 className="mb-4 text-body font-semibold text-ink">Daily lineup slots</h3>
                 <LineupSlotFields value={draft} onChange={setDraft} />
               </div>
-              <RulesFields value={draft} onChange={setDraft} timingLabel="Default move timing" />
+              <RulesFields showErrors={errors.length > 0} value={draft} onChange={setDraft} timingLabel="Default move timing" />
               <ErrorList errors={errors} />
               <div>
                 <Button variant="primary" className="min-w-56" onClick={next}>
@@ -99,7 +105,7 @@ export default function SetupPage() {
 
   const summary = rosterSummary(state.roster, state.settings);
   return (
-    <div className="mx-auto grid max-w-page gap-8 px-10 py-10">
+    <div className="mx-auto grid max-w-page gap-8 px-4 py-6 sm:px-10 sm:py-10">
       <PageHeader
         eyebrow="Step 2 of 2"
         title="Add your roster"
@@ -114,13 +120,15 @@ export default function SetupPage() {
         Add each player&apos;s name, NHL team and eligible positions. You can open the planner with a partial roster and
         add the rest later.
       </p>
+      <StepIndicator step={step} onSelect={setStep} />
       <RosterTable />
-      <div className="flex gap-3">
+      <div className="sticky bottom-0 flex flex-wrap items-center gap-3 border-t border-line bg-surface p-4">
         <Button className="min-w-28" onClick={() => setStep(0)}>
-          Back
+          ← Back to League &amp; Lineup
         </Button>
+        <span className="ml-auto text-body-sm">{summary.regular} of {summary.regularCapacity} rostered</span>
         <Button variant="primary" className="min-w-56" onClick={finish}>
-          Open Weekly Planner
+          Open Weekly Planner →
         </Button>
       </div>
       <AddPlayerDialog open={adding} onClose={() => setAdding(false)} />

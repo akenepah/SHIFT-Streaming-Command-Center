@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertTriangle, ArrowLeft, Info } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { PlayerForm } from "@/components/player/PlayerForm";
 import { PlayerSearch } from "@/components/player/PlayerSearch";
 import { ExistingIdentityNotice, usePlayerPool } from "@/components/roster/PlayerDialogs";
@@ -10,6 +10,7 @@ import { Dialog } from "@/components/ui/Dialog";
 import { ErrorList, Field, Select } from "@/components/ui/Field";
 import { useToast } from "@/components/ui/Toast";
 import { addDays, formatDayLong, formatDayShort, formatMonthDay, weekDates } from "@/domain/dates";
+import { generateDailyLineup } from "@/domain/lineup/generateDailyLineup";
 import type { OpenSlotContext } from "@/domain/lineup/openSlot";
 import { findTeamGame } from "@/domain/schedule/provider";
 import type { WeekInput } from "@/domain/lineup/generateWeek";
@@ -64,6 +65,8 @@ export function PlanMoveDialog({
       ? { type: editing.type, addPlayerId: editing.addPlayerId, dropPlayerId: editing.dropPlayerId, effectiveDate: editing.effectiveDate }
       : { type: initialType, effectiveDate: defaultDate },
   );
+  const committing = useRef(false);
+  const [saving, setSaving] = useState(false);
   const [creating, setCreating] = useState(false);
   const [playerDraft, setPlayerDraft] = useState<PlayerDraft>(emptyPlayerDraft);
   const [playerErrors, setPlayerErrors] = useState<string[]>([]);
@@ -104,16 +107,16 @@ export function PlanMoveDialog({
   const fitsContext = (p: Player) =>
     !!slotContext &&
     canPlaySlot(p.eligiblePositions, slotContext.position) &&
-    !!findTeamGame(weekInput.scheduleProvider, p.nhlTeamId, slotContext.date);
+    !!findTeamGame(weekInput.scheduleProvider, p.nhlTeamId, draft.effectiveDate);
   const pool = slotContext && fitSlot ? fullPool.filter(fitsContext) : fullPool;
   const contextIdle =
     slotContext && fitSlot
       ? pool
           .filter((p) => !rosteredThen(p))
-          .sort((a, b) => a.name.localeCompare(b.name))
+          .sort((a, b) => remaining(b) - remaining(a) || a.name.localeCompare(b.name))
           .slice(0, 20)
       : null;
-  const slotDayLabel = slotContext ? `${formatDayShort(slotContext.date)} ${formatMonthDay(slotContext.date)}` : "";
+  const slotDayLabel = slotContext ? `${formatDayShort(draft.effectiveDate)} ${formatMonthDay(draft.effectiveDate)}` : "";
   const selected = draft.addPlayerId ? lookup[draft.addPlayerId] : undefined;
 
   // Roster capacity on the effective date decides Add vs Add + Drop.
@@ -141,19 +144,28 @@ export function PlanMoveDialog({
     weeklyAcquisitionLimit: state.settings.weeklyAcquisitionLimit,
     weekStartsOn: state.settings.weekStartsOn,
   });
+  if (draft.type === "ADD" && !hasOpenSpot) check.errors.push("Roster is full. Use Add + Drop.");
   const impact = check.errors.length === 0 ? evaluateMoveImpact(baseInput, candidateTx(draft)) : null;
 
   const save = () => {
+    if (committing.current) return;
     if (check.errors.length) {
       setShowErrors(true);
       return;
     }
+    committing.current = true;
+    setSaving(true);
     // A catalog player becomes a saved player once a move references them.
     const added = draft.type !== "DROP" && draft.addPlayerId ? lookup[draft.addPlayerId] : undefined;
     if (added && !state.players[added.id]) dispatch({ type: "player/upsert", player: added });
     if (editing) dispatch({ type: "tx/update", id: editing.id, draft });
     else dispatch({ type: "tx/create", id: newId("move"), draft });
-    toast(editing ? "Planned move updated." : "Move planned.");
+    if (slotContext && added) {
+      const after = generateDailyLineup({ ...baseInput, date: draft.effectiveDate, plannedTransactions: [...others, candidateTx(draft)] });
+      const assigned = after.activeSlots.find(a => a.playerId === added.id);
+      const remains = after.openSlots.some(s => s.type === slotContext.position);
+      toast(`${added.name} ${assigned ? `fills ${assigned.slot.type}` : "is benched"} on ${formatDayShort(draft.effectiveDate)}${remains ? ` · ${slotContext.position} remains open` : ""}.`);
+    } else toast(editing ? "Planned move updated." : "Move planned.");
     onClose();
   };
 
@@ -184,7 +196,7 @@ export function PlanMoveDialog({
         editing
           ? "Edit planned move"
           : slotContext
-            ? `Add player for ${formatDayLong(slotContext.date)} · ${slotContext.position}`
+            ? `Add player for ${formatDayLong(slotContext.date)} ${formatMonthDay(slotContext.date)} · ${slotContext.position}`
             : "Plan a move"
       }
       description={
@@ -195,7 +207,7 @@ export function PlanMoveDialog({
       footer={
         <>
           <Button onClick={onClose}>Cancel</Button>
-          <Button variant="primary" onClick={save}>
+          <Button variant="primary" onClick={save} disabled={saving}>
             {editing ? "Save move" : "Plan move"}
           </Button>
         </>
@@ -250,7 +262,7 @@ export function PlanMoveDialog({
           </Field>
         </div>
 
-        <div className={`grid gap-5 ${needsAdd && needsDrop ? "grid-cols-2" : "grid-cols-1"}`}>
+        <div className={`grid gap-5 ${needsAdd && needsDrop ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"}`}>
           {needsDrop && (
             <Field id="move-drop" label="Drop">
               <Select
@@ -320,7 +332,7 @@ export function PlanMoveDialog({
                         checked={fitSlot}
                         onChange={(e) => setFitSlot(e.target.checked)}
                       />
-                      Only {slotContext.position}-eligible players with a game {slotDayLabel}
+                      Showing {slotContext.position}-eligible players with a game {slotDayLabel}
                     </label>
                   )}
                   <PlayerSearch
@@ -380,7 +392,7 @@ export function PlanMoveDialog({
                 </dd>
               </div>
               <div>
-                <dt className="text-ink-3">Goalie starts</dt>
+                <dt className="text-ink-3">Goalie games</dt>
                 <dd className="text-body font-semibold tabular-nums text-ink">
                   {impact.before.goalieStarts} → {impact.after.goalieStarts}
                 </dd>

@@ -68,7 +68,7 @@ export function validateCatalog(data: unknown, opts: CatalogValidationOptions): 
       if (typeof p[field] !== "string" || !(p[field] as string).trim()) errors.push(`${label}: missing ${field}`);
     }
     if (typeof p.fullName === "string" && typeof p.teamAbbrev === "string") {
-      const key = `${normalizeSearchText(p.fullName)}|${p.teamAbbrev}`;
+      const key = `${normalizeSearchText(p.fullName)}|${p.teamAbbrev}|${p.primaryPosition}`;
       if (identities.has(key)) errors.push(`${label}: duplicate identity (same name and team as ${identities.get(key)})`);
       else identities.set(key, label);
     }

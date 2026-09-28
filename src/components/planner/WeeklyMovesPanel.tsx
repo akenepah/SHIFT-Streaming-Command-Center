@@ -137,7 +137,7 @@ export function WeeklyMovesPanel({
             )}
           </p>
           <p className="mt-2 text-caption text-ink-3">
-            Goalie games show team availability only. Goalie starts are not confirmed.
+            Goalie games show team availability only. Goalie games are not confirmed.
           </p>
         </div>
       )}

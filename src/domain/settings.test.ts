@@ -13,7 +13,7 @@ describe("league settings", () => {
     const s = structuredClone(DEFAULT_LEAGUE_SETTINGS);
     s.roster.slots = { C: 0, LW: 0, RW: 0, D: 0, UTIL: 0, G: 0 };
     s.weeklyAcquisitionLimit = 2.5;
-    expect(validateSettings(s)).toHaveLength(2);
+    expect(validateSettings(s)).toEqual(expect.arrayContaining(["Add at least one active lineup slot.", "Weekly acquisition limit must be a whole number from 0 to 50.", "Add a G slot or set minimum goalie appearances to None."]));
   });
 
   it("changing slot configuration changes the generated lineup", () => {

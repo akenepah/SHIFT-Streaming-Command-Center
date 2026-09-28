@@ -43,7 +43,7 @@ export function MovePlayerPopover({
       date: day.date,
       overrides: setOverride(state.overrides, { date: day.date, playerId: player.id, targetSlotId }),
     });
-    return startsOf(next) - startsOf(day);
+    return { delta: startsOf(next) - startsOf(day), displaced: day.activeSlots.filter(a => a.playerId && a.playerId !== player.id && !next.activeSlots.some(b => b.playerId === a.playerId)).map(a => weekInput.players[a.playerId!]?.name).filter(Boolean) };
   };
 
   const choose = (targetSlotId: string) => {
@@ -64,18 +64,18 @@ export function MovePlayerPopover({
       <div role="menu" aria-label={`Lineup options for ${player.name}`}>
         {targets.length === 0 && <p className="px-2.5 py-2 text-caption text-ink-3">No other legal spot today.</p>}
         {targets.map((t) => {
-          const d = delta(t.targetSlotId);
-          const occupant = t.occupantId ? state.players[t.occupantId] : null;
+          const result = delta(t.targetSlotId);
+          const d = result.delta;
           const bench = t.targetSlotId === BENCH_TARGET;
           const type = day.activeSlots.find((a) => a.slot.id === t.targetSlotId)?.slot.type;
           const effect =
             d !== 0
               ? `${d > 0 ? "+" : ""}${d} ${Math.abs(d) === 1 ? "start" : "starts"}`
-              : occupant
-                ? `Replaces ${occupant.name}`
+              : result.displaced.length
+                ? `Replaces ${result.displaced.join(", ")}`
                 : bench
                   ? "No change in starts"
-                  : "Open slot";
+                  : "Rebalances lineup";
           return (
             <MenuItem key={t.targetSlotId} onSelect={() => choose(t.targetSlotId)}>
               {bench ? <Armchair aria-hidden className="text-ink-3" /> : type && <PositionBadge kind={type} />}

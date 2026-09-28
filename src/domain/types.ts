@@ -38,6 +38,13 @@ export type Player = {
   nhlPlayerId?: number | null;
   /** Where the identity came from: the bundled NHL catalog, or created by the user. */
   source?: PlayerSource;
+  firstName?: string;
+  lastName?: string;
+  primaryPosition?: Position;
+  yahooPlayerId?: string | null;
+  eligibilitySource?: "YAHOO" | "NHL_PRIMARY_FALLBACK" | "USER";
+  eligibilitySeason?: string;
+  active?: boolean;
 };
 
 export type PlayerSource = "NHL" | "CUSTOM";

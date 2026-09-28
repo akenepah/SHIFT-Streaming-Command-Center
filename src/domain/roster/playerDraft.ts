@@ -47,11 +47,13 @@ export function validatePlayerDraft(d: PlayerDraft): string[] {
 export function playerFromDraft(
   d: PlayerDraft,
   id: string,
-  identity: Pick<Player, "source" | "nhlPlayerId"> = { source: "CUSTOM", nhlPlayerId: null },
+  identity: Partial<Player> = { source: "CUSTOM", nhlPlayerId: null },
 ): Player {
   const headshot = d.headshot.trim();
   return {
+    ...identity,
     id,
+    eligibilitySource: "USER",
     name: d.name.trim().replace(/\s+/g, " "),
     nhlTeamId: d.nhlTeamId as NHLTeamId,
     eligiblePositions: POSITIONS.filter((p) => d.eligiblePositions.includes(p)),

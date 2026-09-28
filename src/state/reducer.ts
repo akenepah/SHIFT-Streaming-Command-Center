@@ -1,3 +1,4 @@
+import { canAddToRoster, defaultRosterStatus } from "@/domain/roster/capacity";
 import { resetDay, removeOverride, setOverride } from "@/domain/lineup/overrides";
 import { cancelTransaction, createTransaction, updateTransaction, type TransactionDraft } from "@/domain/transactions/transactions";
 import type { DailyLineupOverride, LeagueSettings, Player, RosterStatus } from "@/domain/types";
@@ -27,14 +28,17 @@ export function reducer(state: AppState, action: Action): AppState {
     case "hydrate":
       return action.state;
     case "settings/update":
-      return { ...state, settings: action.settings };
+      return { ...state, settings: { ...action.settings, leagueName: action.settings.leagueName.trim(), teamName: action.settings.teamName.trim() } };
     case "setup/complete":
       return { ...state, setupComplete: true };
     case "player/upsert":
       return { ...state, players: { ...state.players, [action.player.id]: action.player } };
-    case "roster/add":
+    case "roster/add": {
+      const status = action.status ?? defaultRosterStatus(state.roster, state.settings.roster);
+      if (!canAddToRoster(state.roster, state.settings.roster, status)) return state;
       if (!state.players[action.playerId] || state.roster.some((r) => r.playerId === action.playerId)) return state;
-      return { ...state, roster: [...state.roster, { playerId: action.playerId, rosterStatus: action.status ?? "BENCH" }] };
+      return { ...state, roster: [...state.roster, { playerId: action.playerId, rosterStatus: status }] };
+    }
     case "roster/drop":
       return {
         ...state,
@@ -42,6 +46,7 @@ export function reducer(state: AppState, action: Action): AppState {
         overrides: state.overrides.filter((o) => o.playerId !== action.playerId),
       };
     case "roster/setStatus":
+      if (!canAddToRoster(state.roster.filter(r => r.playerId !== action.playerId), state.settings.roster, action.status)) return state;
       return {
         ...state,
         roster: state.roster.map((r) => (r.playerId === action.playerId ? { ...r, rosterStatus: action.status } : r)),
@@ -49,6 +54,7 @@ export function reducer(state: AppState, action: Action): AppState {
     case "roster/clear":
       return { ...state, roster: [], transactions: [], overrides: [] };
     case "tx/create":
+      if (state.transactions.some(t => t.status !== "CANCELLED" && t.addPlayerId === action.draft.addPlayerId && t.dropPlayerId === action.draft.dropPlayerId && t.effectiveDate === action.draft.effectiveDate)) return state;
       return {
         ...state,
         transactions: [

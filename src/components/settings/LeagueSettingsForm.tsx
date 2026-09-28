@@ -7,16 +7,16 @@ import { activeSlotCount } from "@/domain/config";
 import { weekdayName } from "@/domain/dates";
 import { SLOT_TYPES, type LeagueSettings, type MoveTiming } from "@/domain/types";
 
-type Props = { value: LeagueSettings; onChange: (s: LeagueSettings) => void };
+type Props = { value: LeagueSettings; onChange: (s: LeagueSettings) => void; showErrors?: boolean };
 
-export function LeagueTeamFields({ value, onChange, withSeason = false }: Props & { withSeason?: boolean }) {
+export function LeagueTeamFields({ value, onChange, showErrors = false, withSeason = false }: Props & { withSeason?: boolean }) {
   const set = (patch: Partial<LeagueSettings>) => onChange({ ...value, ...patch });
   return (
-    <div className="grid grid-cols-2 gap-x-6 gap-y-5">
-      <Field id="league-name" label="League name">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+      <Field id="league-name" label="League name" error={showErrors && !value.leagueName.trim() ? "Enter a league name." : undefined}>
         <Input id="league-name" value={value.leagueName} onChange={(e) => set({ leagueName: e.target.value })} />
       </Field>
-      <Field id="team-name" label="Team name">
+      <Field id="team-name" label="Team name" error={showErrors && !value.teamName.trim() ? "Enter a team name." : undefined}>
         <Input id="team-name" value={value.teamName} onChange={(e) => set({ teamName: e.target.value })} />
       </Field>
       {withSeason && (
@@ -26,7 +26,7 @@ export function LeagueTeamFields({ value, onChange, withSeason = false }: Props 
               <option value="2026-27">2026–27</option>
             </Select>
           </Field>
-          <Field id="team-count" label="Number of teams">
+          <Field id="team-count" label="Number of teams" error={showErrors && (!Number.isInteger(value.numberOfTeams) || value.numberOfTeams < 2 || value.numberOfTeams > 32) ? "Use a whole number from 2 to 32." : undefined}>
             <Input
               id="team-count"
               type="number"
@@ -58,7 +58,7 @@ export function LineupSlotFields({ value, onChange }: Props) {
     { kind: "IR+", label: "IR+ slots", value: value.roster.irPlusSlots, set: (n) => setRoster({ irPlusSlots: n }), max: 10 },
   ];
   return (
-    <div className="grid grid-cols-4 gap-x-4 gap-y-6">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-6">
       {cells.map((c) => (
         <div key={c.kind}>
           <label htmlFor={`slot-${c.kind}`} className="mb-2 flex">
@@ -72,7 +72,7 @@ export function LineupSlotFields({ value, onChange }: Props) {
   );
 }
 
-export function RulesFields({ value, onChange, timingLabel = "Default effective date" }: Props & { timingLabel?: string }) {
+export function RulesFields({ value, onChange, showErrors = false, timingLabel = "Default effective date" }: Props & { timingLabel?: string }) {
   const set = (patch: Partial<LeagueSettings>) => onChange({ ...value, ...patch });
   return (
     <div className="grid gap-5">
@@ -86,8 +86,8 @@ export function RulesFields({ value, onChange, timingLabel = "Default effective 
           <option value="TODAY">Same day</option>
         </Select>
       </Field>
-      <div className="grid grid-cols-[1fr_1fr_1.1fr] gap-6">
-        <Field id="acq-limit" label="Weekly acquisition limit">
+      <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_1.1fr] gap-6">
+        <Field id="acq-limit" label="Weekly acquisition limit" error={showErrors && (!Number.isInteger(value.weeklyAcquisitionLimit) || value.weeklyAcquisitionLimit < 0 || value.weeklyAcquisitionLimit > 50) ? "Use a whole number from 0 to 50." : undefined}>
           <Input
             id="acq-limit"
             type="number"
@@ -98,7 +98,7 @@ export function RulesFields({ value, onChange, timingLabel = "Default effective 
             onChange={(e) => set({ weeklyAcquisitionLimit: e.target.value === "" ? NaN : Number(e.target.value) })}
           />
         </Field>
-        <Field id="acq-reset" label="Acquisition reset">
+        <Field id="acq-reset" label="Week starts / adds reset" help="Your planner week and weekly adds both begin on this day.">
           <Select id="acq-reset" value={value.weekStartsOn} onChange={(e) => set({ weekStartsOn: Number(e.target.value) })}>
             {[1, 2, 3, 4, 5, 6, 0].map((d) => (
               <option key={d} value={d}>
@@ -107,7 +107,7 @@ export function RulesFields({ value, onChange, timingLabel = "Default effective 
             ))}
           </Select>
         </Field>
-        <Field id="goalie-min" label="Minimum goalie appearances">
+        <Field id="goalie-min" label="Minimum goalie appearances" error={showErrors && value.roster.slots.G === 0 && value.minGoalieAppearances > 0 ? "Add a G slot or set minimum goalie appearances to None." : undefined}>
           <Select
             id="goalie-min"
             value={value.minGoalieAppearances}
@@ -149,7 +149,7 @@ export function LineupSummary({
         </p>
       )}
       <p>
-        {n(value.weeklyAcquisitionLimit)} weekly adds · resets {weekdayName(value.weekStartsOn)}
+        {value.weeklyAcquisitionLimit === 0 ? "No weekly adds allowed" : `${n(value.weeklyAcquisitionLimit)} weekly adds`} · week starts / adds reset {weekdayName(value.weekStartsOn)}
       </p>
       <p>{value.minGoalieAppearances ? `${value.minGoalieAppearances} minimum goalie appearances` : "No goalie minimum"}</p>
     </div>

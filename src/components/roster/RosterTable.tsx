@@ -54,7 +54,7 @@ export function RosterTable() {
             filter === "ALL" ? "border-line bg-surface text-ink" : "border-transparent text-ink-2 hover:text-ink"
           }`}
         >
-          All players · {summary.rostered}
+          All positions · {summary.rostered}
         </button>
         <div className="w-44">
           <label htmlFor="roster-position-filter" className="sr-only">

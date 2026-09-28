@@ -63,10 +63,12 @@ export default function WeeklyPlannerPage() {
 
   return (
     <div>
-      <div className="px-6 pt-6">
+      <a href="#week-grid" className="sr-only focus:not-sr-only focus:block focus:p-3">Skip to week grid</a>
+      <div className="px-4 pt-6 sm:px-6">
+        <p className="mb-1 text-overline text-ink-2">{settings.leagueName}</p>
         <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
           <h1 className="min-w-0 truncate font-display text-page-title text-ink">{settings.teamName}</h1>
-          <nav aria-label="Week navigation" className="flex items-center gap-3">
+          <nav aria-label="Week navigation" className="flex flex-wrap items-center gap-2">
             <Button size="icon" onClick={() => setWeekStart(addDays(weekStart, -7))} aria-label="Previous week">
               <ChevronLeft aria-hidden />
             </Button>
@@ -118,7 +120,7 @@ export default function WeeklyPlannerPage() {
         )}
       </div>
 
-      <div className="grid grid-cols-[224px_minmax(0,1fr)] gap-4 px-6 pb-6 pt-5 2xl:grid-cols-[240px_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 lg:grid-cols-[224px_minmax(0,1fr)] gap-4 px-6 pb-6 pt-5 2xl:grid-cols-[240px_minmax(0,1fr)]">
         <WeeklyMovesPanel
           weekStart={weekStart}
           summary={summary}
@@ -154,14 +156,18 @@ export default function WeeklyPlannerPage() {
             </div>
           </section>
         ) : (
-          <div className="overflow-x-auto pb-2">
-            <div className="grid min-w-[1000px] grid-cols-7 gap-2 2xl:gap-3">
+          <div className="min-w-0">
+            <p className="mb-2 text-caption text-ink-2">Bar = active slots filled · Green = more room to stream · Red = lineup full</p>
+            <p className="mb-2 text-caption text-ink-2 2xl:hidden">Scroll horizontally to compare all seven days →</p>
+          <div id="week-grid" tabIndex={-1} className="overflow-x-auto pb-2">
+            <div className="grid min-w-[1400px] grid-cols-7 gap-2 2xl:gap-3">
               {plan.days.map((day) => (
                 <DayCard
                   key={day.date}
                   day={day}
                   isToday={day.date === today}
                   isPast={day.date < today}
+                  statusRows={Math.max(0, ...plan.days.map(d => state.transactions.filter(t => t.status === "PLANNED" && t.effectiveDate === d.date).length))}
                   movesToday={state.transactions.filter((t) => t.status === "PLANNED" && t.effectiveDate === day.date)}
                   players={input.players}
                   onMovePlayer={openMove}
@@ -169,6 +175,7 @@ export default function WeeklyPlannerPage() {
                 />
               ))}
             </div>
+          </div>
           </div>
         )}
       </div>

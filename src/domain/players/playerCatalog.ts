@@ -1,3 +1,5 @@
+import eligibilityData from "@/data/players/yahoo-eligibility.json";
+import type { Position } from "../types";
 import catalogData from "@/data/players/2026-27.json";
 import { NHL_TEAM_IDS, type NHLTeamId } from "../nhl/teamIds";
 import { SCHEDULE_DATASET } from "../schedule/staticProvider";
@@ -68,11 +70,19 @@ export function catalogPlayerId(nhlPlayerId: number): string {
  */
 export function playerFromCatalogEntry(e: PlayerCatalogEntry): Player | null {
   if (!e.teamAbbrev) return null;
+  const enrichment = (eligibilityData as {nhlPlayerId:number; yahooPlayerId:string; eligiblePositions:Position[]; season:string}[]).find(row => row.nhlPlayerId === e.nhlPlayerId && row.season === "2026-27");
   return {
     id: catalogPlayerId(e.nhlPlayerId),
     name: e.fullName,
     nhlTeamId: e.teamAbbrev,
-    eligiblePositions: [e.primaryPosition],
+    eligiblePositions: enrichment?.eligiblePositions ?? [e.primaryPosition],
+    primaryPosition: e.primaryPosition,
+    firstName: e.firstName,
+    lastName: e.lastName,
+    yahooPlayerId: enrichment?.yahooPlayerId ?? null,
+    eligibilitySource: enrichment ? "YAHOO" : "NHL_PRIMARY_FALLBACK",
+    eligibilitySeason: "2026-27",
+    active: e.active,
     ...(e.headshotUrl ? { headshot: e.headshotUrl } : {}),
     nhlPlayerId: e.nhlPlayerId,
     source: "NHL",

@@ -2,11 +2,11 @@
 
 import { Plus } from "lucide-react";
 import { Avatar, shortName } from "@/components/player/PlayerBits";
-import { PositionBadge, type BadgeKind } from "@/components/ui/Badges";
+import { POSITION_TONE, PositionBadge, type BadgeKind } from "@/components/ui/Badges";
 import type { Player, SlotType } from "@/domain/types";
 
 /** Shared tile height and shape for every planner row, so all states line up. */
-const TILE = "flex h-11 w-full items-center gap-1.5 rounded-card border px-1.5 text-left 2xl:gap-2 2xl:px-2";
+const TILE = "flex h-[52px] w-full items-center gap-1.5 rounded-card border px-1.5 text-left 2xl:gap-2 2xl:px-2";
 
 /**
  * One planner row. Three states:
@@ -27,7 +27,7 @@ export type SlotTileProps =
       ariaLabel?: string;
     }
   | { kind: "add"; badge: SlotType; ariaLabel: string; onAdd: () => void }
-  | { kind: "open"; badge: "BN" | "IR+" };
+  | { kind: "open"; badge: BadgeKind; label?: string };
 
 export function SlotTile(props: SlotTileProps) {
   if (props.kind === "add") {
@@ -36,7 +36,7 @@ export function SlotTile(props: SlotTileProps) {
         type="button"
         onClick={props.onAdd}
         aria-label={props.ariaLabel}
-        className={`${TILE} group cursor-pointer border-line bg-surface-muted text-ink-3 transition-colors hover:border-primary hover:bg-primary-soft hover:text-primary focus-visible:border-primary focus-visible:bg-primary-soft focus-visible:text-primary active:bg-primary-line/40`}
+        className={`${TILE} ${POSITION_TONE[props.badge].tile} group cursor-pointer text-ink-3 transition-colors hover:border-primary hover:bg-primary-soft hover:text-primary focus-visible:border-primary focus-visible:bg-primary-soft focus-visible:text-primary active:bg-primary-line/40`}
       >
         <PositionBadge kind={props.badge} compact />
         <span className="flex min-w-0 items-center gap-0.5 text-caption font-medium 2xl:gap-1 2xl:text-body-sm">
@@ -49,10 +49,10 @@ export function SlotTile(props: SlotTileProps) {
 
   if (props.kind === "open") {
     return (
-      <div className={`${TILE} border-line bg-surface-muted text-ink-3`}>
+      <div className={`${TILE} ${POSITION_TONE[props.badge].tile} text-ink-3`}>
         <PositionBadge kind={props.badge} compact />
         <span aria-hidden className="size-4 shrink-0 rounded-pill border border-dashed border-line-strong" />
-        <span className="truncate text-body-sm">Open slot</span>
+        <span className="truncate text-body-sm">{props.label ?? "Open slot"}</span>
       </div>
     );
   }
@@ -61,8 +61,8 @@ export function SlotTile(props: SlotTileProps) {
   const content = (
     <>
       <PositionBadge kind={badge} compact />
-      <span className="hidden 3xl:contents">
-        <Avatar src={p.headshot} name={p.name} size={24} />
+      <span className="contents">
+        <Avatar src={p.headshot} name={p.name} size={28} />
       </span>
       <span className="min-w-0 flex-1">
         <span className="block truncate text-body-sm font-medium leading-tight text-ink" title={p.name}>
@@ -75,7 +75,7 @@ export function SlotTile(props: SlotTileProps) {
       </span>
     </>
   );
-  const tone = benched ? "border-warn-line bg-warn-soft" : "border-line bg-surface";
+  const tone = benched ? "border-warn-line bg-warn-soft" : POSITION_TONE[badge].tile;
   if (!onSelect) return <div className={`${TILE} ${tone}`}>{content}</div>;
   return (
     <button
