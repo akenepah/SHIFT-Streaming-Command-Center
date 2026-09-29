@@ -75,7 +75,6 @@ export default function WeeklyPlannerPage() {
 
   return (
     <div>
-      <a href="#week-grid" className="sr-only focus:not-sr-only focus:block focus:p-3">Skip to week grid</a>
       <div className="px-4 pt-6 sm:px-6">
         <p className="mb-1 text-overline text-ink-2">{settings.leagueName}</p>
         <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
@@ -154,7 +153,7 @@ export default function WeeklyPlannerPage() {
         />
         </div>
         {rosterEmpty ? (
-          <section className="flex flex-col items-center justify-center rounded-panel border border-dashed border-line-strong bg-surface px-6 py-20 text-center">
+          <section className="flex flex-col items-center justify-center self-start rounded-panel border border-dashed border-line-strong bg-surface px-6 py-20 text-center">
             <h2 className="font-display text-section-title text-ink">Your roster is empty</h2>
             <p className="mt-2 max-w-md text-body text-ink-2">
               Add your fantasy roster to generate this week&apos;s schedule. Each player&apos;s NHL team fills in their games

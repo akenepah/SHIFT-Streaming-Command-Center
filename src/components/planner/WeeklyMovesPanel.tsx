@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
 import { formatDayShort, formatMonthDay, formatWeekRange, weekdayName } from "@/domain/dates";
 import type { WeekSummary } from "@/domain/lineup/generateWeek";
-import { acquisitionCost, acquisitionsUsed, movesForWeek } from "@/domain/transactions/transactions";
+import { activeSlotCount } from "@/domain/config";
+import { acquisitionCost, acquisitionsUsed, checkDraft, movesForWeek } from "@/domain/transactions/transactions";
 import type { ISODate, PlannedTransaction } from "@/domain/types";
 import { rosterSummary } from "@/state/selectors";
 import { useStore } from "@/state/store";
@@ -37,6 +38,16 @@ export function WeeklyMovesPanel({
   const goalieMin = settings.minGoalieAppearances;
   const goalieMet = summary.goalieStarts >= goalieMin;
   const name = (id?: string) => (id ? (state.players[id]?.name ?? "Unknown player") : "");
+  // Moves saved before a rule existed (or made stale by later changes) are flagged, never silently applied as valid.
+  const moveProblem = (t: PlannedTransaction) =>
+    checkDraft(t, {
+      baseRoster: state.roster,
+      transactions: state.transactions,
+      editingId: t.id,
+      weeklyAcquisitionLimit: settings.weeklyAcquisitionLimit,
+      weekStartsOn: settings.weekStartsOn,
+      regularCapacity: activeSlotCount(settings.roster) + settings.roster.benchSlots,
+    }).errors[0];
 
   return (
     <aside aria-label="Weekly moves" className="self-start rounded-panel border border-line bg-surface p-4">
@@ -98,6 +109,12 @@ export function WeeklyMovesPanel({
                   </p>
                 )}
                 <p className="mt-1 text-caption text-ink-3">{acquisitionCost(t.type) ? "Uses 1 add" : "No add used"}</p>
+                {moveProblem(t) && (
+                  <p role="status" className="mt-1.5 flex items-start gap-1.5 text-caption font-medium text-warn">
+                    <AlertTriangle aria-hidden className="mt-px size-3.5 shrink-0" />
+                    {moveProblem(t)} Edit or cancel this move.
+                  </p>
+                )}
               </li>
             ))}
           </ul>

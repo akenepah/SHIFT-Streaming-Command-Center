@@ -50,13 +50,19 @@ export function playerFromDraft(
   identity: Partial<Player> = { source: "CUSTOM", nhlPlayerId: null },
 ): Player {
   const headshot = d.headshot.trim();
+  const eligiblePositions = POSITIONS.filter((p) => d.eligiblePositions.includes(p));
+  // Only an actual eligibility change marks it user-owned; saving other edits keeps the catalog source.
+  const unchanged =
+    !!identity.eligiblePositions &&
+    identity.eligiblePositions.length === eligiblePositions.length &&
+    identity.eligiblePositions.every((p) => eligiblePositions.includes(p));
   return {
     ...identity,
     id,
-    eligibilitySource: "USER",
+    eligibilitySource: unchanged && identity.eligibilitySource ? identity.eligibilitySource : "USER",
     name: d.name.trim().replace(/\s+/g, " "),
     nhlTeamId: d.nhlTeamId as NHLTeamId,
-    eligiblePositions: POSITIONS.filter((p) => d.eligiblePositions.includes(p)),
+    eligiblePositions,
     ...(headshot ? { headshot } : {}),
     nhlPlayerId: identity.nhlPlayerId ?? null,
     source: identity.source ?? "CUSTOM",

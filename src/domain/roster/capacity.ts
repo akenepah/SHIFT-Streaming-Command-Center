@@ -71,3 +71,12 @@ export function statusChangeBlocker(
   const positions = candidate.players[candidate.playerId]?.eligiblePositions.join("/") ?? "their position";
   return `No open lineup slot for ${positions}. Bench another Active player first.`;
 }
+
+/** "your roster 5 players over capacity and IR+ 1 over", naming only what's actually over. */
+export function overflowText(regularOver: number, irOver: number): string {
+  const parts = [
+    ...(regularOver > 0 ? [`your roster ${regularOver} ${regularOver === 1 ? "player" : "players"} over capacity`] : []),
+    ...(irOver > 0 ? [`IR+ ${irOver} over`] : []),
+  ];
+  return parts.join(" and ") || "your roster within capacity";
+}

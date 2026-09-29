@@ -150,8 +150,8 @@ export function PlanMoveDialog({
     transactions: others,
     weeklyAcquisitionLimit: state.settings.weeklyAcquisitionLimit,
     weekStartsOn: state.settings.weekStartsOn,
+    regularCapacity: regularSpots,
   });
-  if (draft.type === "ADD" && !hasOpenSpot) check.errors.push("Roster is full. Use Add + Drop.");
   const impact = check.errors.length === 0 ? evaluateMoveImpact(baseInput, candidateTx(draft)) : null;
 
   const save = () => {

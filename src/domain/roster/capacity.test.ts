@@ -97,3 +97,12 @@ describeD('position-aware Active capacity (D blocked by surplus forwards)', () =
   expectD(statusChangeBlocker(full, CFG, 'ACTIVE', { playerId: 'x', players: withX })).toMatch(/No open lineup slot for C/);
  });
 });
+
+import { overflowText } from './capacity';
+describeD('shrink confirmation copy', () => {
+ itD('names only what is over, with correct plurals', () => {
+  expectD(overflowText(5, 1)).toBe('your roster 5 players over capacity and IR+ 1 over');
+  expectD(overflowText(1, 0)).toBe('your roster 1 player over capacity');
+  expectD(overflowText(0, 2)).toBe('IR+ 2 over');
+ });
+});

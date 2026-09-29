@@ -61,14 +61,14 @@ export function RosterTable() {
             filter === "ALL" ? "border-line bg-surface text-ink" : "border-transparent text-ink-2 hover:text-ink"
           }`}
         >
-          All positions · {summary.rostered}
+          All players · {summary.rostered}
         </button>
         <div className="w-44">
           <label htmlFor="roster-position-filter" className="sr-only">
             Filter by position
           </label>
           <Select id="roster-position-filter" value={filter} onChange={(e) => setFilter(e.target.value as Position | "ALL")}>
-            <option value="ALL">Position</option>
+            <option value="ALL">All positions</option>
             {POSITIONS.map((p) => (
               <option key={p} value={p}>
                 {p}

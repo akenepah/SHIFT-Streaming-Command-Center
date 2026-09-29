@@ -26,6 +26,8 @@ export function searchPlayers(query: string, pool: readonly Player[], limit = DE
     else if (name.startsWith(q)) tier = 1;
     else if (name.split(" ").some((w) => w.startsWith(q))) tier = 2;
     else if (name.includes(q)) tier = 3;
+    // Multi-word queries in any order ("hughes jack", "mc david"): every word starts a name word.
+    else if (q.includes(" ") && q.split(" ").every((t) => name.split(" ").some((w) => w.startsWith(t)))) tier = 4;
     if (tier >= 0) scored.push({ p, tier, key: name });
   }
   return scored

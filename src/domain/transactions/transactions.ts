@@ -29,6 +29,8 @@ export type TransactionContext = {
   weekStartsOn: number;
   /** When editing, the id of the move being replaced (it's left out of the checks). */
   editingId?: string;
+  /** Active + bench spots. When set, a move may not push the non-IR+ roster over it. */
+  regularCapacity?: number;
 };
 
 export type DraftCheck = {
@@ -53,6 +55,21 @@ export function checkDraft(draft: TransactionDraft, ctx: TransactionContext): Dr
   const onRoster = (id?: string) => !!id && rosterThen.some((r) => r.playerId === id);
   if (needsAdd && onRoster(draft.addPlayerId)) errors.push("That player is already on your roster on this date.");
   if (needsDrop && !onRoster(draft.dropPlayerId)) errors.push("That player isn't on your roster on this date.");
+
+  if (ctx.regularCapacity !== undefined && !errors.length) {
+    // IR+ is separate capacity: dropping an IR+ player doesn't make room for an add.
+    const regular = (r: readonly RosterPlayer[]) => r.filter((x) => x.rosterStatus !== "IR_PLUS").length;
+    const before = regular(rosterThen);
+    const after = regular(projectRoster(rosterThen, [createTransaction(draft, "__check__", new Date(0))], draft.effectiveDate));
+    if (after > ctx.regularCapacity && after > before) {
+      const droppedIr = needsDrop && rosterThen.some((r) => r.playerId === draft.dropPlayerId && r.rosterStatus === "IR_PLUS");
+      errors.push(
+        droppedIr
+          ? `Your roster is full (${before} / ${ctx.regularCapacity}). Dropping an IR+ player doesn't free a roster spot. Drop an Active or Bench player.`
+          : `Your roster is full (${before} / ${ctx.regularCapacity}). Use Add + Drop.`,
+      );
+    }
+  }
 
   if (acquisitionCost(draft.type) > 0) {
     const weekStart = startOfWeek(draft.effectiveDate, ctx.weekStartsOn);
