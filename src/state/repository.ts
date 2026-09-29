@@ -5,6 +5,8 @@ export const STORAGE_KEY = "shift.streaming.v2";
 /** Key used by the first alpha build (schema v1, sample roster). Read once, migrated, then removed. */
 export const LEGACY_STORAGE_KEY = "shift.streaming.v1";
 export const LEGACY_BACKUP_KEY = "shift.streaming.v1.migrated-backup";
+/** Signed-out local data set aside when the account's (newer) cloud data wins. */
+export const SIGNED_OUT_BACKUP_KEY = "shift.streaming.v2.signed-out-backup";
 
 export type LoadResult =
   | { status: "loaded"; state: AppState }
@@ -17,6 +19,8 @@ export interface AppStateRepository {
   load(): LoadResult;
   save(state: AppState): void;
   clear(): void;
+  /** Keep a copy aside (never loaded automatically), e.g. signed-out changes when the account's cloud data wins. */
+  backup?(state: AppState): void;
 }
 
 type StorageLike = Pick<Storage, "getItem" | "setItem" | "removeItem">;
@@ -77,6 +81,10 @@ export class LocalStorageRepository implements AppStateRepository {
 
   clear(): void {
     this.remove(STORAGE_KEY);
+  }
+
+  backup(state: AppState): void {
+    this.set(SIGNED_OUT_BACKUP_KEY, JSON.stringify({ savedAt: new Date().toISOString(), state }));
   }
 }
 
