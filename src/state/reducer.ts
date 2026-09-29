@@ -35,8 +35,9 @@ export function reducer(state: AppState, action: Action): AppState {
     case "player/upsert":
       return { ...state, players: { ...state.players, [action.player.id]: action.player } };
     case "roster/add": {
-      const status = action.status ?? defaultRosterStatus(state.roster, state.settings.roster);
-      if (!canAddToRoster(state.roster, state.settings.roster, status)) return state;
+      const candidate = { playerId: action.playerId, players: state.players };
+      const status = action.status ?? defaultRosterStatus(state.roster, state.settings.roster, candidate);
+      if (!canAddToRoster(state.roster, state.settings.roster, status, candidate)) return state;
       if (!state.players[action.playerId] || state.roster.some((r) => r.playerId === action.playerId)) return state;
       return { ...state, roster: [...state.roster, { playerId: action.playerId, rosterStatus: status }] };
     }
@@ -47,7 +48,7 @@ export function reducer(state: AppState, action: Action): AppState {
         overrides: state.overrides.filter((o) => o.playerId !== action.playerId),
       };
     case "roster/setStatus":
-      if (!canAddToRoster(state.roster.filter(r => r.playerId !== action.playerId), state.settings.roster, action.status)) return state;
+      if (!canAddToRoster(state.roster.filter(r => r.playerId !== action.playerId), state.settings.roster, action.status, { playerId: action.playerId, players: state.players })) return state;
       return {
         ...state,
         roster: state.roster.map((r) => (r.playerId === action.playerId ? { ...r, rosterStatus: action.status } : r)),

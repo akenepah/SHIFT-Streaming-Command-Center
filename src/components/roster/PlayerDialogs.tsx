@@ -24,7 +24,7 @@ import { newId } from "@/state/reducer";
 import { STATUS_LABEL } from "@/state/selectors";
 import { useStore } from "@/state/store";
 
-import { canAddToRoster, defaultRosterStatus, rosterCapacity } from "@/domain/roster/capacity";
+import { canAddToRoster, defaultRosterStatus, rosterCapacity, statusChangeBlocker } from "@/domain/roster/capacity";
 
 const STATUSES: RosterStatus[] = ["ACTIVE", "BENCH", "IR_PLUS"];
 const STATUS_HELP: Record<RosterStatus, string> = {
@@ -135,20 +135,40 @@ function FreshAddPlayerDialog({ onClose }: { onClose: () => void }) {
     onClose();
   };
 
-  const capacity = rosterCapacity(state.roster, state.settings.roster);
-  const canAdd = canAddToRoster(state.roster, state.settings.roster, status);
+  const config = state.settings.roster;
+  const capacity = rosterCapacity(state.roster, config);
+  // Until the user picks a status, choose Active/Bench per player by position fit.
+  const [statusTouched, setStatusTouched] = useState(false);
+  const chooseStatus = (s: RosterStatus) => {
+    setStatus(s);
+    setStatusTouched(true);
+  };
+  // Section-level check (the player's position is only known when they're picked).
+  const canAdd = status === "ACTIVE" ? capacity.regular < capacity.regularCapacity : canAddToRoster(state.roster, config, status);
+  const withPlayer = (p: Player) => ({ playerId: p.id, players: { ...state.players, [p.id]: p } });
+  const statusFor = (p: Player) => (statusTouched ? status : defaultRosterStatus(state.roster, config, withPlayer(p)));
+  const blockedReason = (p: Player, s: RosterStatus) =>
+    canAddToRoster(state.roster, config, s, withPlayer(p))
+      ? null
+      : s === "ACTIVE" && capacity.regular < capacity.regularCapacity
+        ? `No open lineup slot for ${p.eligiblePositions.join("/")}. Add ${p.name} to the bench, or bench another Active player first.`
+        : "Selected roster section is full. Drop a player or choose an available status; IR+ is separate.";
+
   const addPlayer = (p: Player) => {
-    if (!canAdd) { setRosteredNotice("Selected roster section is full. Drop a player or choose an available status; IR+ is separate."); return; }
     if (rostered(p)) {
       setRosteredNotice(`${p.name} is already on your roster.`);
       return;
     }
+    const s = statusFor(p);
+    const reason = blockedReason(p, s);
+    if (reason) { setRosteredNotice(reason); return; }
     // Catalog players become saved players when first added, so later edits (e.g. eligibility) stick.
     if (!state.players[p.id]) dispatch({ type: "player/upsert", player: p });
-    dispatch({ type: "roster/add", playerId: p.id, status });
+    dispatch({ type: "roster/add", playerId: p.id, status: s });
     setRosteredNotice(null);
-    setStatus(defaultRosterStatus([...state.roster, {playerId: p.id, rosterStatus: status}], state.settings.roster));
-    toast(`${p.name} added to your roster.`);
+    setStatus(defaultRosterStatus([...state.roster, { playerId: p.id, rosterStatus: s }], config));
+    setStatusTouched(false);
+    toast(`${p.name} added to your roster${s === "ACTIVE" ? "" : s === "BENCH" ? " (Bench)" : " (IR+)"}.`);
   };
 
   const create = () => {
@@ -163,9 +183,12 @@ function FreshAddPlayerDialog({ onClose }: { onClose: () => void }) {
       return;
     }
     const player = playerFromDraft(draft, newId("player"));
+    const s = statusFor(player);
+    const reason = blockedReason(player, s);
+    if (reason) { setErrors([reason]); return; }
     dispatch({ type: "player/upsert", player });
-    dispatch({ type: "roster/add", playerId: player.id, status });
-    toast(`${player.name} added to your roster.`);
+    dispatch({ type: "roster/add", playerId: player.id, status: s });
+    toast(`${player.name} added to your roster${s === "ACTIVE" ? "" : s === "BENCH" ? " (Bench)" : " (IR+)"}.`);
     close();
   };
 
@@ -213,7 +236,8 @@ function FreshAddPlayerDialog({ onClose }: { onClose: () => void }) {
             mode={{ kind: "action", actionLabel: "Add", onPick: addPlayer }}
             onCreateManually={() => {
               setDraft({ ...emptyPlayerDraft(), name: query.trim() });
-              setStatus(defaultRosterStatus(state.roster, state.settings.roster));
+              setStatus(defaultRosterStatus(state.roster, config));
+              setStatusTouched(false);
               setMode("create");
             }}
             idle={{ label: "Your saved players", players: savedIdle }}
@@ -235,7 +259,7 @@ function FreshAddPlayerDialog({ onClose }: { onClose: () => void }) {
           </>
         )}
         <div className="w-56">
-          <StatusSelect id="add-status" value={status} onChange={setStatus} />
+          <StatusSelect id="add-status" value={status} onChange={chooseStatus} />
         </div>
       </div>
     </Dialog>
@@ -254,7 +278,7 @@ export function ManagePlayerDialog({
   onClose: () => void;
   onDrop?: (p: Player) => void;
 }) {
-  const { dispatch } = useStore();
+  const { state, dispatch } = useStore();
   const toast = useToast();
   const [draft, setDraft] = useState<PlayerDraft>(() => (player ? draftFromPlayer(player) : emptyPlayerDraft()));
   const [nextStatus, setNextStatus] = useState<RosterStatus | null>(status);
@@ -263,10 +287,17 @@ export function ManagePlayerDialog({
   const save = () => {
     if (!player) return;
     const errs = validatePlayerDraft(draft);
+    const edited = playerFromDraft(draft, player.id, player);
+    // Check the status change with the edited eligibility, and say why if it's refused.
+    const blocker =
+      nextStatus && nextStatus !== status
+        ? statusChangeBlocker(state.roster, state.settings.roster, nextStatus, { playerId: player.id, players: { ...state.players, [player.id]: edited } })
+        : null;
+    if (blocker) errs.push(blocker);
     setErrors(errs);
     if (errs.length) return;
     // Keeps the player's identity (source, NHL id); only user-owned data changes.
-    dispatch({ type: "player/upsert", player: playerFromDraft(draft, player.id, player) });
+    dispatch({ type: "player/upsert", player: edited });
     if (nextStatus && nextStatus !== status) dispatch({ type: "roster/setStatus", playerId: player.id, status: nextStatus });
     toast(`${draft.name.trim()} updated.`);
     onClose();
