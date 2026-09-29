@@ -58,7 +58,7 @@ export default function SettingsPage() {
     setBase(saved);
     setExternalChange(false);
     setConfirmShrink(false);
-    toast("Settings saved. The planner has been updated.");
+    toast(user ? "Settings updated. Saving to your account…" : "Settings saved. The planner has been updated.");
   };
 
   const save = () => {

@@ -170,6 +170,20 @@ Signed in (Supabase Auth: email link, or Google when enabled), the Postgres data
 the source of truth (`supabase/migrations/`); a local setup can be saved to the account once, idempotently. Other
 tabs stay in sync (storage events locally, refetch on focus in the cloud). Configure `.env.example` values to enable.
 
+### Supabase setup (developers)
+
+- **Project:** `werylmwtyqodenlzlwgp` ("SHIFT Weekly Streamers", us-east-2).
+- **Env vars** (client-safe only; `.env.local` locally, Vercel Preview for `staging`): `NEXT_PUBLIC_SUPABASE_URL`,
+  `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, optional `NEXT_PUBLIC_AUTH_GOOGLE_ENABLED`. Never a secret/service-role key.
+- **Migrations:** `npx supabase login`, then `npx supabase db push --linked` (or apply a file with
+  `npx supabase db query --linked --project-ref <ref> -f <file>`). Applied: `202609280001_shift.sql`.
+- **Auth:** email magic link. Site URL = the staging preview; allowed redirects include staging, `https://*-pixel-perfect-designs.vercel.app`,
+  `http://localhost:3000` and `https://shift-streamer.farmtofame.com` (each with and without `/**`). The app redirects to
+  `window.location.origin + "/"`, so a new domain only needs adding to that list.
+- **Data model:** user-owned rows only (league, team, slots, roster, custom players, saved NHL-player edits, planned moves,
+  overrides) with owner-only RLS; saves go through `save_shift_state` with a revision check (stale tabs get a conflict,
+  never an overwrite). Daily lineups, the NHL schedule and the player catalog are never stored per user.
+
 - **Legacy demo data (v1).** The first alpha build seeded a sample roster under `shift.streaming.v1`. On first
   load that payload is migrated once. Sample players whose records are exactly the original seed are removed,
   along with their roster entries, planned moves and overrides. Players you created, sample players you edited

@@ -75,7 +75,10 @@ export function StoreProvider({children,repository}: {children:ReactNode;reposit
      blocked.current=offer;setMigration(offer);
      const initial=saved??(offer?local!:createInitialState());
      lastSaved.current=initial;dispatch({type:'hydrate',state:initial});
-     setCloudStatus(offer?'Choose whether to save existing setup':'Saved to account');setHydrated(true);
+     // Cloud wins over local data, but signed-out changes that differ are kept aside, never destroyed.
+     const keptBackup=!!saved&&!!local&&shouldOfferMigration(local,false)&&JSON.stringify(local)!==JSON.stringify(saved);
+     if(keptBackup)repo.current?.backup?.(local!);
+     setCloudStatus(offer?'Choose whether to save existing setup':keptBackup?'Saved to account · earlier signed-out changes kept as a local backup':'Saved to account');setHydrated(true);
      if(saved){candidate.current=null;repo.current?.clear();}
     }).catch(e=>{if(active&&generation.current===ticket){blocked.current=true;setCloudError(String(e.message));setCloudStatus('Cloud unavailable');setHydrated(true);dispatch({type:'hydrate',state:createInitialState()});}});
    },0);
@@ -147,6 +150,8 @@ export function StoreProvider({children,repository}: {children:ReactNode;reposit
    await remote.save(initial); // expected revision 0 makes repeated/concurrent migration safe.
    if(cloud.current!==remote)return;
    blocked.current=false;setMigration(false);lastSaved.current=initial;
+   // "Start fresh" keeps the local setup aside instead of destroying it.
+   if(!save&&candidate.current)repo.current?.backup?.(candidate.current);
    candidate.current=null;repo.current?.clear();dispatch({type:'hydrate',state:initial});setCloudStatus('Saved to account');
   }catch(e){setCloudError(e instanceof Error?e.message:'Migration failed.');setCloudStatus('Changes not saved');}
  }

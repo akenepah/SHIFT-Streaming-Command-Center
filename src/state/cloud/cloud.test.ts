@@ -43,3 +43,15 @@ describe('cloud persistence / real SQL migration',()=>{
   expect(()=>migrationPayload(s)).toThrow('Repair');
  });
 });
+
+import { LocalStorageRepository, SIGNED_OUT_BACKUP_KEY, STORAGE_KEY } from '../repository';
+describe('local data is set aside, never destroyed, when cloud wins',()=>{
+ it('backup() keeps a copy under its own key that load() never picks up',()=>{
+  const data=new Map<string,string>();
+  const repo=new LocalStorageRepository({getItem:k=>data.get(k)??null,setItem:(k,v)=>void data.set(k,v),removeItem:k=>void data.delete(k)});
+  const s=sample();repo.save(s);repo.backup(s);repo.clear();
+  expect(data.has(STORAGE_KEY)).toBe(false);
+  expect(JSON.parse(data.get(SIGNED_OUT_BACKUP_KEY)!).state.roster).toEqual(s.roster);
+  expect(repo.load().status).toBe('empty');
+ });
+});
