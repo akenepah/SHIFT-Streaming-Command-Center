@@ -1,5 +1,5 @@
 import { PGlite } from '@electric-sql/pglite';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { describe,it,expect,beforeAll,afterAll } from 'vitest';
 import { createInitialState } from '../appState';
 import { migrationPayload,shouldOfferMigration } from './repository';
@@ -9,7 +9,7 @@ let db:PGlite;
 beforeAll(async()=>{
  db=new PGlite();
  await db.exec(`create schema auth; create table auth.users(id uuid primary key); create role anon; create role authenticated; grant usage on schema public,auth to authenticated; create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$; insert into auth.users values('${A}'),('${B}');`);
- await db.exec(readFileSync('supabase/migrations/202609280001_shift.sql','utf8'));
+ for (const f of readdirSync('supabase/migrations').filter(f=>f.endsWith('.sql')).sort()) await db.exec(readFileSync(`supabase/migrations/${f}`,'utf8'));
 },30000);
 afterAll(async()=>{await db?.close();});
 async function asUser(id:string){await db.exec(`reset role; set role authenticated; set request.jwt.claim.sub='${id}';`);}

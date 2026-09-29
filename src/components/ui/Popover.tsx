@@ -13,12 +13,15 @@ export function AnchoredPopover({
   onClose,
   label,
   width = 240,
+  placement = "side",
   children,
 }: {
   anchor: HTMLElement | null;
   onClose: () => void;
   label: string;
   width?: number;
+  /** "side": beside the anchor (default). "below-end": under it, right edges aligned (header menus). */
+  placement?: "side" | "below-end";
   children: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -29,6 +32,11 @@ export function AnchoredPopover({
     const place = () => {
       const a = anchor.getBoundingClientRect();
       const h = ref.current?.offsetHeight ?? 0;
+      if (placement === "below-end") {
+        const w = Math.min(width, window.innerWidth - 16);
+        setPos({ top: a.bottom + 6, left: Math.max(8, Math.min(a.right - w, window.innerWidth - w - 8)) });
+        return;
+      }
       let left = a.right + 8;
       if (left + width > window.innerWidth - 8) left = Math.max(8, a.left - width - 8);
       let top = a.top;
@@ -42,7 +50,7 @@ export function AnchoredPopover({
       window.removeEventListener("resize", place);
       window.removeEventListener("scroll", place, true);
     };
-  }, [anchor, width]);
+  }, [anchor, width, placement]);
 
   useEffect(() => {
     if (!anchor) return;
@@ -72,7 +80,7 @@ export function AnchoredPopover({
       ref={ref}
       role="dialog"
       aria-label={label}
-      style={{ top: pos?.top ?? -9999, left: pos?.left ?? -9999, width }}
+      style={{ top: pos?.top ?? -9999, left: pos?.left ?? -9999, width: placement === "below-end" ? `min(${width}px, calc(100vw - 16px))` : width }}
       className="fixed z-40 rounded-card border border-line bg-surface-raised p-1.5 shadow-popover"
     >
       {children}
