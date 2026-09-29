@@ -7,6 +7,7 @@ import { PositionBadge, StatusBadge } from "@/components/ui/Badges";
 import { Select } from "@/components/ui/Field";
 import { ActionMenu, MenuDivider, MenuItem } from "@/components/ui/Popover";
 import { useToast } from "@/components/ui/Toast";
+import { statusChangeBlocker } from "@/domain/roster/capacity";
 import { rosterLayout, type RosterGroupKey } from "@/domain/roster/rosterLayout";
 import { POSITIONS, type Player, type Position, type RosterStatus } from "@/domain/types";
 import { rosterCounts, rosterSummary } from "@/state/selectors";
@@ -37,6 +38,12 @@ export function RosterTable() {
   const matches = (p: Player | null) => filter === "ALL" || (!!p && p.eligiblePositions.includes(filter));
 
   const setStatus = (p: Player, status: RosterStatus) => {
+    // Refused changes say why instead of showing a false success.
+    const blocker = statusChangeBlocker(state.roster, state.settings.roster, status, { playerId: p.id, players: state.players });
+    if (blocker) {
+      toast(`${p.name} can't be moved: ${blocker}`, "info");
+      return;
+    }
     dispatch({ type: "roster/setStatus", playerId: p.id, status });
     toast(`${p.name} is now ${status === "IR_PLUS" ? "on IR+" : status === "BENCH" ? "on the bench" : "Active"}.`);
   };
