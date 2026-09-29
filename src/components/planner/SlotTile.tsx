@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { ArrowLeftRight, Plus } from "lucide-react";
 import { Avatar, shortName } from "@/components/player/PlayerBits";
 import { POSITION_TONE, PositionBadge, type BadgeKind } from "@/components/ui/Badges";
 import type { Player, SlotType } from "@/domain/types";
@@ -33,7 +33,7 @@ export type SlotTileProps =
       onSelect?: (anchor: HTMLElement) => void;
       ariaLabel?: string;
     }
-  | { kind: "add"; badge: SlotType; ariaLabel: string; onAdd: () => void }
+  | { kind: "add"; badge: SlotType; ariaLabel: string; onAdd: (anchor: HTMLElement) => void; label?: string }
   | { kind: "open"; badge: BadgeKind; label?: string };
 
 export function SlotTile(props: SlotTileProps) {
@@ -41,14 +41,14 @@ export function SlotTile(props: SlotTileProps) {
     return (
       <button
         type="button"
-        onClick={props.onAdd}
+        onClick={(e) => props.onAdd(e.currentTarget)}
         aria-label={props.ariaLabel}
         className={`${ACTIVE_ROW} ${OPEN_SURFACE} ${POSITION_TONE[props.badge].accent} group cursor-pointer text-ink-2 transition-colors hover:text-ink focus-visible:text-ink`}
       >
         <PositionBadge kind={props.badge} compact />
         <span className="flex min-w-0 items-center gap-1 text-body-sm font-medium">
           <Plus aria-hidden className="size-4 shrink-0" />
-          <span className="truncate">Open slot</span>
+          <span className="truncate">{props.label ?? "Open slot"}</span>
         </span>
       </button>
     );
@@ -89,9 +89,11 @@ export function SlotTile(props: SlotTileProps) {
       type="button"
       onClick={(e) => onSelect(e.currentTarget)}
       aria-label={props.ariaLabel}
-      className={`${TILE} ${tone} transition-colors hover:border-line-strong`}
+      className={`${TILE} ${tone} group transition-colors hover:border-line-strong`}
     >
       {content}
+      {/* Says "this moves" without noise: on hover/focus with a mouse, always on touch screens. */}
+      <ArrowLeftRight aria-hidden className="size-3.5 shrink-0 text-ink-3 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 [@media(hover:none)]:opacity-100" />
     </button>
   );
 }

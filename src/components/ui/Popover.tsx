@@ -44,9 +44,12 @@ export function AnchoredPopover({
       setPos({ top, left });
     };
     place();
+    const observer = new ResizeObserver(place);
+    observer.observe(ref.current);
     window.addEventListener("resize", place);
     window.addEventListener("scroll", place, true);
     return () => {
+      observer.disconnect();
       window.removeEventListener("resize", place);
       window.removeEventListener("scroll", place, true);
     };
@@ -81,7 +84,7 @@ export function AnchoredPopover({
       role="dialog"
       aria-label={label}
       style={{ top: pos?.top ?? -9999, left: pos?.left ?? -9999, width: placement === "below-end" ? `min(${width}px, calc(100vw - 16px))` : width }}
-      className="fixed z-40 rounded-card border border-line bg-surface-raised p-1.5 shadow-popover"
+      className="fixed z-40 max-h-[calc(100dvh-16px)] overflow-y-auto rounded-card border border-line bg-surface-raised p-1.5 shadow-popover"
     >
       {children}
     </div>

@@ -26,7 +26,7 @@ export function WeekGridScroller({ children }: { children: React.ReactNode }) {
   const scrollable = edges.left || edges.right;
   return (
     <div className="relative">
-      {scrollable && <p className="mb-2 text-caption text-ink-2">Scroll sideways to compare all seven days →</p>}
+      {scrollable && <p className="mb-2 text-caption text-ink-2">Scroll sideways to compare days →</p>}
       <div ref={ref} id="week-grid" tabIndex={-1} className="overflow-x-auto pb-2 focus:outline-none">
         {children}
       </div>
