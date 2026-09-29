@@ -5,8 +5,10 @@ import { createInitialState, type AppState } from "./appState";
 import { reducer, type Action } from "./reducer";
 import { browserStorage, STORAGE_KEY, type AppStateRepository, type LoadResult } from "./repository";
 import { cloudClient } from "./cloud/client";
-import { CloudRepository, INITIAL_ORIGIN, listCloudWorkspaces, shouldOfferMigration, type WorkspaceSummary } from "./cloud/repository";
-import { cloudActiveKey, LocalWorkspaces, localWorkspaceKey, newWorkspaceId, PRIMARY_LOCAL_ID, resolveActiveWorkspace, WORKSPACE_INDEX_KEY } from "./workspaces";
+import { withPendingSave } from "./cloud/saveQueue";
+import { CloudRepository, INITIAL_ORIGIN, listCloudWorkspaces, type WorkspaceSummary } from "./cloud/repository";
+import { cloudActiveKey, LocalWorkspaces, localWorkspaceKey, newWorkspaceId, PRIMARY_LOCAL_ID, resolveActiveWorkspace, WORKSPACE_INDEX_KEY, type MigrationSource } from "./workspaces";
+import { adoptLocalWorkspace, discoverMigrations, findWorkspaceByOrigin } from "./cloud/migration";
 
 /**
  * App state for the ACTIVE team workspace, plus the workspace layer around it.
@@ -28,6 +30,8 @@ type Store = {
   cloudStatus: string;
   cloudError: string | null;
   migration: boolean;
+  migrationSources: MigrationSource[];
+  reviewMigration: () => Promise<void>;
   resolveMigration: (save: boolean) => Promise<void>;
   reloadCloud: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -75,6 +79,9 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
   const [cloudStatus, setCloudStatus] = useState("Local only");
   const [cloudError, setCloudError] = useState<string | null>(null);
   const [migration, setMigration] = useState(false);
+  const [migrationSources, setMigrationSources] = useState<MigrationSource[]>([]);
+  const sources = useRef<MigrationSource[]>([]);
+  const migrating = useRef(false);
   const [workspaces, setWorkspaces] = useState<WorkspaceSummary[]>([]);
   const [activeWorkspaceId, setActiveWorkspaceIdState] = useState<string | null>(null);
   const [creatingWorkspace, setCreatingWorkspace] = useState(false);
@@ -156,6 +163,8 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
       draft.current = null;
       setCreatingWorkspace(false);
       setMigration(false);
+      sources.current = [];
+      setMigrationSources([]);
       const ticket = ++generation.current;
       if (!next) {
         // Signed out: back to this browser's own (local) teams. Cloud data never lives in localStorage, so
@@ -181,22 +190,20 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
           cloud.current = remote;
           setWorkspaces(list);
           setActive(id);
-          const local = candidate.current;
-          const offer = !!local && shouldOfferMigration(local, list.length > 0);
-          blocked.current = offer;
-          setMigration(offer);
-          const initial = saved ?? (offer ? local! : createInitialState());
+          const found = localWs.current
+            ? await discoverMigrations(client, next.id, localWs.current, list, () => active && generation.current === ticket)
+            : [];
+          if (!active || generation.current !== ticket) return;
+          sources.current = found;
+          setMigrationSources(found);
+          blocked.current = found.length > 0;
+          setMigration(found.length > 0);
+          const initial = saved ?? createInitialState();
           lastSaved.current = initial;
+          external.current = true;
           dispatch({ type: "hydrate", state: initial });
-          // Cloud wins over local data, but signed-out changes that differ are kept aside, never destroyed.
-          const keptBackup = !!saved && !!local && shouldOfferMigration(local, false) && JSON.stringify(local) !== JSON.stringify(saved);
-          if (keptBackup) repo.current?.backup?.(local!);
-          setCloudStatus(offer ? "Choose whether to save existing setup" : keptBackup ? "Saved to account · earlier signed-out changes kept as a local backup" : "Saved to account");
+          setCloudStatus(found.length ? "Local teams available to save" : "Saved to account");
           setHydrated(true);
-          if (saved) {
-            candidate.current = null;
-            repo.current?.clear();
-          }
         } catch (e) {
           if (active && generation.current === ticket) {
             blocked.current = true;
@@ -217,10 +224,9 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
   }, []);
 
   async function drain() {
-    if (saving.current) return saving.current;
     const remote = cloud.current;
-    if (!remote || blocked.current) return;
-    saving.current = (async () => {
+    return withPendingSave(saving, () => !!remote && cloud.current === remote && !blocked.current && !!pending.current, async () => {
+      if (!remote) return;
       try {
         while (pending.current && cloud.current === remote && !blocked.current) {
           const next = pending.current;
@@ -235,7 +241,11 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
           if (created && remote.leagueId) {
             setActive(remote.leagueId);
             const client = cloudClient();
-            if (client) setWorkspaces(await listCloudWorkspaces(client));
+            if (client) {
+              const list = await listCloudWorkspaces(client);
+              if (cloud.current !== remote) return;
+              setWorkspaces(list);
+            }
           }
         }
       } catch (e) {
@@ -244,51 +254,57 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
           setCloudError(e instanceof Error ? e.message : "Could not save.");
           setCloudStatus("Changes not saved");
         }
-      } finally {
-        saving.current = null;
       }
-    })();
-    return saving.current;
+    });
   }
 
   /** "Add another team" finished setup: save it as a NEW workspace (never over the previous team) and switch to it. */
   async function commitNewWorkspace(next: AppState) {
     const d = draft.current;
     if (!d || committing.current) return;
+    const uid = owner.current;
+    const ticket = generation.current;
+    const current = () => generation.current === ticket && owner.current === uid && draft.current === d;
     committing.current = true;
     try {
       const client = cloudClient();
-      if (owner.current && client) {
-        const remote = new CloudRepository(client, owner.current, null, d.originKey);
+      if (uid && client) {
+        const remote = new CloudRepository(client, uid, null, d.originKey);
         setCloudStatus("Saving…");
         // Retry transient failures (the origin key makes a retried create idempotent), so a network blip
         // never strands a finished new team.
         for (let attempt = 0; ; attempt++) {
           try {
             await remote.save(next);
+            if (!current()) return;
             break;
           } catch (e) {
+            if (!current()) return;
             const duplicate = e instanceof Error && /already saved/.test(e.message);
             if (duplicate && attempt > 0) {
-              // An earlier attempt DID create it (only its reply was lost): open that team, newest in the list.
+              const id = await findWorkspaceByOrigin(client, d.originKey);
               const list = await listCloudWorkspaces(client);
+              if (!current()) return;
+              if (!id) throw e;
               draft.current = null;
               setCreatingWorkspace(false);
               setWorkspaces(list);
               activeId.current = null;
-              await switchWorkspace(list[list.length - 1].id);
+              await switchWorkspace(id);
               return;
             }
             if (duplicate || attempt >= 3) throw e;
             await new Promise((r) => setTimeout(r, 1000 * 2 ** attempt));
           }
         }
+        const list = await listCloudWorkspaces(client);
+        if (!current()) return;
         cloud.current = remote;
         lastSaved.current = next;
         draft.current = null;
         setCreatingWorkspace(false);
         setActive(remote.leagueId);
-        setWorkspaces(await listCloudWorkspaces(client));
+        setWorkspaces(list);
         setCloudStatus("Saved to account");
         // Anything changed while the create was in flight is saved normally now.
         if (latest.current !== next) {
@@ -309,8 +325,10 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
         refreshLocalList();
       }
     } catch (e) {
-      setCloudError(e instanceof Error ? e.message : "Could not save the new team.");
-      setCloudStatus("Changes not saved");
+      if (current()) {
+        setCloudError(e instanceof Error ? e.message : "Could not save the new team.");
+        setCloudStatus("Changes not saved");
+      }
     } finally {
       committing.current = false;
     }
@@ -475,30 +493,66 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
     }
   }
 
+  async function reviewMigration() {
+    if (!sources.current.length) return;
+    const ticket = generation.current;
+    const uid = owner.current;
+    await drain();
+    if (generation.current !== ticket || owner.current !== uid) return;
+    if (blocked.current) throw new Error("Resolve unsaved changes before saving teams from this device.");
+    blocked.current = true;
+    setMigration(true);
+  }
+
   async function resolveMigration(save: boolean) {
-    const remote = cloud.current;
-    if (!remote) return;
-    try {
-      setCloudError(null);
-      setCloudStatus("Saving…");
-      const initial = save ? latest.current : createInitialState();
-      await remote.save(initial); // the "initial" origin key makes repeated/concurrent migration safe.
-      if (cloud.current !== remote) return;
+    if (migrating.current) return;
+    const client = cloudClient();
+    const uid = owner.current;
+    const local = localWs.current;
+    if (!client || !uid || !local) return;
+    if (!save) {
+      // Dismiss only: never create an empty replacement or upload local data implicitly.
       blocked.current = false;
       setMigration(false);
-      lastSaved.current = initial;
-      // "Start fresh" keeps the local setup aside instead of destroying it.
-      if (!save && candidate.current) repo.current?.backup?.(candidate.current);
-      candidate.current = null;
-      repo.current?.clear();
-      dispatch({ type: "hydrate", state: initial });
-      setActive(remote.leagueId);
-      const client = cloudClient();
-      if (client) setWorkspaces(await listCloudWorkspaces(client));
+      setCloudError(null);
+      setCloudStatus("Saved to account · local teams kept on this device");
+      return;
+    }
+    migrating.current = true;
+    const ticket = generation.current;
+    const current = () => generation.current === ticket && owner.current === uid;
+    try {
+      setCloudError(null);
+      setCloudStatus("Saving existing teams…");
+      let selected: Awaited<ReturnType<typeof adoptLocalWorkspace>> | null = null;
+      const preferred = localActive.current;
+      for (const source of sources.current) {
+        const result = await adoptLocalWorkspace(client, uid, local, source, current);
+        if (!current()) return;
+        if (!selected || source.id === preferred) selected = result;
+      }
+      const list = await listCloudWorkspaces(client);
+      if (!current()) return;
+      sources.current = [];
+      setMigrationSources([]);
+      setWorkspaces(list);
+      blocked.current = false;
+      setMigration(false);
+      if (selected) {
+        cloud.current = selected.remote;
+        lastSaved.current = selected.state;
+        external.current = true;
+        dispatch({ type: "hydrate", state: selected.state });
+        setActive(selected.remote.leagueId);
+      }
       setCloudStatus("Saved to account");
     } catch (e) {
-      setCloudError(e instanceof Error ? e.message : "Migration failed.");
-      setCloudStatus("Changes not saved");
+      if (current()) {
+        setCloudError(e instanceof Error ? e.message : "Migration failed. Your local data is unchanged.");
+        setCloudStatus("Local teams retained · save incomplete");
+      }
+    } finally {
+      migrating.current = false;
     }
   }
 
@@ -506,32 +560,41 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
     const client = cloudClient();
     const uid = owner.current;
     if (!client || !uid) return;
+    const ticket = generation.current;
+    const current = () => generation.current === ticket && owner.current === uid;
     try {
       await saving.current;
       const list = await listCloudWorkspaces(client);
       const id = resolveActiveWorkspace(list, activeId.current ?? readPref(cloudActiveKey(uid)));
       const remote = new CloudRepository(client, uid, id, id ? null : INITIAL_ORIGIN);
       const saved = await remote.load();
+      const found = localWs.current ? await discoverMigrations(client, uid, localWs.current, list, current) : [];
+      if (!current()) return;
+      sources.current = found;
+      setMigrationSources(found);
       cloud.current = remote;
       pending.current = null;
-      blocked.current = false;
+      blocked.current = found.length > 0;
       draft.current = null;
       setCreatingWorkspace(false);
-      setMigration(false);
+      setMigration(found.length > 0);
       setCloudError(null);
       const next = saved ?? createInitialState();
       lastSaved.current = next;
+      external.current = true;
       dispatch({ type: "hydrate", state: next });
       setWorkspaces(list);
       setActive(id);
       setCloudStatus("Saved to account");
     } catch (e) {
-      setCloudError(e instanceof Error ? e.message : "Could not load saved data.");
+      if (current()) setCloudError(e instanceof Error ? e.message : "Could not load saved data.");
     }
   }
 
   async function signOut() {
+    const uid = owner.current;
     await drain();
+    if (owner.current !== uid) throw new Error("Your session changed. Please try again.");
     if (blocked.current && !migration) throw new Error("Resolve unsaved changes before signing out.");
     const { error } = await cloudClient()!.auth.signOut();
     if (error) throw error;
@@ -540,12 +603,12 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
   const value = useMemo(
     () => ({
       state, dispatch, hydrated, loadStatus, removedDemoPlayers, user, cloudStatus, cloudError, migration,
-      resolveMigration, reloadCloud, signOut, externalRevision,
+      resolveMigration, migrationSources, reviewMigration, reloadCloud, signOut, externalRevision,
       workspaces, activeWorkspaceId, creatingWorkspace, switchWorkspace, startNewWorkspace, cancelNewWorkspace,
     }),
     // Functions use current state and refs; recreate the public value as state changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [state, hydrated, loadStatus, removedDemoPlayers, user, cloudStatus, cloudError, migration, externalRevision, workspaces, activeWorkspaceId, creatingWorkspace],
+    [state, hydrated, loadStatus, removedDemoPlayers, user, cloudStatus, cloudError, migration, migrationSources, externalRevision, workspaces, activeWorkspaceId, creatingWorkspace],
   );
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
 }
