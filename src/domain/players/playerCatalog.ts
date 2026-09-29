@@ -128,3 +128,30 @@ export function withCatalog(saved: Readonly<Record<string, Player>>): Record<str
   return { ...CATALOG_PLAYERS, ...saved };
 }
 
+
+/**
+ * Bring a saved catalog player's fantasy eligibility up to the current catalog
+ * unless the user edited it. Catalog-sourced eligibility (YAHOO / MANUAL /
+ * NHL fallback) always follows the catalog. Legacy records without a source
+ * are upgraded only while they still hold the old default (just the NHL
+ * primary position), so older manual edits are never overwritten.
+ */
+export function refreshCatalogEligibility(player: Player): Player {
+  if (player.source !== "NHL" || !player.nhlPlayerId || player.eligibilitySource === "USER") return player;
+  const entry = getCatalogEntry(player.nhlPlayerId);
+  if (!entry) return player;
+  const legacyDefault =
+    player.eligibilitySource === undefined &&
+    player.eligiblePositions.length === 1 &&
+    player.eligiblePositions[0] === entry.primaryPosition;
+  if (player.eligibilitySource === undefined && !legacyDefault) return player;
+  const current = catalogEligibility(entry);
+  return {
+    ...player,
+    eligiblePositions: current.eligiblePositions,
+    eligibilitySource: current.eligibilitySource,
+    eligibilitySeason: "2026-27",
+    yahooPlayerId: player.yahooPlayerId ?? current.yahooPlayerId,
+    primaryPosition: player.primaryPosition ?? entry.primaryPosition,
+  };
+}

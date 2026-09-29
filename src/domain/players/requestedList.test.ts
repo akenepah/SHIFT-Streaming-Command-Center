@@ -65,3 +65,41 @@ describe("requested 2026-27 player list (catalog floor)", () => {
     }
   });
 });
+
+import { refreshCatalogEligibility } from "./playerCatalog";
+import { playerFromDraft } from "../roster/playerDraft";
+
+describe("saved catalog players pick up current eligibility (unless the user edited it)", () => {
+  const jarvis = CATALOG_PLAYERS[catalogPlayerId(8482093)]; // list: LW/RW; NHL primary RW
+  const legacy = { ...jarvis, eligiblePositions: ["RW" as const], eligibilitySource: undefined };
+
+  it("upgrades a legacy record still at the old single-position default", () => {
+    expect(refreshCatalogEligibility(legacy)).toMatchObject({ eligiblePositions: ["LW", "RW"], eligibilitySource: "MANUAL" });
+  });
+
+  it("never overwrites a user edit (explicit USER, or a non-default legacy value)", () => {
+    const edited = { ...jarvis, eligiblePositions: ["C" as const, "RW" as const], eligibilitySource: "USER" as const };
+    expect(refreshCatalogEligibility(edited)).toBe(edited);
+    const legacyEdited = { ...legacy, eligiblePositions: ["C" as const, "RW" as const] };
+    expect(refreshCatalogEligibility(legacyEdited)).toBe(legacyEdited);
+  });
+
+  it("leaves custom players alone", () => {
+    const custom = { id: "x", name: "X", nhlTeamId: "EDM" as const, eligiblePositions: ["C" as const], source: "CUSTOM" as const };
+    expect(refreshCatalogEligibility(custom)).toBe(custom);
+  });
+
+  it("saving a status/team-only edit keeps the catalog eligibility source", () => {
+    const draft = { name: jarvis.name, nhlTeamId: jarvis.nhlTeamId, eligiblePositions: [...jarvis.eligiblePositions], headshot: jarvis.headshot ?? "" };
+    expect(playerFromDraft(draft, jarvis.id, jarvis).eligibilitySource).toBe("MANUAL");
+    expect(playerFromDraft({ ...draft, eligiblePositions: ["RW"] }, jarvis.id, jarvis).eligibilitySource).toBe("USER");
+  });
+});
+
+describe("search word order", () => {
+  it("finds surname-first queries", () => {
+    const pool = Object.values(CATALOG_PLAYERS);
+    expect(searchPlayers("hughes jack", pool).map((p) => p.name)).toContain("Jack Hughes");
+    expect(searchPlayers("pettersson elias", pool).map((p) => p.nhlPlayerId).sort()).toEqual([8480012, 8483678]);
+  });
+});

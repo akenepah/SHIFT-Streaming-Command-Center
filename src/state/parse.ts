@@ -1,3 +1,4 @@
+import { refreshCatalogEligibility } from "@/domain/players/playerCatalog";
 import { DEFAULT_LEAGUE_SETTINGS } from "@/domain/config";
 import { isValidISODate } from "@/domain/dates";
 import { isNHLTeamId } from "@/domain/nhl/teamIds";
@@ -147,7 +148,7 @@ function parseBody(raw: Obj): Omit<AppState, "version"> {
     for (const value of Object.values(raw.players)) {
       const parsed = parsePlayer(value);
       if (!parsed) continue;
-      if ("player" in parsed) players[parsed.player.id] = parsed.player;
+      if ("player" in parsed) players[parsed.player.id] = refreshCatalogEligibility(parsed.player);
       else repairs.set(parsed.repair.playerId, { ...parsed.repair, rosterStatus: null });
     }
   }
