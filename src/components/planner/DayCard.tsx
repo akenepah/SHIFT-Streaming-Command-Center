@@ -14,6 +14,8 @@ type Props = {
   isToday: boolean;
   isPast: boolean;
   movesToday: PlannedTransaction[];
+  /** Broken planned moves (id → problem): flagged and struck through, never shown as if they're fine. */
+  moveProblems?: ReadonlyMap<string, string>;
   statusRows: number;
   players: Readonly<Record<string, Player>>;
   onMovePlayer: (player: Player, day: DailyLineup, anchor: HTMLElement) => void;
@@ -57,7 +59,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 const GROUP_OF = (t: SlotType) => (t === "C" || t === "LW" || t === "RW" ? "FORWARDS" : t === "D" ? "DEFENSE" : t === "UTIL" ? "UTILITY" : "GOALTENDER");
 
-export function DayCard({ day, isToday, isPast, movesToday, statusRows, players, onMovePlayer, onAddToSlot }: Props) {
+export function DayCard({ day, isToday, isPast, movesToday, moveProblems, statusRows, players, onMovePlayer, onAddToSlot }: Props) {
   const { state, dispatch } = useStore();
   const { benchSlots, irPlusSlots } = state.settings.roster;
   const slotCount = day.activeSlots.length;
@@ -69,9 +71,11 @@ export function DayCard({ day, isToday, isPast, movesToday, statusRows, players,
 
   const reserveTile = (row: ReserveRow, badge: "BN" | "IR+", key: number) => {
     if (row.kind === "open") return <SlotTile key={key} kind="open" badge={badge} />;
+    // A bench player who starts today already appears in the lineup above; listing them again here read as a duplicate.
+    if (row.starting) return <SlotTile key={key} kind="open" badge={badge} label="In lineup today" />;
     const p = players[row.playerId];
     if (!p) return null;
-    const secondary = row.starting ? "Starting today" : row.game ? matchupText(row.game) : "No game";
+    const secondary = row.game ? matchupText(row.game) : "No game";
     return (
       <SlotTile
         key={key}
@@ -80,7 +84,6 @@ export function DayCard({ day, isToday, isPast, movesToday, statusRows, players,
         player={p}
         secondary={row.benchedGame ? `${secondary} · BN game` : secondary}
         benched={row.benchedGame}
-        muted={row.starting}
         // Only a benched game can be moved into the lineup; no-game and IR+ rows are informational.
         onSelect={row.benchedGame ? (anchor) => onMovePlayer(p, day, anchor) : undefined}
         ariaLabel={row.benchedGame ? `${p.name} has a game but is benched. Change lineup spot` : undefined}
@@ -136,12 +139,19 @@ export function DayCard({ day, isToday, isPast, movesToday, statusRows, players,
                 <span className="flex items-center gap-1.5 font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-move-strong">
                   <ArrowLeftRight aria-hidden className="size-3.5" /> Planned move
                 </span>
-                {movesToday.map((t) => (
-                  <span key={t.id} className="mt-0.5 block leading-4">
-                    {t.addPlayerId && <span className="block truncate">+ {shortName(name(t.addPlayerId))}</span>}
-                    {t.dropPlayerId && <span className="block truncate">− {shortName(name(t.dropPlayerId))}</span>}
-                  </span>
-                ))}
+                {movesToday.map((t) => {
+                  const problem = moveProblems?.get(t.id);
+                  return (
+                    <span key={t.id} className={`mt-0.5 block leading-4 ${problem ? "text-warn" : ""}`} title={problem}>
+                      {problem && <span className="block font-semibold">Needs fixing</span>}
+                      <span className={problem ? "line-through" : undefined}>
+                        {t.addPlayerId && <span className="block truncate">+ {shortName(name(t.addPlayerId))}</span>}
+                        {t.dropPlayerId && <span className="block truncate">− {shortName(name(t.dropPlayerId))}</span>}
+                      </span>
+                      {problem && <span className="sr-only">{problem}</span>}
+                    </span>
+                  );
+                })}
               </div>
             )}
           </div>

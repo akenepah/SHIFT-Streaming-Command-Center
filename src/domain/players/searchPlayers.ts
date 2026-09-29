@@ -12,13 +12,15 @@ export const DEFAULT_SEARCH_LIMIT = 20;
  * "oreilly", "O'Reilly" and "o’reilly" all match.
  *
  * Order: exact full name, full name starts with the query, first or last name
- * starts with it, contains it; alphabetical within each tier. Never ranked by
- * any fantasy ranking.
+ * starts with it, contains it. Within a tier, players with verified fantasy
+ * eligibility come before unverified NHL-position fallbacks (depth players),
+ * so "Hughes" lists Jack and Quinn before Cameron; then alphabetical. Never
+ * ranked by any fantasy ranking.
  */
 export function searchPlayers(query: string, pool: readonly Player[], limit = DEFAULT_SEARCH_LIMIT): Player[] {
   const q = normalizeSearchText(query);
   if (!q) return [];
-  const scored: { p: Player; tier: number; key: string }[] = [];
+  const scored: { p: Player; tier: number; unverified: number; key: string }[] = [];
   for (const p of pool) {
     const name = normalizeSearchText(p.name);
     let tier = -1;
@@ -28,10 +30,10 @@ export function searchPlayers(query: string, pool: readonly Player[], limit = DE
     else if (name.includes(q)) tier = 3;
     // Multi-word queries in any order ("hughes jack", "mc david"): every word starts a name word.
     else if (q.includes(" ") && q.split(" ").every((t) => name.split(" ").some((w) => w.startsWith(t)))) tier = 4;
-    if (tier >= 0) scored.push({ p, tier, key: name });
+    if (tier >= 0) scored.push({ p, tier, unverified: p.eligibilitySource === "NHL_PRIMARY_FALLBACK" ? 1 : 0, key: name });
   }
   return scored
-    .sort((a, b) => a.tier - b.tier || a.key.localeCompare(b.key) || a.p.nhlTeamId.localeCompare(b.p.nhlTeamId) || a.p.id.localeCompare(b.p.id))
+    .sort((a, b) => a.tier - b.tier || a.unverified - b.unverified || a.key.localeCompare(b.key) || a.p.nhlTeamId.localeCompare(b.p.nhlTeamId) || a.p.id.localeCompare(b.p.id))
     .slice(0, limit)
     .map((x) => x.p);
 }
