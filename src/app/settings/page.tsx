@@ -18,6 +18,7 @@ import { validateSettings } from "@/domain/settings";
 import { overflowText, rosterCapacity } from "@/domain/roster/capacity";
 import { rosterCounts } from "@/state/selectors";
 import { useStore } from "@/state/store";
+import { setUnsavedEdits } from "@/state/unsavedGuard";
 
 export default function SettingsPage() {
   const { state, dispatch, user, externalRevision } = useStore();
@@ -40,6 +41,10 @@ export default function SettingsPage() {
   const s = state.settings;
   const [confirmShrink, setConfirmShrink] = useState(false);
   const capacity = rosterCapacity(state.roster, draft.roster);
+  useEffect(() => {
+    setUnsavedEdits(dirty);
+    return () => setUnsavedEdits(false);
+  }, [dirty]);
   useEffect(() => {
     if (!dirty) return;
     const unload = (e: BeforeUnloadEvent) => { e.preventDefault(); };
