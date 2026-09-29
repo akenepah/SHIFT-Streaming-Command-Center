@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
 import { formatDayShort, formatMonthDay, formatWeekRange, weekdayName } from "@/domain/dates";
 import type { WeekSummary } from "@/domain/lineup/generateWeek";
-import { activeSlotCount } from "@/domain/config";
-import { acquisitionCost, acquisitionsUsed, checkDraft, movesForWeek } from "@/domain/transactions/transactions";
+import { acquisitionCost, acquisitionsUsed, movesForWeek } from "@/domain/transactions/transactions";
 import type { ISODate, PlannedTransaction } from "@/domain/types";
 import { rosterSummary } from "@/state/selectors";
 import { useStore } from "@/state/store";
@@ -19,18 +18,21 @@ function Divider() {
 export function WeeklyMovesPanel({
   weekStart,
   summary,
+  problems,
   onPlan,
   onEdit,
 }: {
   weekStart: ISODate;
   summary: WeekSummary;
+  /** Broken planned moves (id → problem), from `moveProblems`. */
+  problems: ReadonlyMap<string, string>;
   onPlan: () => void;
   onEdit: (t: PlannedTransaction) => void;
 }) {
   const { state, dispatch } = useStore();
   const toast = useToast();
   const { settings } = state;
-  const used = acquisitionsUsed(state.transactions, weekStart);
+  const used = acquisitionsUsed(state.transactions, weekStart, problems);
   const limit = settings.weeklyAcquisitionLimit;
   const over = used > limit;
   const moves = movesForWeek(state.transactions, weekStart);
@@ -38,16 +40,8 @@ export function WeeklyMovesPanel({
   const goalieMin = settings.minGoalieAppearances;
   const goalieMet = summary.goalieStarts >= goalieMin;
   const name = (id?: string) => (id ? (state.players[id]?.name ?? "Unknown player") : "");
-  // Moves saved before a rule existed (or made stale by later changes) are flagged, never silently applied as valid.
-  const moveProblem = (t: PlannedTransaction) =>
-    checkDraft(t, {
-      baseRoster: state.roster,
-      transactions: state.transactions,
-      editingId: t.id,
-      weeklyAcquisitionLimit: settings.weeklyAcquisitionLimit,
-      weekStartsOn: settings.weekStartsOn,
-      regularCapacity: activeSlotCount(settings.roster) + settings.roster.benchSlots,
-    }).errors[0];
+  // Moves saved before a rule existed (or made stale by later changes) are flagged, never counted or shown as valid.
+  const moveProblem = (t: PlannedTransaction) => problems.get(t.id);
 
   return (
     <aside aria-label="Weekly moves" className="self-start rounded-panel border border-line bg-surface p-4">

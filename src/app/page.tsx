@@ -18,6 +18,7 @@ import { openSlotContext, openSlotEffectiveDate, type OpenSlotContext } from "@/
 import { SCHEDULE_META } from "@/domain/schedule/staticProvider";
 import { activeSlotCount } from "@/domain/config";
 import type { DailyLineup, ISODate, PlannedTransaction, TransactionType } from "@/domain/types";
+import { moveProblems } from "@/domain/transactions/transactions";
 import { useStore } from "@/state/store";
 import { useWeekPlan } from "@/state/usePlanner";
 
@@ -40,6 +41,17 @@ export default function WeeklyPlannerPage() {
   // Re-align if the league's week start day changes.
   const weekStart = startOfWeek(requestedWeek ?? thisWeek, settings.weekStartsOn);
   const { input, plan } = useWeekPlan(weekStart);
+  const problems = useMemo(
+    () =>
+      moveProblems({
+        baseRoster: state.roster,
+        transactions: state.transactions,
+        weeklyAcquisitionLimit: settings.weeklyAcquisitionLimit,
+        weekStartsOn: settings.weekStartsOn,
+        regularCapacity: activeSlotCount(settings.roster) + settings.roster.benchSlots,
+      }),
+    [state.roster, state.transactions, settings],
+  );
 
   const targets = useMemo(() => getScheduleTargets({ input, plan, today, now, timing: settings.defaultMoveTiming }), [input, plan, today, now, settings.defaultMoveTiming]);
   const [targetTeam, setTargetTeam] = useState<NHLTeamId | "">("");
@@ -137,6 +149,7 @@ export default function WeeklyPlannerPage() {
         <WeeklyMovesPanel
           weekStart={weekStart}
           summary={summary}
+          problems={problems}
           onPlan={() => {
             setTargetTeam("");
             setSlotContext(null);
@@ -183,6 +196,7 @@ export default function WeeklyPlannerPage() {
                   isToday={day.date === today}
                   isPast={day.date < today}
                   statusRows={Math.max(0, ...plan.days.map(d => state.transactions.filter(t => t.status === "PLANNED" && t.effectiveDate === d.date).length))}
+                  moveProblems={problems}
                   movesToday={state.transactions.filter((t) => t.status === "PLANNED" && t.effectiveDate === day.date)}
                   players={input.players}
                   onMovePlayer={openMove}

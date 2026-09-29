@@ -454,7 +454,9 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
     if (owner.current && blocked.current) throw new Error("Resolve unsaved changes before adding a team.");
     draft.current = { previousId: activeId.current, originKey: newWorkspaceId(), localId: newWorkspaceId() };
     setCreatingWorkspace(true);
-    dispatch({ type: "hydrate", state: createInitialState() });
+    // Blank names: the defaults would duplicate the first team's "My League / My Team" in the switcher.
+    const fresh = createInitialState();
+    dispatch({ type: "hydrate", state: { ...fresh, settings: { ...fresh.settings, leagueName: "", teamName: "" } } });
   }
 
   async function cancelNewWorkspace() {

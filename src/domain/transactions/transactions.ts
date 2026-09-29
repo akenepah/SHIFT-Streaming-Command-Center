@@ -7,11 +7,18 @@ export function acquisitionCost(type: TransactionType): number {
   return type === "DROP" ? 0 : 1;
 }
 
-/** Acquisitions used by planned moves effective within the fantasy week that starts on `weekStart`. */
-export function acquisitionsUsed(transactions: readonly PlannedTransaction[], weekStart: ISODate): number {
+/**
+ * Acquisitions used by planned moves effective within the fantasy week that starts on `weekStart`.
+ * Moves in `exclude` (broken moves, see `moveProblems`) don't count: they can't happen as planned.
+ */
+export function acquisitionsUsed(
+  transactions: readonly PlannedTransaction[],
+  weekStart: ISODate,
+  exclude?: { has(id: string): boolean },
+): number {
   const weekEnd = addDays(weekStart, 6);
   return transactions
-    .filter((t) => t.status === "PLANNED" && t.effectiveDate >= weekStart && t.effectiveDate <= weekEnd)
+    .filter((t) => t.status === "PLANNED" && t.effectiveDate >= weekStart && t.effectiveDate <= weekEnd && !exclude?.has(t.id))
     .reduce((n, t) => n + acquisitionCost(t.type), 0);
 }
 
@@ -78,6 +85,17 @@ export function checkDraft(draft: TransactionDraft, ctx: TransactionContext): Dr
       warnings.push(`This would use ${used} of ${ctx.weeklyAcquisitionLimit} acquisitions for that week.`);
   }
   return { errors, warnings };
+}
+
+/** Planned moves made invalid by later changes (e.g. the dropped player left the roster), keyed by id → first problem. */
+export function moveProblems(ctx: Omit<TransactionContext, "editingId">): Map<string, string> {
+  const problems = new Map<string, string>();
+  for (const t of ctx.transactions) {
+    if (t.status !== "PLANNED") continue;
+    const error = checkDraft(t, { ...ctx, editingId: t.id }).errors[0];
+    if (error) problems.set(t.id, error);
+  }
+  return problems;
 }
 
 export function createTransaction(draft: TransactionDraft, id: string, now: Date = new Date()): PlannedTransaction {

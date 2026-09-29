@@ -12,7 +12,7 @@ const players = playerMap(player("mcdavid", "EDM", "C"), player("bench", "BOS", 
 const noopRepo: AppStateRepository = { load: () => ({ status: "empty", state: null }), save: () => {}, clear: () => {} } as unknown as AppStateRepository;
 const config = slotsConfig({ C: 3, LW: 1 });
 
-function render(opts: { date?: string; games?: boolean; isPast?: boolean; moves?: PlannedTransaction[] } = {}) {
+function render(opts: { date?: string; games?: boolean; isPast?: boolean; moves?: PlannedTransaction[]; problems?: Map<string, string> } = {}) {
   const date = opts.date ?? DATE;
   const day = generateDailyLineup({
     roster: [rostered("mcdavid"), rostered("bench", "BENCH"), rostered("off")],
@@ -23,7 +23,7 @@ function render(opts: { date?: string; games?: boolean; isPast?: boolean; moves?
   });
   return renderToStaticMarkup(
     <StoreProvider repository={noopRepo}>
-      <DayCard day={day} isToday={false} isPast={!!opts.isPast} movesToday={opts.moves ?? []} statusRows={opts.moves?.length ?? 0} players={players} onMovePlayer={() => {}} onAddToSlot={() => {}} />
+      <DayCard day={day} isToday={false} isPast={!!opts.isPast} movesToday={opts.moves ?? []} moveProblems={opts.problems} statusRows={opts.moves?.length ?? 0} players={players} onMovePlayer={() => {}} onAddToSlot={() => {}} />
     </StoreProvider>,
   );
 }
@@ -52,9 +52,11 @@ describe("DayCard", () => {
     expect(html).toContain("No games");
   });
 
-  it("shows a bench player moved into the lineup as Starting today, not an open slot", () => {
+  it("shows a bench player moved into the lineup only once: the bench row says In lineup today", () => {
     const html = render();
-    expect(html).toMatch(/bench<\/span>[\s\S]*Starting today/);
+    const bench = html.slice(html.search(/bench<\/span>/));
+    expect(bench).toContain("In lineup today");
+    expect(html).not.toContain("Starting today");
   });
 
   it("renders a planned move as a charcoal transaction band, not a position tile", () => {
@@ -67,5 +69,14 @@ describe("DayCard", () => {
     const text = band.replace(/<!-- -->/g, "");
     expect(text).toContain("+ off");
     expect(text).toContain("− bench");
+    expect(text).not.toContain("Needs fixing");
+  });
+
+  it("flags a broken planned move instead of showing it as fine", () => {
+    const move: PlannedTransaction = { id: "m", type: "ADD_DROP", addPlayerId: "off", dropPlayerId: "gone", effectiveDate: DATE, status: "PLANNED", createdAt: "" };
+    const html = render({ moves: [move], problems: new Map([["m", "That player isn't on your roster on this date."]]) });
+    expect(html).toContain("Needs fixing");
+    expect(html).toContain("line-through");
+    expect(html).toContain("isn&#x27;t on your roster");
   });
 });

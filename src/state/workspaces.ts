@@ -25,6 +25,13 @@ export function newWorkspaceId(): string {
 }
 
 /** Pick the active team: the remembered one if it still exists, else the most recently updated, else the first. */
+/** A new team named exactly like an existing one (same team and league) can't be told apart in the team switcher. */
+export function duplicateTeamError(workspaces: readonly WorkspaceSummary[], teamName: string, leagueName: string): string | null {
+  const key = (s: string) => s.trim().toLocaleLowerCase();
+  const clash = workspaces.find((w) => key(w.teamName) === key(teamName) && key(w.leagueName) === key(leagueName));
+  return clash ? `You already have "${clash.teamName}" in ${clash.leagueName}. Use a different team or league name.` : null;
+}
+
 export function resolveActiveWorkspace(workspaces: readonly WorkspaceSummary[], remembered: string | null): string | null {
   if (!workspaces.length) return null;
   if (remembered && workspaces.some((w) => w.id === remembered)) return remembered;
