@@ -18,7 +18,7 @@ import { confirmDiscardUnsaved } from "@/state/unsavedGuard";
  */
 export function AccountControl() {
   const {
-    user, cloudStatus, cloudError, migration, resolveMigration, reloadCloud, signOut,
+    user, cloudStatus, cloudError, migration, migrationSources, reviewMigration, resolveMigration, reloadCloud, signOut,
     workspaces, activeWorkspaceId, creatingWorkspace, switchWorkspace, startNewWorkspace,
   } = useStore();
   const router = useRouter();
@@ -138,6 +138,9 @@ export function AccountControl() {
               </MenuItem>
             )}
             <MenuDivider />
+            {user && migrationSources.length > 0 && (
+              <MenuItem onSelect={() => { close(); void run(reviewMigration); }}>Save teams from this device</MenuItem>
+            )}
             {user ? (
               <MenuItem
                 disabled={busy || cloudStatus === "Saving…"}
@@ -164,9 +167,9 @@ export function AccountControl() {
 
       <Dialog
         open={dialogOpen || migration || !!cloudError}
-        onClose={() => setDialogOpen(false)}
-        title={migration ? "Existing SHIFT setup found" : user ? "Your account" : sentTo ? "Check your email" : "Save your league"}
-        description={migration ? "Save this league and roster to your account?" : "Your saved teams follow you across browsers and devices."}
+        onClose={() => { if (busy) return; if (migration) void resolveMigration(false); setDialogOpen(false); }}
+        title={migration ? migrationSources.length > 1 ? "Save your existing teams" : workspaces.length ? "We found another team on this device" : "Save your existing SHIFT setup" : user ? "Your account" : sentTo ? "Check your email" : "Save your league"}
+        description={migration ? "We found your league and roster saved on this device. Save it to your SHIFT account so it’s available on your other devices." : "Your saved teams follow you across browsers and devices."}
         footer={<Button onClick={() => setDialogOpen(false)} disabled={migration || !!cloudError}>Close</Button>}
       >
         <div className="grid gap-4">
@@ -174,9 +177,11 @@ export function AccountControl() {
             <p>Account saving is not available on this deployment yet. Your setup currently stays in this browser.</p>
           ) : migration ? (
             <>
-              <Button disabled={busy} variant="primary" onClick={() => run(() => resolveMigration(true))}>Save to account</Button>
-              <Button disabled={busy} onClick={() => run(() => resolveMigration(false))}>Start fresh</Button>
-              <Button disabled={busy} onClick={() => run(signOut)}>Not now — sign out</Button>
+              <ul className="grid gap-2">
+                {migrationSources.map(source => <li key={source.id}><strong>{source.teamName}</strong><span className="block text-body-sm text-ink-2">{source.leagueName} · {source.season}</span></li>)}
+              </ul>
+              <Button disabled={busy} variant="primary" onClick={() => run(() => resolveMigration(true))}>{busy ? "Saving existing teams…" : migrationSources.length > 1 ? "Save all to my account" : workspaces.length ? "Add team to account" : "Save to my account"}</Button>
+              <Button disabled={busy} onClick={() => run(() => resolveMigration(false))}>Not now</Button>
             </>
           ) : user ? (
             <>
@@ -222,7 +227,7 @@ export function AccountControl() {
           {cloudError && (
             <>
               <p role="alert" className="text-danger">{cloudError}</p>
-              <Button disabled={busy} onClick={() => run(async () => { if (window.confirm("Reload cloud data and discard unsaved changes in this tab?")) await reloadCloud(); })}>
+              <Button disabled={busy} onClick={() => run(async () => { if (migration || window.confirm("Reload cloud data and discard unsaved changes in this tab?")) await reloadCloud(); })}>
                 Reload saved data
               </Button>
             </>

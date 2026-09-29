@@ -23,3 +23,5 @@ Tested staging origin: `https://shift-streaming-command-center-git-8e3c08-pixel-
 Unit tests cover redirect origins, duplicate submission, lock release, success, failure, and rate limits. Local browser tests using simulated responses verified loading/disabled controls, success copy, rate-limit feedback, and failure feedback without sending email.
 
 Live email delivery, desktop/mobile callback, and session persistence still require a successful request after the sender configuration is corrected. Simulated responses do not establish that acceptance result.
+
+A user-authorized retry at 22:14:44 UTC failed again; the Auth log at 22:14:49 UTC still named the original unverified `shift-streamer.farmtofame.com` sender domain. The user reports verifying `auth.shift-streamer.farmtofame.com` and requested deferring further email troubleshooting. No further email requests should be sent without renewed authorization.
