@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { game, player, playerMap, rostered, schedule, slotsConfig, tx } from "../testing/fixtures";
+import { acquisitionsUsed } from "../transactions/transactions";
+import { generateDailyLineup } from "./generateDailyLineup";
 import { generateWeek } from "./generateWeek";
 
 const sched = schedule([
@@ -45,5 +47,23 @@ describe("generateWeek", () => {
     expect(rosterIds).toEqual(["b", "b", "b", "e", "e", "e", "e"]);
     // Mon b (BOS), Wed b (BOS); Fri e (EDM @ BOS). Wed EDM game is before the add.
     expect(week.summary.startsByPlayer).toEqual({ b: 2, e: 1 });
+  });
+});
+
+
+describe("optional next-week planning boundary", () => {
+  it("shows a Monday acquisition only in next week's day and acquisition count", () => {
+    const weekStart = "2026-10-12";
+    const nextMonday = "2026-10-19";
+    const input = { weekStart, roster: [rostered("old")], players: playerMap(player("old", "BOS", "C"), player("new", "BOS", "C")), scheduleProvider: sched, rosterConfiguration: slotsConfig({ C: 1 }) };
+    const move = tx({ type: "ADD_DROP", addPlayerId: "new", dropPlayerId: "old", effectiveDate: nextMonday });
+    const planned = { ...input, plannedTransactions: [move] };
+    const current = generateWeek(planned);
+    expect(current).toEqual(generateWeek(input));
+    const extraDay = generateDailyLineup({ ...planned, date: nextMonday });
+    expect(extraDay.nhlGameCount).toBe(1);
+    expect(extraDay.activeSlots[0].playerId).toBe("new");
+    expect(acquisitionsUsed([move], weekStart)).toBe(0);
+    expect(acquisitionsUsed([move], nextMonday)).toBe(1);
   });
 });

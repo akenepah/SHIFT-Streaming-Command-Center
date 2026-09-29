@@ -52,7 +52,7 @@ export function WeeklyMovesPanel({
       <p className="mt-0.5 text-caption text-ink-3 tabular-nums">
         {used} of {limit} used · Resets {weekdayName(settings.weekStartsOn)}
       </p>
-      <Button variant="primary" className="mt-4 w-full" onClick={onPlan}>
+      <Button className="mt-4 w-full" onClick={onPlan}>
         <Plus aria-hidden /> Plan a move
       </Button>
 

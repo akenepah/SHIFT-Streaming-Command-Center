@@ -12,18 +12,18 @@ const players = playerMap(player("mcdavid", "EDM", "C"), player("bench", "BOS", 
 const noopRepo: AppStateRepository = { load: () => ({ status: "empty", state: null }), save: () => {}, clear: () => {} } as unknown as AppStateRepository;
 const config = slotsConfig({ C: 3, LW: 1 });
 
-function render(opts: { date?: string; games?: boolean; isPast?: boolean; moves?: PlannedTransaction[]; problems?: Map<string, string> } = {}) {
+function render(opts: { date?: string; games?: boolean; isPast?: boolean; moves?: PlannedTransaction[]; problems?: Map<string, string>; nextWeek?: boolean; benchOnly?: boolean } = {}) {
   const date = opts.date ?? DATE;
   const day = generateDailyLineup({
     roster: [rostered("mcdavid"), rostered("bench", "BENCH"), rostered("off")],
     players,
     date,
     scheduleProvider: schedule(opts.games === false ? [] : [game(date, "EDM", "BOS")]),
-    rosterConfiguration: config,
+    rosterConfiguration: opts.benchOnly ? slotsConfig({ C: 1 }) : config,
   });
   return renderToStaticMarkup(
     <StoreProvider repository={noopRepo}>
-      <DayCard day={day} isToday={false} isPast={!!opts.isPast} movesToday={opts.moves ?? []} moveProblems={opts.problems} statusRows={opts.moves?.length ?? 0} players={players} onMovePlayer={() => {}} onAddToSlot={() => {}} />
+      <DayCard day={day} isToday={false} isPast={!!opts.isPast} movesToday={opts.moves ?? []} moveProblems={opts.problems} nextWeek={opts.nextWeek} statusRows={opts.moves?.length ?? 0} players={players} onMovePlayer={() => {}} onAddToSlot={() => {}} />
     </StoreProvider>,
   );
 }
@@ -31,8 +31,13 @@ function render(opts: { date?: string; games?: boolean; isPast?: boolean; moves?
 describe("DayCard", () => {
   it("labels open slots with day, date, position and ordinal", () => {
     const html = render();
-    expect(html).toContain('aria-label="Add a player for Tuesday Oct 13 at center, slot 2 of 3"');
-    expect(html).toContain('aria-label="Add a player for Tuesday Oct 13 at center, slot 3 of 3"');
+    expect(html).toMatch(/aria-label="Open center slot for Tuesday Oct 13, slot 2 of 3\. (Add a player|Start a benched player or add a player)"/);
+    expect(html).toMatch(/aria-label="Open center slot for Tuesday Oct 13, slot 3 of 3\. /);
+  });
+
+  it("marks the optional next-week day as Next week", () => {
+    expect(render()).not.toContain("Next week");
+    expect(render({ nextWeek: true })).toContain("Next week");
   });
 
   it("groups the active lineup with counts from settings", () => {
@@ -44,6 +49,11 @@ describe("DayCard", () => {
     const html = render({ isPast: true });
     expect(html).not.toContain("Add a player for");
     expect(html).toContain("Open slot");
+  });
+
+  it("does not offer a bench move on a past day", () => {
+    expect(render({ benchOnly: true })).toContain('aria-label="bench has a game but is benched. Move to a lineup spot"');
+    expect(render({ benchOnly: true, isPast: true })).not.toContain('aria-label="bench has a game but is benched. Move to a lineup spot"');
   });
 
   it("makes zero-game days passive: No games, never 15 Add actions", () => {

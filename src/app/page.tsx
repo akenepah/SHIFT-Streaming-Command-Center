@@ -1,12 +1,13 @@
 "use client";
 
-import { AlertTriangle, ChevronLeft, ChevronRight, Info, Plus } from "lucide-react";
+import { AlertTriangle, CalendarPlus, ChevronLeft, ChevronRight, Info, UserPlus, X } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ScheduleTargets } from "@/components/planner/ScheduleTargets";
 import { getScheduleTargets, targetEffectiveDate } from "@/domain/scheduleTargets/scheduleTargets";
 import type { NHLTeamId } from "@/domain/types";
 import { DayCard } from "@/components/planner/DayCard";
+import { generateDailyLineup } from "@/domain/lineup/generateDailyLineup";
 import { MovePlayerPopover, type MoveTarget } from "@/components/planner/MovePlayerPopover";
 import { PlanMoveDialog } from "@/components/planner/PlanMoveDialog";
 import { WeekGridScroller } from "@/components/planner/WeekGridScroller";
@@ -17,7 +18,7 @@ import { addDays, formatDayShort, formatMonthDay, startOfWeek, todayISO } from "
 import { openSlotContext, openSlotEffectiveDate, type OpenSlotContext } from "@/domain/lineup/openSlot";
 import { SCHEDULE_META } from "@/domain/schedule/staticProvider";
 import { activeSlotCount } from "@/domain/config";
-import type { DailyLineup, ISODate, PlannedTransaction, TransactionType } from "@/domain/types";
+import type { DailyLineup, ISODate, PlannedTransaction, Player, TransactionType } from "@/domain/types";
 import { moveProblems } from "@/domain/transactions/transactions";
 import { useStore } from "@/state/store";
 import { useWeekPlan } from "@/state/usePlanner";
@@ -26,6 +27,8 @@ function formatRange(weekStart: ISODate): string {
   const end = addDays(weekStart, 6);
   return `${formatMonthDay(weekStart)} – ${formatMonthDay(end)}, ${end.slice(0, 4)}`;
 }
+
+const NEXT_DAY_KEY = "shift.planner.showNextDay";
 
 export default function WeeklyPlannerPage() {
   const { state } = useStore();
@@ -71,8 +74,45 @@ export default function WeeklyPlannerPage() {
   const seasonOver = weekStart > SCHEDULE_META.regularSeasonEnd;
   const { summary } = plan;
 
-  const openMove = (player: MoveTarget["player"], day: DailyLineup, anchor: HTMLElement) =>
+  const openMove = (player: Player, day: DailyLineup, anchor: HTMLElement) =>
     setMoveTarget((t) => (t?.anchor === anchor ? null : { player, day, anchor }));
+  const openSlotMenu = (day: DailyLineup, slotId: string, anchor: HTMLElement) =>
+    setMoveTarget((t) => (t?.anchor === anchor ? null : { kind: "slot", slotId, day, anchor }));
+
+  // Optional first day of next week ("Show next Monday"): planning context across the scoring boundary.
+  // Never part of `plan`/`summary`, so this week's totals stay Monday–Sunday. Remembered per browser.
+  const [showNextDay, setShowNextDay] = useState(false);
+  useEffect(() => {
+    try {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time read of a per-browser preference after hydration
+      setShowNextDay(localStorage.getItem(NEXT_DAY_KEY) === "1");
+    } catch {}
+  }, []);
+  const toggleNextDay = (on: boolean) => {
+    setShowNextDay(on);
+    try {
+      localStorage.setItem(NEXT_DAY_KEY, on ? "1" : "0");
+    } catch {}
+  };
+  const nextDayDate = addDays(weekStart, 7);
+  const nextDay = useMemo(() => {
+    if (!showNextDay) return null;
+    const { weekStart: _ws, ...rest } = input;
+    void _ws;
+    return generateDailyLineup({ ...rest, date: nextDayDate });
+  }, [showNextDay, input, nextDayDate]);
+  const gridDays = nextDay ? [...plan.days, nextDay] : plan.days;
+
+  // Keep Add Player reachable: when the toolbar button scrolls away, a floating one appears.
+  const addButtonRef = useRef<HTMLButtonElement>(null);
+  const [addButtonVisible, setAddButtonVisible] = useState(true);
+  useEffect(() => {
+    const el = addButtonRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(([entry]) => setAddButtonVisible(entry.isIntersecting), { rootMargin: "-64px 0px 0px 0px" });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [rosterEmpty]);
 
   // Add Player on the planner is a planned move: Add when the roster has room, else Add + Drop.
   const regular = state.roster.filter((r) => r.rosterStatus !== "IR_PLUS").length;
@@ -107,8 +147,9 @@ export default function WeeklyPlannerPage() {
             <Button onClick={() => setWeekStart(thisWeek)} aria-pressed={weekStart === thisWeek}>
               This Week
             </Button>
-            <Button variant="primary" onClick={() => (rosterEmpty ? setAddingPlayer(true) : openAdd(null))}>
-              <Plus aria-hidden /> Add Player
+            <span aria-hidden className="mx-1 hidden h-8 w-px bg-line sm:block" />
+            <Button ref={addButtonRef} variant="primary" onClick={() => (rosterEmpty ? setAddingPlayer(true) : openAdd(null))}>
+              <UserPlus aria-hidden /> Add Player
             </Button>
           </nav>
         </div>
@@ -174,7 +215,7 @@ export default function WeeklyPlannerPage() {
             </p>
             <div className="mt-6 flex gap-3">
               <Button variant="primary" onClick={() => setAddingPlayer(true)}>
-                <Plus aria-hidden /> Add player
+                <UserPlus aria-hidden /> Add player
               </Button>
               <Link
                 href="/roster"
@@ -186,23 +227,45 @@ export default function WeeklyPlannerPage() {
           </section>
         ) : (
           <div className="min-w-0">
-            <p className="mb-2 text-caption text-ink-2">Bar = active slots filled · Green = more room to stream · Red = lineup full</p>
+            <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+              <p className="text-caption text-ink-2">Bar = active slots filled · Green = more room to stream · Red = lineup full</p>
+              <Button size="sm" onClick={() => toggleNextDay(!showNextDay)} aria-pressed={showNextDay}>
+                {showNextDay ? <X aria-hidden /> : <CalendarPlus aria-hidden />}
+                {showNextDay ? `Hide next ${formatDayShort(nextDayDate)}` : `Show next ${formatDayShort(nextDayDate)}`}
+              </Button>
+            </div>
           <WeekGridScroller>
-            <div className="grid min-w-[1376px] grid-cols-7 gap-2 2xl:gap-3">
-              {plan.days.map((day) => (
+            <div
+              className={`grid gap-2 2xl:gap-3 ${nextDay ? "min-w-[1600px] grid-cols-[repeat(7,minmax(0,1fr))_auto_minmax(0,1fr)]" : "min-w-[1376px] grid-cols-7"}`}
+            >
+              {gridDays.map((day, i) => {
+                const isNext = !!nextDay && i === 7;
+                const card = (
                 <DayCard
                   key={day.date}
                   day={day}
+                  nextWeek={isNext}
                   isToday={day.date === today}
                   isPast={day.date < today}
-                  statusRows={Math.max(0, ...plan.days.map(d => state.transactions.filter(t => t.status === "PLANNED" && t.effectiveDate === d.date).length))}
+                  statusRows={Math.max(0, ...gridDays.map(d => state.transactions.filter(t => t.status === "PLANNED" && t.effectiveDate === d.date).length))}
                   moveProblems={problems}
                   movesToday={state.transactions.filter((t) => t.status === "PLANNED" && t.effectiveDate === day.date)}
                   players={input.players}
                   onMovePlayer={openMove}
-                  onAddToSlot={(d, position) => openAdd(openSlotContext(d.date, position))}
+                  onAddToSlot={(d, position, slotId) => openAdd(openSlotContext(d.date, position, slotId))}
+                  onOpenSlot={openSlotMenu}
                 />
-              ))}
+                );
+                if (!isNext) return card;
+                // The scoring week ends Sunday: a labelled divider keeps next week's day visibly apart.
+                return [
+                  <div key="week-boundary" className="flex flex-col items-center gap-2 pt-4" aria-hidden>
+                    <span className="font-display text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-3 [writing-mode:vertical-rl]">Week ends</span>
+                    <span className="w-0 flex-1 border-l-2 border-dashed border-line-strong" />
+                  </div>,
+                  card,
+                ];
+              })}
             </div>
           </WeekGridScroller>
           </div>
@@ -222,11 +285,28 @@ export default function WeeklyPlannerPage() {
           defaultDate={slotContext ? openSlotEffectiveDate(slotContext, settings.defaultMoveTiming, today) : defaultMoveDate}
           initialType={planType}
           initialTeam={targetTeam}
+          allowNextWeek={showNextDay}
           slotContext={slotContext}
         />
       )}
       <AddPlayerDialog open={addingPlayer} onClose={() => setAddingPlayer(false)} />
-      <MovePlayerPopover target={moveTarget} weekInput={input} onClose={() => setMoveTarget(null)} />
+      <MovePlayerPopover
+        key={moveTarget ? `${moveTarget.day.date}-${moveTarget.kind === "slot" ? moveTarget.slotId : moveTarget.player.id}` : "none"}
+        target={moveTarget}
+        weekInput={input}
+        onClose={() => setMoveTarget(null)}
+        onAddToSlot={(d, slotId) => {
+          const type = d.activeSlots.find((a) => a.slot.id === slotId)?.slot.type;
+          if (type) openAdd(openSlotContext(d.date, type, slotId));
+        }}
+      />
+      {!rosterEmpty && !addButtonVisible && (
+        <div className="pointer-events-none fixed inset-x-0 bottom-4 z-30 flex justify-center">
+          <Button variant="primary" className="pointer-events-auto shadow-popover" onClick={() => openAdd(null)}>
+            <UserPlus aria-hidden /> Add Player
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

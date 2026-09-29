@@ -9,10 +9,11 @@ export type OpenSlotContext = {
   source: "weekly-planner-open-slot";
   date: ISODate;
   position: SlotType;
+  slotId?: string;
 };
 
-export function openSlotContext(date: ISODate, position: SlotType): OpenSlotContext {
-  return { source: "weekly-planner-open-slot", date, position };
+export function openSlotContext(date: ISODate, position: SlotType, slotId?: string): OpenSlotContext {
+  return { source: "weekly-planner-open-slot", date, position, ...(slotId ? { slotId } : {}) };
 }
 
 /**

@@ -388,3 +388,19 @@ describe("roster summary", () => {
     expect(rosterSummary(s.roster, s.settings)).toMatchObject({ rostered: 24, irPlus: 0 });
   });
 });
+
+
+describe("daily lineup replacement and Undo", () => {
+  it("changes only one date and restores the exact previous pins", () => {
+    const date = "2026-10-17";
+    const previous = [{ date, playerId: "p1", targetSlotId: "RW1" }];
+    const other = { date: "2026-10-18", playerId: "p2", targetSlotId: "C1" };
+    const state = { ...userState(), overrides: [...previous, other] };
+    const moved = reducer(state, { type: "override/setDay", date, overrides: [{ date, playerId: "p1", targetSlotId: "C1" }, { ...other, targetSlotId: "RW1" }] });
+    expect(moved.overrides.filter(o => o.date !== date)).toEqual([other]);
+    expect(moved.roster).toBe(state.roster);
+    const undone = reducer(moved, { type: "override/setDay", date, overrides: previous });
+    expect(undone.overrides.filter(o => o.date === date)).toEqual(previous);
+    expect(undone.overrides.filter(o => o.date !== date)).toEqual([other]);
+  });
+});

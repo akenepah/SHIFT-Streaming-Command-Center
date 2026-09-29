@@ -20,6 +20,8 @@ export type Action =
   | { type: "override/set"; override: DailyLineupOverride }
   | { type: "override/remove"; date: string; playerId: string }
   | { type: "override/resetDay"; date: string }
+  /** Replace one date's overrides wholesale (explicit lineup moves and their Undo). */
+  | { type: "override/setDay"; date: string; overrides: DailyLineupOverride[] }
   | { type: "repair/resolve"; player: Player }
   | { type: "repair/remove"; playerId: string }
   | { type: "data/reset" };
@@ -76,6 +78,11 @@ export function reducer(state: AppState, action: Action): AppState {
       return { ...state, overrides: removeOverride(state.overrides, action.date, action.playerId) };
     case "override/resetDay":
       return { ...state, overrides: resetDay(state.overrides, action.date) };
+    case "override/setDay":
+      return {
+        ...state,
+        overrides: [...resetDay(state.overrides, action.date), ...action.overrides.filter((o) => o.date === action.date)],
+      };
     case "repair/resolve": {
       // A repaired player rejoins the roster with the status they had before.
       const entry = state.needsRepair.find((r) => r.playerId === action.player.id);
