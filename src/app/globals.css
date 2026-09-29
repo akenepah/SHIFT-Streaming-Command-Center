@@ -1,0 +1,315 @@
+@import "tailwindcss";
+
+/*
+ * SHIFT design tokens.
+ *
+ * Retheming happens here: every raw value lives once in :root as a --shift-*
+ * variable, and @theme maps semantic names onto them for Tailwind utilities
+ * (bg-surface, text-ink-2, rounded-card, text-page-title, ...). Components use
+ * only the semantic names, never raw hex values or font families.
+ *
+ * Three tiers: (1) the locked Powerplay brand anchors, (2) tonal ramps
+ * derived from them, (3) semantic roles. Rebrand by editing tiers 1–2;
+ * restyle a role by pointing it at a different ramp step.
+ */
+:root {
+  /* ── 1. Brand anchors (locked Powerplay palette) ───────────────────────── */
+  --shift-brand-blue: #2563eb; /* Powerplay Blue: primary interaction */
+  --shift-brand-navy: #0b1425; /* Deep Powerplay Navy: header, strong structure */
+  --shift-brand-slate: #334155; /* Slate: secondary structure */
+  --shift-brand-coral: #fb7185; /* Energy Coral: sparing, non-semantic accent */
+  --shift-brand-coral-text: #9f2346; /* readable Coral for small text (eyebrows) */
+  --shift-brand-canvas: #f7f7f7; /* light neutral canvas */
+  --shift-brand-white: #ffffff; /* working surfaces */
+
+  /* ── 2. Tonal ramps derived from the anchors ───────────────────────────── */
+  --shift-blue-50: #eff4ff;
+  --shift-blue-100: #dbe6fe;
+  --shift-blue-200: #bfd2fd;
+  --shift-blue-500: var(--shift-brand-blue);
+  --shift-blue-600: #1d4ed8;
+  --shift-blue-700: #1e40af;
+  --shift-blue-800: #1e3a8a;
+
+  --shift-navy-950: #070d19;
+  --shift-navy-900: var(--shift-brand-navy);
+  --shift-navy-800: #16223a;
+  --shift-navy-700: #22304d;
+
+  --shift-slate-50: #f8fafc;
+  --shift-slate-100: #f1f5f9;
+  --shift-slate-200: #e2e8f0;
+  --shift-slate-300: #cbd5e1;
+  --shift-slate-400: #94a3b8; /* borders, icons, inactive: not body text */
+  --shift-slate-500: #5b6a7f; /* ≥4.5:1 on white and canvas: muted text */
+  --shift-slate-600: #475569;
+  --shift-slate-700: var(--shift-brand-slate);
+  --shift-slate-900: #0f172a;
+
+  --shift-coral-50: #fff1f3;
+  --shift-coral-100: #ffe0e6;
+  --shift-coral-400: var(--shift-brand-coral);
+  --shift-coral-800: var(--shift-brand-coral-text);
+
+  /* ── 3. Semantic roles (components use these via Tailwind tokens) ──────── */
+  --shift-font-wordmark: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --shift-font-display: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
+  --shift-font-body: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+
+  /* background / surfaces / borders / text */
+  --shift-bg: var(--shift-brand-canvas);
+  --shift-surface: var(--shift-brand-white);
+  --shift-surface-muted: var(--shift-slate-50);
+  --shift-surface-raised: var(--shift-brand-white);
+  --shift-border: var(--shift-slate-200);
+  --shift-border-strong: var(--shift-slate-300);
+  --shift-text: var(--shift-slate-900);
+  --shift-text-secondary: var(--shift-slate-700);
+  --shift-text-muted: var(--shift-slate-500);
+  --shift-text-inverse: var(--shift-brand-white);
+
+  /* navigation */
+  --shift-nav: var(--shift-navy-900);
+  --shift-nav-active: var(--shift-navy-800);
+  --shift-nav-hover: var(--shift-navy-800);
+  --shift-nav-text: var(--shift-brand-white);
+  --shift-nav-text-muted: #c3cbd8;
+  --shift-nav-accent: var(--shift-blue-500);
+
+  /* primary (Powerplay Blue): white text passes AA on every fill step */
+  --shift-primary: var(--shift-blue-500);
+  --shift-primary-hover: var(--shift-blue-600);
+  --shift-primary-pressed: var(--shift-blue-700);
+  --shift-primary-strong: var(--shift-blue-700);
+  --shift-primary-soft: var(--shift-blue-50);
+  --shift-primary-border: var(--shift-blue-200);
+  --shift-on-primary: var(--shift-brand-white);
+
+  /* secondary (Slate) and accent (Energy Coral: never danger) */
+  --shift-secondary: var(--shift-slate-700);
+  --shift-secondary-hover: var(--shift-slate-900);
+  --shift-secondary-soft: var(--shift-slate-100);
+  --shift-accent: var(--shift-coral-400);
+  --shift-accent-soft: var(--shift-coral-50);
+  --shift-accent-border: var(--shift-coral-100);
+  --shift-accent-strong: var(--shift-coral-800);
+
+  --shift-focus: var(--shift-blue-500);
+
+  /* feedback (independent of the brand) */
+  --shift-danger: #c42b2b;
+  --shift-danger-soft: #fdeeee;
+  --shift-danger-line: #f4c7c7;
+  --shift-warning: #b45309;
+  --shift-warning-strong: #92400e;
+  --shift-warning-soft: #fff7e8;
+  --shift-warning-line: #f6d38f;
+  --shift-success: #11743f;
+  --shift-success-soft: #e8f6ee;
+  --shift-success-line: #b6dfc7;
+  --shift-info: var(--shift-blue-500);
+  --shift-info-soft: var(--shift-blue-50);
+
+  /* Streaming opportunity (daily lineup fill; low fill = high opportunity) */
+  --shift-opp-very-high: #16a34a;
+  --shift-opp-strong: #0d9488;
+  --shift-opp-moderate: #d97706;
+  --shift-opp-limited: #e8475f;
+  --shift-opp-none: #c42b2b;
+  --shift-opp-na: var(--shift-slate-300);
+
+  /* Position semantics (independent of the brand): accent/text, soft tint, border */
+  --shift-pos-c: #2563eb;
+  --shift-pos-c-soft: #eef4ff;
+  --shift-pos-c-line: #d3e1fd;
+  --shift-pos-lw: #15803d;
+  --shift-pos-lw-soft: #eef8f1;
+  --shift-pos-lw-line: #cfe9d8;
+  --shift-pos-rw: #a16207;
+  --shift-pos-rw-soft: #fdf6e3;
+  --shift-pos-rw-line: #f3e1ad;
+  --shift-pos-d: #c0343f;
+  --shift-pos-d-soft: #fdf0f1;
+  --shift-pos-d-line: #f5d0d4;
+  --shift-pos-util: #7c3aed;
+  --shift-pos-util-soft: #f4effe;
+  --shift-pos-util-line: #e1d4fb;
+  --shift-pos-g: #0e7490;
+  --shift-pos-g-soft: #ecfbfd;
+  --shift-pos-g-line: #b9e9f1;
+  --shift-pos-bn: var(--shift-slate-600);
+  --shift-pos-bn-soft: var(--shift-slate-100);
+  --shift-pos-bn-line: var(--shift-slate-200);
+  --shift-pos-ir: #65506c;
+  --shift-pos-ir-soft: #f4f0f5;
+  --shift-pos-ir-line: #dfd3e3;
+
+  /* Planned move (a scheduled transaction, not a lineup slot): charcoal on cool gray, no position tint. */
+  --shift-move-soft: #f1f3f6;
+  --shift-move-line: #c3cbd6;
+  --shift-move-ink: var(--shift-slate-700);
+  --shift-move-strong: #1f2733;
+}
+
+@theme inline {
+  --font-wordmark: var(--shift-font-wordmark);
+  --font-display: var(--shift-font-display);
+  --font-body: var(--shift-font-body);
+  --font-sans: var(--shift-font-body);
+
+  --color-canvas: var(--shift-bg);
+  --color-surface: var(--shift-surface);
+  --color-surface-muted: var(--shift-surface-muted);
+  --color-surface-raised: var(--shift-surface-raised);
+  --color-line: var(--shift-border);
+  --color-line-strong: var(--shift-border-strong);
+  --color-ink: var(--shift-text);
+  --color-ink-2: var(--shift-text-secondary);
+  --color-ink-3: var(--shift-text-muted);
+  --color-ink-inverse: var(--shift-text-inverse);
+
+  --color-nav: var(--shift-nav);
+  --color-nav-active: var(--shift-nav-active);
+  --color-nav-hover: var(--shift-nav-hover);
+  --color-nav-ink: var(--shift-nav-text);
+  --color-nav-ink-muted: var(--shift-nav-text-muted);
+  --color-nav-accent: var(--shift-nav-accent);
+
+  --color-primary: var(--shift-primary);
+  --color-primary-hover: var(--shift-primary-hover);
+  --color-primary-pressed: var(--shift-primary-pressed);
+  --color-primary-strong: var(--shift-primary-strong);
+  --color-primary-soft: var(--shift-primary-soft);
+  --color-primary-line: var(--shift-primary-border);
+  --color-on-primary: var(--shift-on-primary);
+  --color-secondary: var(--shift-secondary);
+  --color-secondary-hover: var(--shift-secondary-hover);
+  --color-secondary-soft: var(--shift-secondary-soft);
+  --color-accent: var(--shift-accent);
+  --color-accent-soft: var(--shift-accent-soft);
+  --color-accent-line: var(--shift-accent-border);
+  --color-accent-strong: var(--shift-accent-strong);
+  --color-focus: var(--shift-focus);
+  --color-opp-very-high: var(--shift-opp-very-high);
+  --color-opp-strong: var(--shift-opp-strong);
+  --color-opp-moderate: var(--shift-opp-moderate);
+  --color-opp-limited: var(--shift-opp-limited);
+  --color-opp-none: var(--shift-opp-none);
+  --color-opp-na: var(--shift-opp-na);
+  --color-danger: var(--shift-danger);
+  --color-danger-soft: var(--shift-danger-soft);
+  --color-danger-line: var(--shift-danger-line);
+  --color-warn: var(--shift-warning);
+  --color-warn-strong: var(--shift-warning-strong);
+  --color-warn-soft: var(--shift-warning-soft);
+  --color-warn-line: var(--shift-warning-line);
+  --color-success: var(--shift-success);
+  --color-success-soft: var(--shift-success-soft);
+  --color-success-line: var(--shift-success-line);
+  --color-info: var(--shift-info);
+  --color-info-soft: var(--shift-info-soft);
+
+  --color-pos-c: var(--shift-pos-c);
+  --color-pos-c-soft: var(--shift-pos-c-soft);
+  --color-pos-c-line: var(--shift-pos-c-line);
+  --color-pos-lw: var(--shift-pos-lw);
+  --color-pos-lw-soft: var(--shift-pos-lw-soft);
+  --color-pos-lw-line: var(--shift-pos-lw-line);
+  --color-pos-rw: var(--shift-pos-rw);
+  --color-pos-rw-soft: var(--shift-pos-rw-soft);
+  --color-pos-rw-line: var(--shift-pos-rw-line);
+  --color-pos-d: var(--shift-pos-d);
+  --color-pos-d-soft: var(--shift-pos-d-soft);
+  --color-pos-d-line: var(--shift-pos-d-line);
+  --color-pos-util: var(--shift-pos-util);
+  --color-pos-util-soft: var(--shift-pos-util-soft);
+  --color-pos-util-line: var(--shift-pos-util-line);
+  --color-pos-g: var(--shift-pos-g);
+  --color-pos-g-soft: var(--shift-pos-g-soft);
+  --color-pos-g-line: var(--shift-pos-g-line);
+  --color-pos-bn: var(--shift-pos-bn);
+  --color-pos-bn-soft: var(--shift-pos-bn-soft);
+  --color-pos-bn-line: var(--shift-pos-bn-line);
+  --color-pos-ir: var(--shift-pos-ir);
+  --color-pos-ir-soft: var(--shift-pos-ir-soft);
+  --color-pos-ir-line: var(--shift-pos-ir-line);
+  --color-move-soft: var(--shift-move-soft);
+  --color-move-line: var(--shift-move-line);
+  --color-move-ink: var(--shift-move-ink);
+  --color-move-strong: var(--shift-move-strong);
+
+  /* Type roles */
+  --text-wordmark: 1.625rem;
+  --text-wordmark--line-height: 1;
+  --text-page-title: 2rem;
+  --text-page-title--line-height: 2.5rem;
+  --text-page-title--letter-spacing: -0.02em;
+  --text-page-title--font-weight: 700;
+  --text-section-title: 1.25rem;
+  --text-section-title--line-height: 1.75rem;
+  --text-section-title--letter-spacing: -0.01em;
+  --text-section-title--font-weight: 600;
+  --text-card-title: 1.125rem;
+  --text-card-title--line-height: 1.5rem;
+  --text-card-title--font-weight: 600;
+  --text-body: 0.875rem;
+  --text-body--line-height: 1.375rem;
+  --text-body-sm: 0.8125rem;
+  --text-body-sm--line-height: 1.125rem;
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1.125rem;
+  --text-label--font-weight: 500;
+  --text-data: 0.875rem;
+  --text-data--line-height: 1.25rem;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.125rem;
+  --text-overline: 0.75rem;
+  --text-overline--line-height: 1rem;
+  --text-overline--letter-spacing: 0.06em;
+  --text-overline--font-weight: 600;
+
+  /* Radii: restrained */
+  --radius-badge: 0.3125rem;
+  --radius-control: 0.5rem;
+  --radius-card: 0.625rem;
+  --radius-panel: 0.75rem;
+  --radius-pill: 9999px;
+
+  /* Layout */
+  --breakpoint-3xl: 112.5rem; /* 1800px: day tiles have room for headshots */
+  --container-page: 100rem; /* 1600px canonical desktop frame */
+
+  /* Elevation: borders do most of the work */
+  --shadow-popover: 0 8px 24px -6px rgb(11 20 37 / 0.18), 0 2px 6px rgb(11 20 37 / 0.06);
+  --shadow-overlay: 0 24px 48px -12px rgb(11 20 37 / 0.3);
+}
+
+/* Main column + summary rail (League Settings, Setup): 976 / 24 / 520 at desktop. */
+@utility layout-form-rail {
+  display: grid;
+  align-items: start;
+  gap: 1.5rem;
+  grid-template-columns: minmax(0, 976px) minmax(300px, 520px);
+}
+
+html,
+body {
+  background: var(--shift-bg);
+  color: var(--shift-text);
+  font-family: var(--shift-font-body);
+}
+
+:focus-visible {
+  outline: 2px solid var(--shift-focus);
+  outline-offset: 2px;
+}
+
+dialog::backdrop {
+  background: rgb(11 20 37 / 0.45); /* Powerplay Navy scrim */
+}
+
+dialog {
+  margin: auto;
+}
+
+@media (max-width: 1023px) { .layout-form-rail { grid-template-columns: minmax(0, 1fr); } }
