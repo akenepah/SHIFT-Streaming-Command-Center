@@ -98,3 +98,18 @@ describe("Schedule Targets", () => {
     expect(targets(i).targets[0].teamAbbrev).toBe("VAN");
   });
 });
+
+describe("Schedule Targets follow the active team workspace", () => {
+  it("switching A → B → A recomputes from each team's own lineup (no carry-over)", () => {
+    const games = schedule([game(mon, "VAN", "CAR"), game(tue, "VAN", "NYR")]);
+    // Team A has an open C slot (CAR's center fits); team B only has an open LW slot (only VAN's winger fits).
+    const teamA = input({ rosterConfiguration: slotsConfig({ C: 1 }), scheduleProvider: games });
+    const teamB = input({ rosterConfiguration: slotsConfig({ LW: 1 }), scheduleProvider: games });
+    const a1 = targets(teamA).targets.map((t) => t.teamAbbrev);
+    const b = targets(teamB).targets.map((t) => t.teamAbbrev);
+    const a2 = targets(teamA).targets.map((t) => t.teamAbbrev);
+    expect(a1).toEqual(["CAR"]);
+    expect(b).toEqual(["VAN"]);
+    expect(a2).toEqual(a1);
+  });
+});

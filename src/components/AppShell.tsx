@@ -14,7 +14,7 @@ const NAV = [
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { state, hydrated, loadStatus, removedDemoPlayers } = useStore();
+  const { state, hydrated, loadStatus, removedDemoPlayers, activeWorkspaceId } = useStore();
   const pathname = usePathname();
   const router = useRouter();
   const inSetup = pathname.startsWith("/setup");
@@ -82,7 +82,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           created or edited were kept.
         </div>
       )}
-      <main id="main-content" tabIndex={-1} className="w-full flex-1 focus:outline-none">
+      {/* Keyed by team: switching teams remounts the page, so no page-local draft (e.g. an unsaved Settings
+          form) can carry one team's values into another team. */}
+      <main key={activeWorkspaceId ?? "no-team"} id="main-content" tabIndex={-1} className="w-full flex-1 focus:outline-none">
         {hydrated && !needsSetup ? children : <p className="px-6 py-6 text-body text-ink-3">Loading…</p>}
       </main>
     </div>

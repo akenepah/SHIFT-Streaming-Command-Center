@@ -50,7 +50,12 @@ export default function SetupPage() {
 }
 
 function SetupFlow() {
-  const { state, dispatch } = useStore();
+  const { state, dispatch, creatingWorkspace, cancelNewWorkspace } = useStore();
+  // "Add another team": a new, separate workspace. Cancel returns to the previous team; nothing was saved.
+  const cancelNewTeam = async () => {
+    await cancelNewWorkspace();
+    router.push("/");
+  };
   const router = useRouter();
   const toast = useToast();
   const params = useSearchParams();
@@ -77,7 +82,12 @@ function SetupFlow() {
   if (step === 0) {
     return (
       <div className="mx-auto max-w-page px-4 py-6 sm:px-10 sm:py-10">
-        <PageHeader eyebrow="Get started" title="Set up your league" subtitle="Set your roster rules once. Start planning your week." />
+        <PageHeader
+          eyebrow={creatingWorkspace ? "Add another team" : "Get started"}
+          title={creatingWorkspace ? "Set up your new team" : "Set up your league"}
+          subtitle={creatingWorkspace ? "A separate team with its own league settings, roster and moves. Your other teams stay as they are." : "Set your roster rules once. Start planning your week."}
+          actions={creatingWorkspace ? <Button onClick={() => void cancelNewTeam()}>Cancel</Button> : undefined}
+        />
         <div className="mt-6">
           <StepIndicator step={step} onSelect={setStep} />
         </div>
@@ -109,13 +119,16 @@ function SetupFlow() {
   return (
     <div className="mx-auto grid max-w-page gap-8 px-4 py-6 sm:px-10 sm:py-10">
       <PageHeader
-        eyebrow="Step 2 of 2"
+        eyebrow={creatingWorkspace ? "Add another team · Step 2 of 2" : "Step 2 of 2"}
         title="Add your roster"
         subtitle={`${state.settings.leagueName} · ${summary.regular} / ${summary.regularCapacity} rostered · ${summary.irPlus} / ${summary.irPlusCapacity} IR+`}
         actions={
-          <Button variant="primary" onClick={() => setAdding(true)}>
-            <Plus aria-hidden /> Add Player
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            {creatingWorkspace && <Button onClick={() => void cancelNewTeam()}>Cancel new team</Button>}
+            <Button variant="primary" onClick={() => setAdding(true)}>
+              <Plus aria-hidden /> Add Player
+            </Button>
+          </div>
         }
       />
       <p className="-mt-4 text-body text-ink-2">
