@@ -8,6 +8,7 @@ import { Field, Input } from "@/components/ui/Field";
 import { AnchoredPopover, MenuDivider, MenuItem } from "@/components/ui/Popover";
 import { useToast } from "@/components/ui/Toast";
 import { cloudClient } from "@/state/cloud/client";
+import { authRedirect, createSubmissionGate, sendMagicLink } from "@/state/cloud/auth";
 import { useStore } from "@/state/store";
 import { confirmDiscardUnsaved } from "@/state/unsavedGuard";
 
@@ -28,20 +29,23 @@ export function AccountControl() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [sentTo, setSentTo] = useState("");
+  const [submitOnce] = useState(createSubmissionGate);
   const client = cloudClient();
   const close = () => setAnchor(null);
 
   async function run(action: () => Promise<void>) {
-    if (busy) return;
-    setBusy(true);
-    setMessage("");
-    try {
-      await action();
-    } catch (e) {
-      setMessage(e instanceof Error ? e.message : "Please try again.");
-    } finally {
-      setBusy(false);
-    }
+    await submitOnce(async () => {
+      setBusy(true);
+      setMessage("");
+      try {
+        await action();
+      } catch (e) {
+        setMessage(e instanceof Error ? e.message : "Please try again.");
+      } finally {
+        setBusy(false);
+      }
+    });
   }
   async function choose(id: string) {
     if (!confirmDiscardUnsaved()) return;
@@ -161,7 +165,7 @@ export function AccountControl() {
       <Dialog
         open={dialogOpen || migration || !!cloudError}
         onClose={() => setDialogOpen(false)}
-        title={migration ? "Existing SHIFT setup found" : user ? "Your account" : "Save your league"}
+        title={migration ? "Existing SHIFT setup found" : user ? "Your account" : sentTo ? "Check your email" : "Save your league"}
         description={migration ? "Save this league and roster to your account?" : "Your saved teams follow you across browsers and devices."}
         footer={<Button onClick={() => setDialogOpen(false)} disabled={migration || !!cloudError}>Close</Button>}
       >
@@ -181,28 +185,31 @@ export function AccountControl() {
             </>
           ) : (
             <>
+              {sentTo && <p role="status">We sent a sign-in link to {sentTo}.</p>}
+              <form className="grid gap-4" aria-busy={busy} onSubmit={(event) => {
+                event.preventDefault();
+                void run(async () => {
+                  setSentTo("");
+                  setSentTo(await sendMagicLink(client, email, window.location.origin));
+                });
+              }}>
               <Field id="account-email" label="Email">
-                <Input id="account-email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <Input id="account-email" type="email" required disabled={busy} autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); setSentTo(""); }} />
               </Field>
               <Button
                 variant="primary"
+                type="submit"
                 disabled={busy || !email.trim()}
-                onClick={() =>
-                  run(async () => {
-                    const { error } = await client.auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: `${window.location.origin}/` } });
-                    if (error) throw error;
-                    setMessage("Check your email for a sign-in link.");
-                  })
-                }
               >
-                Continue with email
+                {busy ? "Sending sign-in link…" : "Continue with email"}
               </Button>
+              </form>
               {process.env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true" && (
                 <Button
                   disabled={busy}
                   onClick={() =>
                     run(async () => {
-                      const { error } = await client.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}/` } });
+                      const { error } = await client.auth.signInWithOAuth({ provider: "google", options: { redirectTo: authRedirect(window.location.origin) } });
                       if (error) throw error;
                     })
                   }
