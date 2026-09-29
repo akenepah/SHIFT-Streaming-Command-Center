@@ -48,8 +48,7 @@ export function SlotTile(props: SlotTileProps) {
         <PositionBadge kind={props.badge} compact />
         <span className="flex min-w-0 items-center gap-1 text-body-sm font-medium">
           <Plus aria-hidden className="size-4 shrink-0" />
-          {/* Icon-only at laptop widths; the aria-label always carries the full action. */}
-          <span className="hidden truncate min-[1360px]:inline">Open slot</span>
+          <span className="truncate">Open slot</span>
         </span>
       </button>
     );

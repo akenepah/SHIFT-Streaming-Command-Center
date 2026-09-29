@@ -152,7 +152,9 @@ function FreshAddPlayerDialog({ onClose }: { onClose: () => void }) {
       ? null
       : s === "ACTIVE" && capacity.regular < capacity.regularCapacity
         ? `No open lineup slot for ${p.eligiblePositions.join("/")}. Add ${p.name} to the bench, or bench another Active player first.`
-        : "Selected roster section is full. Drop a player or choose an available status; IR+ is separate.";
+        : s !== "IR_PLUS" && capacity.regular >= capacity.regularCapacity
+          ? `Your roster is full (${capacity.regular} / ${capacity.regularCapacity}). Drop a player first, or plan an Add + Drop from the Weekly Planner's Add Player. IR+ is separate.`
+          : "Selected roster section is full. Drop a player or choose an available status; IR+ is separate.";
 
   const addPlayer = (p: Player) => {
     if (rostered(p)) {

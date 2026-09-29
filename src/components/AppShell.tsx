@@ -28,6 +28,21 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-screen flex-col">
+      {/* First tab stop on every page. */}
+      <a
+        href={pathname === "/" ? "#week-grid" : "#main-content"}
+        onClick={(e) => {
+          // Fall back to the main region when the week grid isn't rendered (e.g. empty roster).
+          const target = document.getElementById(pathname === "/" ? "week-grid" : "main-content") ?? document.getElementById("main-content");
+          if (!target) return;
+          e.preventDefault();
+          target.focus();
+          target.scrollIntoView({ block: "start" });
+        }}
+        className="sr-only z-50 rounded-control bg-surface px-4 py-3 font-semibold text-primary-strong focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:shadow-popover"
+      >
+        {pathname === "/" ? "Skip to week grid" : "Skip to main content"}
+      </a>
       <header className="sticky top-0 z-30 bg-nav text-nav-ink">
         <div className="flex min-h-14 flex-wrap items-center gap-2 px-4 sm:gap-8 sm:px-6">
           <Link href={state.setupComplete ? "/" : "/setup?step=1"} aria-label="SHIFT, Weekly Planner" className="shrink-0">
@@ -67,7 +82,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           created or edited were kept.
         </div>
       )}
-      <main className="w-full flex-1">
+      <main id="main-content" tabIndex={-1} className="w-full flex-1 focus:outline-none">
         {hydrated && !needsSetup ? children : <p className="px-6 py-6 text-body text-ink-3">Loading…</p>}
       </main>
     </div>

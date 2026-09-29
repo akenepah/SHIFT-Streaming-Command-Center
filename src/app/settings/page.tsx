@@ -15,7 +15,7 @@ import { PageHeader, SectionCard } from "@/components/ui/Page";
 import { useToast } from "@/components/ui/Toast";
 import { SCHEDULE_META } from "@/domain/schedule/staticProvider";
 import { validateSettings } from "@/domain/settings";
-import { rosterCapacity } from "@/domain/roster/capacity";
+import { overflowText, rosterCapacity } from "@/domain/roster/capacity";
 import { rosterCounts } from "@/state/selectors";
 import { useStore } from "@/state/store";
 
@@ -148,7 +148,7 @@ export default function SettingsPage() {
         />
       </div>
 
-      <Dialog open={confirmShrink} onClose={() => setConfirmShrink(false)} title="Save reduced capacity?" description={`This will leave your roster ${capacity.regularOver} players over capacity and IR+ ${capacity.irOver} over. No players will be removed.`} footer={<><Button onClick={() => setConfirmShrink(false)}>Cancel</Button><Button variant="primary" onClick={commit}>Save anyway</Button></>}><p>Overflow remains visible until you adjust your roster.</p></Dialog>
+      <Dialog open={confirmShrink} onClose={() => setConfirmShrink(false)} title="Save reduced capacity?" description={`This will leave ${overflowText(capacity.regularOver, capacity.irOver)}. No players will be removed.`} footer={<><Button onClick={() => setConfirmShrink(false)}>Cancel</Button><Button variant="primary" onClick={commit}>Save anyway</Button></>}><p>Overflow remains visible until you adjust your roster.</p></Dialog>
       <Dialog
         open={confirmReset}
         onClose={() => setConfirmReset(false)}
