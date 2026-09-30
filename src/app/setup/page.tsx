@@ -16,6 +16,7 @@ import { ErrorList } from "@/components/ui/Field";
 import { PageHeader } from "@/components/ui/Page";
 import { useToast } from "@/components/ui/Toast";
 import { validateSettings } from "@/domain/settings";
+import { duplicateTeamError } from "@/state/workspaces";
 import { rosterSummary } from "@/state/selectors";
 import { useStore } from "@/state/store";
 
@@ -50,7 +51,7 @@ export default function SetupPage() {
 }
 
 function SetupFlow() {
-  const { state, dispatch, creatingWorkspace, cancelNewWorkspace } = useStore();
+  const { state, dispatch, creatingWorkspace, cancelNewWorkspace, workspaces } = useStore();
   // "Add another team": a new, separate workspace. Cancel returns to the previous team; nothing was saved.
   const cancelNewTeam = async () => {
     await cancelNewWorkspace();
@@ -67,6 +68,8 @@ function SetupFlow() {
 
   const next = () => {
     const errs = validateSettings(draft);
+    const duplicate = creatingWorkspace && duplicateTeamError(workspaces, draft.teamName, draft.leagueName);
+    if (duplicate) errs.push(duplicate);
     setErrors(errs);
     if (errs.length) { requestAnimationFrame(() => (document.querySelector("[aria-invalid=true]") as HTMLElement | null)?.focus()); return; }
     dispatch({ type: "settings/update", settings: draft });

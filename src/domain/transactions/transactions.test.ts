@@ -8,6 +8,7 @@ import {
   cancelTransaction,
   checkDraft,
   createTransaction,
+  moveProblems,
   movesForWeek,
   updateTransaction,
 } from "./transactions";
@@ -42,6 +43,36 @@ describe("acquisition count", () => {
     ];
     expect(acquisitionsUsed(moves, WEEK)).toBe(2);
     expect(movesForWeek(moves, WEEK).map((t) => t.addPlayerId)).toEqual(["b", "c"]);
+  });
+});
+
+describe("broken moves", () => {
+  const ctx = (transactions: ReturnType<typeof tx>[], roster = [rostered("a"), rostered("b")]) => ({
+    baseRoster: roster,
+    transactions,
+    weeklyAcquisitionLimit: 6,
+    weekStartsOn: 1,
+  });
+
+  it("flags a move whose dropped player left the roster, and stops counting its add", () => {
+    const broken = tx({ type: "ADD_DROP", addPlayerId: "x", dropPlayerId: "gone", effectiveDate: "2026-10-13" });
+    const fine = tx({ type: "ADD_DROP", addPlayerId: "y", dropPlayerId: "a", effectiveDate: "2026-10-14" });
+    const problems = moveProblems(ctx([broken, fine]));
+    expect(problems.get(broken.id)).toMatch(/isn't on your roster/);
+    expect(problems.has(fine.id)).toBe(false);
+    expect(acquisitionsUsed([broken, fine], WEEK)).toBe(2);
+    expect(acquisitionsUsed([broken, fine], WEEK, problems)).toBe(1);
+  });
+
+  it("flags a later move that re-adds a player an earlier move already added", () => {
+    const first = tx({ type: "ADD_DROP", addPlayerId: "x", dropPlayerId: "a", effectiveDate: "2026-10-13" });
+    const again = tx({ type: "ADD_DROP", addPlayerId: "x", dropPlayerId: "b", effectiveDate: "2026-10-14" });
+    const problems = moveProblems(ctx([first, again]));
+    expect([...problems.keys()]).toEqual([again.id]);
+  });
+
+  it("ignores cancelled moves", () => {
+    expect(moveProblems(ctx([tx({ type: "DROP", dropPlayerId: "gone", effectiveDate: "2026-10-13", status: "CANCELLED" })])).size).toBe(0);
   });
 });
 

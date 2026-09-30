@@ -1,5 +1,6 @@
 import type { WorkspaceSummary } from "./cloud/repository";
 import { LocalStorageRepository, STORAGE_KEY, type StorageLike } from "./repository";
+import type { AppState } from "./appState";
 
 /**
  * Local (signed-out) team workspaces. The original single-team slot (`shift.streaming.v2`) IS the first
@@ -9,6 +10,12 @@ export const WORKSPACE_INDEX_KEY = "shift.workspaces.v1";
 export const PRIMARY_LOCAL_ID = "local-primary";
 
 type LocalIndex = { version: 1; activeId: string; extra: string[] };
+type LocalIdentity = { originKey: string; ownerId?: string };
+export type MigrationSource = WorkspaceSummary & { originKey: string; state: AppState };
+
+export function migrationMarkerKey(userId: string, originKey: string) {
+  return `shift.migration.${userId}.${originKey}`;
+}
 
 export function localWorkspaceKey(id: string): string {
   return id === PRIMARY_LOCAL_ID ? STORAGE_KEY : `${STORAGE_KEY}.ws.${id}`;
@@ -25,6 +32,13 @@ export function newWorkspaceId(): string {
 }
 
 /** Pick the active team: the remembered one if it still exists, else the most recently updated, else the first. */
+/** A new team named exactly like an existing one (same team and league) can't be told apart in the team switcher. */
+export function duplicateTeamError(workspaces: readonly WorkspaceSummary[], teamName: string, leagueName: string): string | null {
+  const key = (s: string) => s.trim().toLocaleLowerCase();
+  const clash = workspaces.find((w) => key(w.teamName) === key(teamName) && key(w.leagueName) === key(leagueName));
+  return clash ? `You already have "${clash.teamName}" in ${clash.leagueName}. Use a different team or league name.` : null;
+}
+
 export function resolveActiveWorkspace(workspaces: readonly WorkspaceSummary[], remembered: string | null): string | null {
   if (!workspaces.length) return null;
   if (remembered && workspaces.some((w) => w.id === remembered)) return remembered;
@@ -70,7 +84,13 @@ export class LocalWorkspaces {
   }
 
   activeId(): string {
-    return this.index().activeId;
+    const index = this.index();
+    if (!this.identity(index.activeId)?.ownerId) return index.activeId;
+    const local = [PRIMARY_LOCAL_ID, ...index.extra].find(id => !this.identity(id)?.ownerId);
+    if (local) return local;
+    const id = newWorkspaceId();
+    this.add(id);
+    return id;
   }
 
   setActive(id: string) {
@@ -89,11 +109,58 @@ export class LocalWorkspaces {
     return new LocalStorageRepository(this.storage, localWorkspaceKey(id));
   }
 
+  private identity(id: string): LocalIdentity | null {
+    const raw = this.read(`${localWorkspaceKey(id)}.identity`);
+    if (!raw) return null;
+    try {
+      const value = JSON.parse(raw);
+      if (typeof value.originKey === "string" && (!value.ownerId || typeof value.ownerId === "string")) return value;
+    } catch { /* Unknown ownership must not expose an account's source to another user. */ }
+    return { originKey: "invalid", ownerId: "unknown" };
+  }
+
+  private persist(key: string, value: unknown) {
+    const serialized = JSON.stringify(value);
+    this.storage?.setItem(key, serialized);
+    if (this.storage?.getItem(key) !== serialized) throw new Error("Allow browser storage before saving this setup to your account. Your local data is unchanged.");
+  }
+
+  /** Read all completed local teams, including a failed adoption owned by this account. */
+  migrationSources(userId: string): MigrationSource[] {
+    const sources: MigrationSource[] = [];
+    for (const id of [PRIMARY_LOCAL_ID, ...this.index().extra]) {
+      const identity = this.identity(id);
+      if (identity?.ownerId && identity.ownerId !== userId) continue;
+      if (identity && this.read(migrationMarkerKey(userId, identity.originKey))) continue;
+      const result = this.repo(id).load();
+      if (result.status === "corrupt" || !result.state.setupComplete) continue;
+      const durable = identity ?? { originKey: `migration:${newWorkspaceId()}` };
+      if (!identity) this.persist(`${localWorkspaceKey(id)}.identity`, durable);
+      const { teamName, leagueName, season } = result.state.settings;
+      sources.push({ id, originKey: durable.originKey, teamName, leagueName, season, state: result.state });
+    }
+    return sources;
+  }
+
+  claimMigration(source: MigrationSource, userId: string) {
+    const current = this.identity(source.id);
+    if (current?.originKey !== source.originKey || (current.ownerId && current.ownerId !== userId))
+      throw new Error("This local team belongs to another account. Sign in to its account to continue.");
+    this.persist(`${localWorkspaceKey(source.id)}.identity`, { ...current, ownerId: userId });
+  }
+
+  /** Called only after cloud read-back. Keep the source intact, but never offer another user's copy. */
+  completeMigration(source: MigrationSource, userId: string, cloudId: string) {
+    this.claimMigration(source, userId);
+    this.persist(migrationMarkerKey(userId, source.originKey), { cloudId });
+  }
+
   /** Summaries for the Account menu, read from each slot's settings only. */
   list(): WorkspaceSummary[] {
     const index = this.index();
     const summaries: WorkspaceSummary[] = [];
     for (const id of [PRIMARY_LOCAL_ID, ...index.extra]) {
+      if (this.identity(id)?.ownerId) continue;
       let settings: { teamName?: unknown; leagueName?: unknown; season?: unknown } | undefined;
       let setup = false;
       try {
@@ -104,7 +171,7 @@ export class LocalWorkspaces {
         settings = undefined;
       }
       // The primary slot is only a team once set up (it is empty before first setup, or after moving to the cloud).
-      if (id === PRIMARY_LOCAL_ID && !setup) continue;
+      if (!setup) continue;
       summaries.push({
         id,
         teamName: typeof settings?.teamName === "string" && settings.teamName.trim() ? settings.teamName : "Untitled team",

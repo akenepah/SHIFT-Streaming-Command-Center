@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { player } from "@/domain/testing/fixtures";
 import { createInitialState, type AppState } from "./appState";
 import { LocalStorageRepository, STORAGE_KEY } from "./repository";
-import { cloudActiveKey, LocalWorkspaces, localWorkspaceKey, PRIMARY_LOCAL_ID, resolveActiveWorkspace, WORKSPACE_INDEX_KEY } from "./workspaces";
+import { cloudActiveKey, duplicateTeamError, LocalWorkspaces, localWorkspaceKey, PRIMARY_LOCAL_ID, resolveActiveWorkspace, WORKSPACE_INDEX_KEY } from "./workspaces";
 
 function memory() {
   const data = new Map<string, string>();
@@ -87,5 +87,15 @@ describe("choosing the active cloud team", () => {
   });
   it("remembers the active team per account, so user B never inherits user A's choice", () => {
     expect(cloudActiveKey("user-a")).not.toBe(cloudActiveKey("user-b"));
+  });
+});
+
+describe("duplicateTeamError", () => {
+  const list = [{ id: "a", teamName: "My Team", leagueName: "My League", season: "2026-27" }];
+  it("rejects the same team and league name, ignoring case and spaces", () => {
+    expect(duplicateTeamError(list, " my team ", "MY LEAGUE")).toMatch(/already have "My Team" in My League/);
+  });
+  it("allows the same team name in a different league", () => {
+    expect(duplicateTeamError(list, "My Team", "Keeper League")).toBeNull();
   });
 });

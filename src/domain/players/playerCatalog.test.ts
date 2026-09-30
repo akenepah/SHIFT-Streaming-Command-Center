@@ -174,6 +174,12 @@ describe("catalog players", () => {
 });
 
 describe("searchPlayers", () => {
+  it("lists verified players before unverified depth players with the same name match", () => {
+    expect(names(searchPlayers("hughes", pool)).slice(0, 3).sort()).toEqual(["Jack Hughes", "Luke Hughes", "Quinn Hughes"]);
+    expect(names(searchPlayers("makar", pool))[0]).toBe("Cale Makar");
+    expect(names(searchPlayers("tkachuk", pool)).slice(0, 2).sort()).toEqual(["Brady Tkachuk", "Matthew Tkachuk"]);
+  });
+
   it("finds exact full names and last names, case-insensitively", () => {
     expect(names(searchPlayers("Connor McDavid", pool))).toEqual(["Connor McDavid"]);
     expect(names(searchPlayers("mcdavid", pool))[0]).toBe("Connor McDavid");
@@ -193,8 +199,8 @@ describe("searchPlayers", () => {
     expect(names(searchPlayers("stutzle", pool))).toEqual(["Tim Stützle"]);
   });
 
-  it("lists shared surnames as distinct players, alphabetically", () => {
-    expect(names(searchPlayers("hughes", pool))).toEqual(["Cameron Hughes", "Jack Hughes", "Luke Hughes", "Quinn Hughes", "T.J. Hughes"]);
+  it("lists shared surnames as distinct players: verified first, then alphabetically", () => {
+    expect(names(searchPlayers("hughes", pool))).toEqual(["Jack Hughes", "Luke Hughes", "Quinn Hughes", "Cameron Hughes", "T.J. Hughes"]);
     expect(names(searchPlayers("tkachuk", pool))).toEqual(["Brady Tkachuk", "Matthew Tkachuk"]);
   });
 

@@ -11,6 +11,7 @@ import { ErrorList, Field, Select } from "@/components/ui/Field";
 import { useToast } from "@/components/ui/Toast";
 import { addDays, formatDayLong, formatDayShort, formatMonthDay, weekDates } from "@/domain/dates";
 import { generateDailyLineup } from "@/domain/lineup/generateDailyLineup";
+import { placePlannedAddition } from "@/domain/lineup/placement";
 import type { OpenSlotContext } from "@/domain/lineup/openSlot";
 import { findTeamGame } from "@/domain/schedule/provider";
 import type { WeekInput } from "@/domain/lineup/generateWeek";
@@ -50,6 +51,7 @@ export function PlanMoveDialog({
   initialType = "ADD_DROP",
   slotContext = null,
   initialTeam = "",
+  allowNextWeek = false,
 }: {
   open: boolean;
   onClose: () => void;
@@ -61,6 +63,7 @@ export function PlanMoveDialog({
   /** Set when the flow starts from an empty active slot on the Weekly Planner. */
   slotContext?: OpenSlotContext | null;
   initialTeam?: NHLTeamId | "";
+  allowNextWeek?: boolean;
 }) {
   const { state, dispatch } = useStore();
   const toast = useToast();
@@ -91,6 +94,10 @@ export function PlanMoveDialog({
   const rosterIds = new Set(rosterThen.map((r) => r.playerId));
   const remaining = (p: Player) =>
     draft.effectiveDate <= weekEnd ? teamGamesBetween(p.nhlTeamId, draft.effectiveDate, weekEnd) : 0;
+  // The first day of next week: a weekend add can be aimed at it (planning across the scoring boundary).
+  const nextWeekDay = addDays(weekEnd, 1);
+  const playsNextWeekDay = (p: Player) => !!findTeamGame(weekInput.scheduleProvider, p.nhlTeamId, nextWeekDay);
+  const lateInWeek = draft.effectiveDate >= addDays(weekEnd, -1);
 
   const candidateTx = (d: TransactionDraft): PlannedTransaction => ({
     ...createTransaction(d, editing?.id ?? "__preview__"),
@@ -168,7 +175,11 @@ export function PlanMoveDialog({
     if (editing) dispatch({ type: "tx/update", id: editing.id, draft });
     else dispatch({ type: "tx/create", id: newId("move"), draft });
     if (slotContext && added) {
-      const after = generateDailyLineup({ ...baseInput, date: draft.effectiveDate, plannedTransactions: [...others, candidateTx(draft)] });
+      const placementInput = { ...baseInput, players: { ...baseInput.players, [added.id]: added }, date: draft.effectiveDate };
+      const before = generateDailyLineup(placementInput);
+      const placement = placePlannedAddition(before, { ...placementInput, plannedTransactions: [...others, candidateTx(draft)] }, added.id, slotContext);
+      if (placement.overrides) dispatch({ type: "override/setDay", date: draft.effectiveDate, overrides: placement.overrides });
+      const after = placement.day;
       const assigned = after.activeSlots.find(a => a.playerId === added.id);
       // Only call out the clicked slot when the engine placed the player elsewhere (or benched them).
       const elsewhere = assigned?.slot.type !== slotContext.position;
@@ -260,6 +271,7 @@ export function PlanMoveDialog({
               {!dates.includes(draft.effectiveDate) && (
                 <option value={draft.effectiveDate}>
                   {formatDayShort(draft.effectiveDate)} {formatMonthDay(draft.effectiveDate)}
+                  {draft.effectiveDate === nextWeekDay ? " · next week" : ""}
                 </option>
               )}
               {dates.map((d) => (
@@ -267,6 +279,11 @@ export function PlanMoveDialog({
                   {formatDayShort(d)} {formatMonthDay(d)}
                 </option>
               ))}
+              {(allowNextWeek || lateInWeek) && draft.effectiveDate !== nextWeekDay && (
+                <option value={nextWeekDay}>
+                  {formatDayShort(nextWeekDay)} {formatMonthDay(nextWeekDay)} · next week
+                </option>
+              )}
             </Select>
           </Field>
         </div>
@@ -369,8 +386,12 @@ export function PlanMoveDialog({
                         : { label: "Your saved players", players: savedIdle }
                     }
                     meta={(p) => (
-                      <span className="shrink-0 text-caption text-ink-3 tabular-nums">
-                        {remaining(p)} {remaining(p) === 1 ? "game" : "games"} left this week
+                      <span className="shrink-0 text-right text-caption text-ink-3 tabular-nums">
+                        <span className="block">
+                          {findTeamGame(weekInput.scheduleProvider, p.nhlTeamId, draft.effectiveDate) ? "Plays" : "No game"} {formatDayShort(draft.effectiveDate)} {formatMonthDay(draft.effectiveDate)}
+                        </span>
+                        {draft.effectiveDate <= weekEnd && <span className="block">{remaining(p)} {remaining(p) === 1 ? "game" : "games"} left this week</span>}
+                        {draft.effectiveDate <= weekEnd && lateInWeek && playsNextWeekDay(p) && <span className="block text-primary-strong">+ plays next {formatDayShort(nextWeekDay)}</span>}
                       </span>
                     )}
                   />
