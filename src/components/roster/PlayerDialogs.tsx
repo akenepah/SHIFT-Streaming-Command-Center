@@ -1,13 +1,15 @@
 "use client";
 
 import { AlertTriangle, ArrowLeft } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { PlayerForm } from "@/components/player/PlayerForm";
 import { PlayerSearch } from "@/components/player/PlayerSearch";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
 import { Field, Select } from "@/components/ui/Field";
 import { useToast } from "@/components/ui/Toast";
+import { todayISO, formatDayShort, formatMonthDay } from "@/domain/dates";
+import { dropImpact } from "@/domain/roster/dropImpact";
 import { withCatalog } from "@/domain/players/playerCatalog";
 import { findExistingIdentity, isRostered, type ExistingIdentity } from "@/domain/players/searchPlayers";
 import {
@@ -109,6 +111,7 @@ function FreshAddPlayerDialog({ onClose }: { onClose: () => void }) {
   const toast = useToast();
   const [mode, setMode] = useState<"search" | "create">("search");
   const [query, setQuery] = useState("");
+  const searchInput = useRef<HTMLInputElement>(null);
   const [status, setStatus] = useState<RosterStatus>(() => defaultRosterStatus(state.roster, state.settings.roster));
   const [draft, setDraft] = useState<PlayerDraft>(emptyPlayerDraft);
   const [errors, setErrors] = useState<string[]>([]);
@@ -168,6 +171,8 @@ function FreshAddPlayerDialog({ onClose }: { onClose: () => void }) {
     if (!state.players[p.id]) dispatch({ type: "player/upsert", player: p });
     dispatch({ type: "roster/add", playerId: p.id, status: s });
     setRosteredNotice(null);
+    setQuery("");
+    searchInput.current?.focus();
     setStatus(defaultRosterStatus([...state.roster, { playerId: p.id, rosterStatus: s }], config));
     setStatusTouched(false);
     toast(`${p.name} added to your roster${s === "ACTIVE" ? "" : s === "BENCH" ? " (Bench)" : " (IR+)"}.`);
@@ -231,6 +236,7 @@ function FreshAddPlayerDialog({ onClose }: { onClose: () => void }) {
         {mode === "search" ? (
           <PlayerSearch
             inputId="add-search"
+            inputRef={searchInput}
             query={query}
             onQueryChange={setQuery}
             pool={pool}
@@ -338,8 +344,10 @@ export function ManagePlayerDialog({
 }
 
 export function DropPlayerDialog({ player, onClose }: { player: Player | null; onClose: () => void }) {
-  const { dispatch } = useStore();
+  const { state, dispatch } = useStore();
   const toast = useToast();
+  const impact = player ? dropImpact(player.id, state.transactions, state.overrides, todayISO()) : { moves: [], dates: [] };
+  const affected = impact.moves.length > 0 || impact.dates.length > 0;
   return (
     <Dialog
       open={!!player}
@@ -360,11 +368,16 @@ export function DropPlayerDialog({ player, onClose }: { player: Player | null; o
               onClose();
             }}
           >
-            Drop player
+            {affected ? "Drop anyway" : "Drop player"}
           </Button>
         </>
       }
     >
+      {affected && <div role="alert" className="mb-4 rounded-control border border-warn-line bg-warn-soft p-3 text-body-sm text-warn-strong">
+        <p className="font-semibold">{impact.moves.length ? "This player is part of a planned move" : "This player has daily lineup choices"}</p>
+        {impact.moves.length > 0 && <><p className="mt-2">Dropping {player?.name} affects these planned moves:</p><ul className="mt-1 list-disc pl-5">{impact.moves.map(t => <li key={t.id}>{t.type.replaceAll("_", " + ")} · {formatDayShort(t.effectiveDate)} {formatMonthDay(t.effectiveDate)}</li>)}</ul><p className="mt-2">Moves stay in your plan. Any move that can no longer happen will show Needs fixing.</p></>}
+        {impact.dates.length > 0 && <p className="mt-2">Their daily lineup choices will be removed for {impact.dates.map(d => `${formatDayShort(d)} ${formatMonthDay(d)}`).join(", ")}.</p>}
+      </div>}
       <p className="text-body-sm text-ink-2">They stay in your saved players, so you can add them back later.</p>
     </Dialog>
   );

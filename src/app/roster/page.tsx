@@ -17,7 +17,7 @@ export default function RosterPage() {
   const weekStart = startOfWeek(todayISO(), state.settings.weekStartsOn);
   const plannedCount = state.transactions.filter((t) => t.status === "PLANNED" && t.effectiveDate >= weekStart).length;
   return (
-    <div className="mx-auto grid max-w-page gap-8 px-10 py-10">
+    <div className="mx-auto grid max-w-page gap-8 px-4 py-6 sm:px-10 sm:py-10">
       <PageHeader
         eyebrow={`${state.settings.leagueName} · ${state.settings.season.replace("-", "–")}`}
         title="Roster"

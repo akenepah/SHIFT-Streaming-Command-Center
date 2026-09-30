@@ -186,3 +186,30 @@ describe('existing local team adoption', () => {
     expect(local.migrationSources(B)).toEqual([]);
   });
 });
+
+it('independent background reads cannot advance a writer revision or overwrite newer edits', async () => {
+  const client = sdk();
+  const writer = new CloudRepository(client, A, null, 'race');
+  await writer.save(sample());
+  const second = new CloudRepository(client, A, writer.leagueId);
+  const original = await second.load();
+  await second.save({ ...original!, settings: { ...original!.settings, teamName: 'Newer remote team' } });
+  const refresh = new CloudRepository(client, A, writer.leagueId);
+  expect((await refresh.load())?.settings.teamName).toBe('Newer remote team');
+  expect(writer.revision).toBe(1);
+  await expect(writer.save(sample())).rejects.toThrow('newer data');
+  expect((await refresh.load())?.settings.teamName).toBe('Newer remote team');
+});
+it('a failed write can retry its unchanged revision without losing edits', async () => {
+  const options = { failSave: false };
+  const client = sdk(() => A, options);
+  const remote = new CloudRepository(client, A, null, 'retry');
+  await remote.save(sample());
+  options.failSave = true;
+  const changed = sample(); changed.settings.weeklyAcquisitionLimit = 9;
+  await expect(remote.save(changed)).rejects.toThrow('offline');
+  expect(remote.revision).toBe(1);
+  options.failSave = false;
+  await remote.save(changed);
+  expect((await remote.load())?.settings.weeklyAcquisitionLimit).toBe(9);
+});

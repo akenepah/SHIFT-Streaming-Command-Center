@@ -25,9 +25,9 @@ export function WeekGridScroller({ children }: { children: React.ReactNode }) {
   }, []);
   const scrollable = edges.left || edges.right;
   return (
-    <div className="relative">
+    <div className="relative min-w-0 overflow-hidden">
       {scrollable && <p className="mb-2 text-caption text-ink-2">Scroll sideways to compare days →</p>}
-      <div ref={ref} id="week-grid" tabIndex={-1} className="overflow-x-auto pb-2 focus:outline-none">
+      <div ref={ref} id="week-grid" aria-label="Daily lineups, scroll sideways to compare days" tabIndex={0} className="overflow-x-auto pb-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
         {children}
       </div>
       <div aria-hidden className={`pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-canvas to-transparent transition-opacity ${edges.left ? "opacity-100" : "opacity-0"}`} />

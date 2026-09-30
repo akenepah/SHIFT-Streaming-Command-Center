@@ -34,6 +34,7 @@ type Store = {
   reviewMigration: () => Promise<void>;
   resolveMigration: (save: boolean) => Promise<void>;
   reloadCloud: () => Promise<void>;
+  retryCloudSave: () => Promise<void>;
   signOut: () => Promise<void>;
   /** Bumps when another tab's change is loaded into this one (dirty forms warn on it). */
   externalRevision: number;
@@ -152,7 +153,7 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
     let active = true;
     const sub = client.auth.onAuthStateChange((_event, session) => {
       const next = session?.user ?? null;
-      if (owner.current === next?.id && cloud.current) return;
+      if (owner.current === next?.id && cloud.current) { setUser(next); return; }
       const previous = owner.current;
       owner.current = next?.id ?? null;
       setUser(next);
@@ -402,11 +403,16 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
     const onFocus = () => {
       const remote = cloud.current;
       if (document.visibilityState !== "visible" || !remote || draft.current || pending.current || saving.current || blocked.current) return;
+      const client = cloudClient();
+      if (!client || !owner.current) return;
       const before = remote.revision;
-      remote
+      // A background read must not mutate the revision used by an in-flight write.
+      const refreshed = new CloudRepository(client, owner.current, remote.leagueId);
+      refreshed
         .load()
         .then((saved) => {
-          if (cloud.current !== remote || draft.current || pending.current || saving.current || !saved || remote.revision === before) return;
+          if (cloud.current !== remote || draft.current || pending.current || saving.current || !saved || remote.revision !== before || refreshed.revision === before) return;
+          cloud.current = refreshed;
           external.current = true;
           lastSaved.current = saved;
           dispatch({ type: "hydrate", state: saved });
@@ -415,8 +421,7 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
         .catch(() => {
           /* A failed background refresh leaves current data untouched. */
         });
-      const client = cloudClient();
-      if (client && owner.current)
+      if (owner.current)
         listCloudWorkspaces(client)
           .then((list) => {
             if (cloud.current === remote) setWorkspaces(list);
@@ -434,10 +439,13 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
   }, []);
 
   async function switchWorkspace(id: string) {
+    const uid = owner.current;
+    const initialGeneration = generation.current;
     if (id === activeId.current && !draft.current) return;
     const client = cloudClient();
     if (owner.current && client) {
       await drain();
+      if (owner.current !== uid || generation.current !== initialGeneration) return;
       if (blocked.current) throw new Error("Resolve unsaved changes before switching teams.");
       draft.current = null;
       setCreatingWorkspace(false);
@@ -448,7 +456,9 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
         const saved = await remote.load();
         if (generation.current !== ticket) return;
         if (!saved) {
-          setWorkspaces(await listCloudWorkspaces(client));
+          const list = await listCloudWorkspaces(client);
+          if (generation.current !== ticket) return;
+          setWorkspaces(list);
           throw new Error("That team is no longer in your account.");
         }
         cloud.current = remote;
@@ -468,7 +478,10 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
   }
 
   async function startNewWorkspace() {
+    const uid = owner.current;
+    const ticket = generation.current;
     await drain();
+    if (owner.current !== uid || generation.current !== ticket) return;
     if (owner.current && blocked.current) throw new Error("Resolve unsaved changes before adding a team.");
     draft.current = { previousId: activeId.current, originKey: newWorkspaceId(), localId: newWorkspaceId() };
     setCreatingWorkspace(true);
@@ -556,6 +569,20 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
     }
   }
 
+  async function retryCloudSave() {
+    if (migration || !owner.current) return;
+    // Bootstrap/read failures have no user edit to write back. Only retry an actual failed save.
+    if (cloudStatus !== "Changes not saved") { await reloadCloud(); return; }
+    setCloudError(null);
+    if (draft.current) { await commitNewWorkspace(latest.current); return; }
+    if (!cloud.current) { await reloadCloud(); return; }
+    setCloudError(null);
+    blocked.current = false;
+    pending.current = latest.current;
+    // The original revision is retained: a conflicting newer write still cannot be overwritten.
+    await drain();
+  }
+
   async function reloadCloud() {
     const client = cloudClient();
     const uid = owner.current;
@@ -603,7 +630,7 @@ export function StoreProvider({ children, repository }: { children: ReactNode; r
   const value = useMemo(
     () => ({
       state, dispatch, hydrated, loadStatus, removedDemoPlayers, user, cloudStatus, cloudError, migration,
-      resolveMigration, migrationSources, reviewMigration, reloadCloud, signOut, externalRevision,
+      resolveMigration, migrationSources, reviewMigration, reloadCloud, retryCloudSave, signOut, externalRevision,
       workspaces, activeWorkspaceId, creatingWorkspace, switchWorkspace, startNewWorkspace, cancelNewWorkspace,
     }),
     // Functions use current state and refs; recreate the public value as state changes.

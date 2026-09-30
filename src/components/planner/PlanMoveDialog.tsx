@@ -216,12 +216,12 @@ export function PlanMoveDialog({
         editing
           ? "Edit planned move"
           : slotContext
-            ? `Add player for ${formatDayShort(slotContext.date)} ${formatMonthDay(slotContext.date)} · ${slotContext.position}`
+            ? `Fill ${formatDayShort(slotContext.date)}’s ${slotContext.position} opening`
             : "Plan a move"
       }
       description={
         slotContext && !editing
-          ? "Find a player who can help fill this lineup opportunity. Planning only: SHIFT doesn't make changes in your fantasy league."
+          ? `${formatMonthDay(slotContext.date)} · Find a player for this day and position. Planning only: SHIFT does not make changes in your fantasy league.`
           : "Planning only. SHIFT doesn't make changes in your fantasy league. The move applies to the planner from its effective date."
       }
       footer={

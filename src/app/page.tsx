@@ -1,4 +1,6 @@
 "use client";
+import { Orientation } from "@/components/planner/Orientation";
+import { Help } from "@/components/ui/Help";
 
 import { AlertTriangle, CalendarPlus, ChevronLeft, ChevronRight, Info, UserPlus, X } from "lucide-react";
 import Link from "next/link";
@@ -154,6 +156,7 @@ export default function WeeklyPlannerPage() {
           </nav>
         </div>
 
+        <Orientation />
         {(seasonNotStarted || seasonOver) && (
           <p className="mt-4 flex items-center gap-2 text-body-sm text-primary-strong">
             <Info aria-hidden className="size-4" />
@@ -228,7 +231,7 @@ export default function WeeklyPlannerPage() {
         ) : (
           <div className="min-w-0">
             <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-              <p className="text-caption text-ink-2">Bar = active slots filled · Green = more room to stream · Red = lineup full</p>
+              <div className="flex items-center text-body-sm text-ink-2"><span>Daily lineup capacity</span><Help label="lineup capacity">Shows how full your active lineup is each day. Green means more room to stream; red means a full lineup. The optional Next Monday is outside this week’s totals.</Help></div>
               <Button size="sm" onClick={() => toggleNextDay(!showNextDay)} aria-pressed={showNextDay}>
                 {showNextDay ? <X aria-hidden /> : <CalendarPlus aria-hidden />}
                 {showNextDay ? `Hide next ${formatDayShort(nextDayDate)}` : `Show next ${formatDayShort(nextDayDate)}`}

@@ -18,7 +18,7 @@ import { confirmDiscardUnsaved } from "@/state/unsavedGuard";
  */
 export function AccountControl() {
   const {
-    user, cloudStatus, cloudError, migration, migrationSources, reviewMigration, resolveMigration, reloadCloud, signOut,
+    user, cloudStatus, cloudError, migration, migrationSources, reviewMigration, resolveMigration, reloadCloud, retryCloudSave, signOut,
     workspaces, activeWorkspaceId, creatingWorkspace, switchWorkspace, startNewWorkspace,
   } = useStore();
   const router = useRouter();
@@ -41,6 +41,7 @@ export function AccountControl() {
       try {
         await action();
       } catch (e) {
+        setDialogOpen(true);
         setMessage(e instanceof Error ? e.message : "Please try again.");
       } finally {
         setBusy(false);
@@ -227,6 +228,7 @@ export function AccountControl() {
           {cloudError && (
             <>
               <p role="alert" className="text-danger">{cloudError}</p>
+              {!migration && cloudStatus === "Changes not saved" && <Button disabled={busy} variant="primary" onClick={() => run(retryCloudSave)}>Retry saving my changes</Button>}
               <Button disabled={busy} onClick={() => run(async () => { if (migration || window.confirm("Reload cloud data and discard unsaved changes in this tab?")) await reloadCloud(); })}>
                 Reload saved data
               </Button>

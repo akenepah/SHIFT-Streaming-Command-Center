@@ -34,7 +34,7 @@ export function AnchoredPopover({
       const h = ref.current?.offsetHeight ?? 0;
       if (placement === "below-end") {
         const w = Math.min(width, window.innerWidth - 16);
-        setPos({ top: a.bottom + 6, left: Math.max(8, Math.min(a.right - w, window.innerWidth - w - 8)) });
+        setPos({ top: Math.max(8, Math.min(a.bottom + 6, window.innerHeight - h - 8)), left: Math.max(8, Math.min(a.right - w, window.innerWidth - w - 8)) });
         return;
       }
       let left = a.right + 8;
@@ -60,6 +60,15 @@ export function AnchoredPopover({
     const el = ref.current;
     el?.querySelector<HTMLElement>("button, [href], [tabindex]:not([tabindex='-1'])")?.focus();
     const onKey = (e: KeyboardEvent) => {
+      if (el && ["ArrowDown", "ArrowUp", "Home", "End"].includes(e.key) && el.querySelector('[role="menu"]')) {
+        const items = Array.from(el.querySelectorAll<HTMLElement>('[role^="menuitem"]:not(:disabled)'));
+        if (items.length) {
+          e.preventDefault();
+          const i = items.indexOf(document.activeElement as HTMLElement);
+          const next = e.key === "Home" ? 0 : e.key === "End" ? items.length - 1 : (i + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
+          items[next].focus();
+        }
+      }
       if (e.key === "Escape") {
         e.preventDefault();
         onClose();
@@ -109,7 +118,7 @@ export function MenuItem({
       role="menuitem"
       disabled={disabled}
       onClick={onSelect}
-      className={`flex min-h-9 w-full items-center gap-2 rounded-control px-2.5 py-1.5 text-left text-body-sm disabled:text-ink-3 [&_svg]:size-4 ${
+      className={`flex min-h-11 w-full items-center gap-2 rounded-control px-2.5 py-1.5 text-left text-body-sm disabled:text-ink-3 [&_svg]:size-4 ${
         tone === "danger" ? "text-danger hover:bg-danger-soft" : "text-ink hover:bg-surface-muted"
       }`}
     >
@@ -136,7 +145,7 @@ export function ActionMenu({ label, children }: { label: string; children: (clos
         aria-expanded={!!anchor}
         aria-controls={anchor ? id : undefined}
         onClick={(e) => setAnchor(anchor ? null : e.currentTarget)}
-        className="inline-flex size-8 items-center justify-center rounded-control text-ink-2 hover:bg-surface-muted hover:text-ink"
+        className="inline-flex size-11 items-center justify-center rounded-control text-ink-2 hover:bg-surface-muted hover:text-ink"
       >
         <MoreHorizontal aria-hidden className="size-4" />
       </button>
