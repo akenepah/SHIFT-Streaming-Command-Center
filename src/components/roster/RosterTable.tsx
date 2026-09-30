@@ -98,15 +98,15 @@ export function RosterTable() {
       </div>
 
       <div className="overflow-x-auto rounded-panel border border-line bg-surface">
-        <table className="w-full min-w-[880px] text-left">
+        <table className="w-full text-left">
           <thead className="bg-surface-muted text-overline uppercase text-ink-2">
             <tr>
-              <th scope="col" className="w-16 py-3 pl-2 pr-2 text-center">Slot</th>
+              <th scope="col" className="w-12 md:w-16 py-3 pl-2 pr-2 text-center">Slot</th>
               <th scope="col" className="py-3 pr-4">Player</th>
-              <th scope="col" className="w-36 py-3 pr-4">NHL team</th>
-              <th scope="col" className="w-52 py-3 pr-4">Eligible positions</th>
-              <th scope="col" className="w-40 py-3 pr-4">Status</th>
-              <th scope="col" className="w-20 py-3 pr-5 text-right">Actions</th>
+              <th scope="col" className="hidden w-36 py-3 md:table-cell pr-4">NHL team</th>
+              <th scope="col" className="hidden w-52 py-3 md:table-cell pr-4">Eligible positions</th>
+              <th scope="col" className="hidden w-40 py-3 md:table-cell pr-4">Status</th>
+              <th scope="col" className="w-16 py-3 pr-3 md:w-20 md:pr-5 text-right">Actions</th>
             </tr>
           </thead>
           {groups.map((group) => {
@@ -144,14 +144,16 @@ export function RosterTable() {
                       <td className="py-3 pl-2 pr-2 text-center">
                         <PositionBadge kind={row.slot} />
                       </td>
-                      <td className="py-3 pr-4">
+                      <td className="py-3 pr-2 md:pr-4">
                         <PlayerIdentity name={p.name} headshot={p.headshot} />
+                        <p className="mt-1 text-caption text-ink-2 md:hidden">{p.nhlTeamId} · {p.eligiblePositions.join(" / ")} · {status === "IR_PLUS" ? "IR+" : status === "BENCH" ? "Bench" : "Active"}</p>
+                        {row.overflow && <p className="text-caption text-warn md:hidden">No free slot in baseline</p>}
                       </td>
-                      <td className="py-3 pr-4">
+                      <td className="hidden py-3 pr-4 md:table-cell">
                         <TeamTag teamId={p.nhlTeamId} />
                       </td>
-                      <td className="py-3 pr-4 text-data text-ink">{p.eligiblePositions.join(" · ")}</td>
-                      <td className="py-3 pr-4">
+                      <td className="hidden py-3 pr-4 text-data text-ink md:table-cell">{p.eligiblePositions.join(" · ")}</td>
+                      <td className="hidden py-3 pr-4 md:table-cell">
                         <span className="flex flex-col items-start gap-1">
                           <StatusBadge status={status} />
                           {row.overflow && <span className="text-caption text-warn">No free slot in baseline</span>}

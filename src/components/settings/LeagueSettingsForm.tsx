@@ -1,5 +1,6 @@
 "use client";
 
+import { Help } from "@/components/ui/Help";
 import type { ReactNode } from "react";
 import { PositionBadge, type BadgeKind } from "@/components/ui/Badges";
 import { Field, Input, Select, Stepper } from "@/components/ui/Field";
@@ -61,10 +62,10 @@ export function LineupSlotFields({ value, onChange }: Props) {
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-6">
       {cells.map((c) => (
         <div key={c.kind}>
-          <label htmlFor={`slot-${c.kind}`} className="mb-2 flex">
+          <div className="mb-2 flex items-center gap-1"><label htmlFor={`slot-${c.kind}`} className="flex">
             <PositionBadge kind={c.kind} />
             <span className="sr-only">{c.label}</span>
-          </label>
+          </label>{c.kind === "UTIL" && <Help label="UTIL">A flexible slot for any eligible skater, including forwards and defensemen. Goalies cannot play here.</Help>}{c.kind === "IR+" && <Help label="IR+">A separate injured-player roster area. Players here never start in your active lineup.</Help>}</div>
           <Stepper id={`slot-${c.kind}`} label={c.label} value={c.value} onChange={c.set} max={c.max} />
         </div>
       ))}
@@ -76,6 +77,7 @@ export function RulesFields({ value, onChange, showErrors = false, timingLabel =
   const set = (patch: Partial<LeagueSettings>) => onChange({ ...value, ...patch });
   return (
     <div className="grid gap-5">
+      <div className="flex items-center text-body-sm"><span>Weekly adds</span><Help label="Weekly adds">The number of roster additions your league allows each fantasy week. Add + Drop uses one add; a drop alone uses none.</Help></div>
       <Field id="move-timing" label={timingLabel} help="You can choose a different effective date for each planned move." className="max-w-[452px]">
         <Select
           id="move-timing"
@@ -164,7 +166,7 @@ export function LineupSummary({
       <h2 className="font-display text-section-title text-ink">{title}</h2>
       {variant === "setup" ? (
         <>
-          <p className="mt-4 text-body text-ink-2">Monday through Sunday, with independent daily lineup cards.</p>
+          <p className="mt-4 text-body text-ink-2">Seven days beginning on your selected reset day, with independent daily lineup cards.</p>
           <p className="mt-5 text-body font-medium text-primary tabular-nums">
             {n(active)} active · {n(value.roster.benchSlots)} bench · {n(value.roster.irPlusSlots)} IR+
           </p>

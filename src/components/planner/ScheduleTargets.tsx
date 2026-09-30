@@ -1,4 +1,5 @@
 "use client";
+import { Help } from "@/components/ui/Help";
 
 import { formatDayShort, formatMonthDay } from "@/domain/dates";
 import { teamFullName } from "@/domain/nhl/teams";
@@ -16,7 +17,7 @@ export function ScheduleTargets({ result, onSelect }: {
   }[result.status];
   return (
     <section aria-labelledby="schedule-targets-title" className="rounded-panel border border-line bg-surface p-4">
-      <h2 id="schedule-targets-title" className="font-display text-card-title text-ink">Schedule Targets</h2>
+      <div className="flex items-center justify-between"><h2 id="schedule-targets-title" className="font-display text-card-title text-ink">Schedule Targets</h2><Help label="Schedule Targets">Teams whose remaining games best fit the open spots in your lineup. B2B means back-to-back games on consecutive days.</Help></div>
       {empty ? <p className="mt-3 text-body-sm text-ink-2">{empty}</p> : <>
         <p className="mt-1 text-caption text-ink-2">Skater fits from {formatMonthDay(result.effectiveDate)}</p>
         {result.targets[0]?.opportunityGames === 1 && <p className="mt-2 text-caption text-ink-2">Very little streaming room remains this week.</p>}
