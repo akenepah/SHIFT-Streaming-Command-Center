@@ -1,11 +1,12 @@
 "use client";
 
 import { AlertTriangle, Search } from "lucide-react";
-import { useMemo, type ReactNode } from "react";
+import { useMemo, type ReactNode, type Ref } from "react";
 import { PlayerIdentity, TeamTag } from "@/components/player/PlayerBits";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Field";
 import { CATALOG_ERROR } from "@/domain/players/playerCatalog";
+import { quickEntryCandidate } from "@/domain/players/quickEntry";
 import { DEFAULT_SEARCH_LIMIT, searchPlayers } from "@/domain/players/searchPlayers";
 import type { Player } from "@/domain/types";
 
@@ -22,6 +23,7 @@ type Mode =
  */
 export function PlayerSearch({
   inputId,
+  inputRef,
   query,
   onQueryChange,
   pool,
@@ -33,6 +35,7 @@ export function PlayerSearch({
   autoFocus = false,
 }: {
   inputId: string;
+  inputRef?: Ref<HTMLInputElement>;
   query: string;
   onQueryChange: (q: string) => void;
   pool: readonly Player[];
@@ -68,10 +71,17 @@ export function PlayerSearch({
         <Search aria-hidden className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
         <Input
           id={inputId}
+          ref={inputRef}
           type="search"
           className="pl-10"
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
+          onKeyDown={e => {
+            if (e.key !== "Enter" || e.nativeEvent.isComposing || mode.kind !== "action") return;
+            e.preventDefault();
+            const player = quickEntryCandidate(query, found, isRostered);
+            if (player) mode.onPick(player);
+          }}
           placeholder="Search players"
           autoComplete="off"
           {...(autoFocus ? { "data-autofocus": true } : {})}

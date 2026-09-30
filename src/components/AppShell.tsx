@@ -49,7 +49,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <ShiftWordmark />
           </Link>
           {!inSetup && (
-            <nav aria-label="Main" className="flex max-w-full items-center gap-0 overflow-x-auto sm:gap-2">
+            <nav aria-label="Main" className="order-last flex w-full items-center justify-between gap-0 border-t border-nav-ink/15 py-1 sm:order-none sm:w-auto sm:justify-start sm:gap-2 sm:border-0 sm:py-0">
               {NAV.map((item) => {
                 const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
                 return (
@@ -57,7 +57,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                     key={item.href}
                     href={item.href}
                     aria-current={active ? "page" : undefined}
-                    className={`flex h-10 items-center rounded-control px-2 text-body-sm sm:px-4 sm:text-body ${
+                    className={`flex min-h-11 items-center rounded-control px-2 text-body-sm sm:px-4 sm:text-body ${
                       active ? "font-semibold text-nav-ink" : "font-medium text-nav-ink-muted hover:bg-nav-hover hover:text-nav-ink"
                     }`}
                   >

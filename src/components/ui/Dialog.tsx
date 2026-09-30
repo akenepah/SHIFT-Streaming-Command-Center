@@ -51,10 +51,10 @@ export function Dialog({ open, onClose, title, description, children, footer, wi
       onClick={(e) => {
         if (e.target === ref.current) onClose();
       }}
-      className={`${WIDTH[width]} max-h-[88vh] max-w-[calc(100vw-32px)] rounded-panel border border-line bg-surface-raised p-0 text-ink shadow-overlay`}
+      className={`${WIDTH[width]} max-h-[88dvh] max-w-[calc(100vw-32px)] rounded-panel border border-line bg-surface-raised p-0 text-ink shadow-overlay`}
     >
       {open && (
-        <div className="flex max-h-[88vh] flex-col">
+        <div className="flex max-h-[88dvh] flex-col">
           <div className="flex items-start gap-4 px-6 pb-4 pt-5">
             <div className="min-w-0 flex-1">
               <h2 id={titleId} className="font-display text-card-title">
@@ -70,7 +70,7 @@ export function Dialog({ open, onClose, title, description, children, footer, wi
               type="button"
               onClick={onClose}
               aria-label="Close dialog"
-              className="-mr-2 -mt-1 inline-flex size-8 items-center justify-center rounded-control text-ink-3 hover:bg-surface-muted hover:text-ink"
+              className="-mr-2 -mt-1 inline-flex size-11 items-center justify-center rounded-control text-ink-3 hover:bg-surface-muted hover:text-ink"
             >
               <X aria-hidden className="size-4" />
             </button>

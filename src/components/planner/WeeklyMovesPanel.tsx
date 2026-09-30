@@ -75,7 +75,7 @@ export function WeeklyMovesPanel({
                       type="button"
                       onClick={() => onEdit(t)}
                       aria-label="Edit planned move"
-                      className="inline-flex size-7 items-center justify-center rounded-control text-ink-3 hover:bg-surface-muted hover:text-ink"
+                      className="inline-flex size-11 items-center justify-center rounded-control text-ink-3 hover:bg-surface-muted hover:text-ink"
                     >
                       <Pencil aria-hidden className="size-3.5" />
                     </button>
@@ -86,7 +86,7 @@ export function WeeklyMovesPanel({
                         toast("Planned move cancelled.", "info", { label: "Undo", onClick: () => dispatch({ type: "tx/restore", id: t.id }) });
                       }}
                       aria-label="Cancel planned move"
-                      className="inline-flex size-7 items-center justify-center rounded-control text-ink-3 hover:bg-danger-soft hover:text-danger"
+                      className="inline-flex size-11 items-center justify-center rounded-control text-ink-3 hover:bg-danger-soft hover:text-danger"
                     >
                       <X aria-hidden className="size-3.5" />
                     </button>
@@ -102,11 +102,11 @@ export function WeeklyMovesPanel({
                     <span className="font-semibold text-danger">−</span> {name(t.dropPlayerId)}
                   </p>
                 )}
-                <p className="mt-1 text-caption text-ink-3">{acquisitionCost(t.type) ? "Uses 1 add" : "No add used"}</p>
+                <p className="mt-1 text-caption text-ink-3">{moveProblem(t) ? "No add counted until fixed" : acquisitionCost(t.type) ? "Uses 1 add" : "No add used"}</p>
                 {moveProblem(t) && (
                   <p role="status" className="mt-1.5 flex items-start gap-1.5 text-caption font-medium text-warn">
                     <AlertTriangle aria-hidden className="mt-px size-3.5 shrink-0" />
-                    {moveProblem(t)} Edit or cancel this move.
+                    <span><strong>Needs fixing.</strong> {moveProblem(t)} Edit or cancel this move.</span>
                   </p>
                 )}
               </li>

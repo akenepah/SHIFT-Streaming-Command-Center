@@ -98,12 +98,15 @@ function SetupFlow() {
           <section className="rounded-panel border border-line bg-surface p-6">
             <h2 className="font-display text-section-title text-ink">League &amp; lineup</h2>
             <div className="mt-6 grid gap-6">
+              <h3 className="text-body font-semibold text-ink">League</h3>
               <LeagueTeamFields showErrors={errors.length > 0} value={draft} onChange={setDraft} withSeason />
               <div>
                 <h3 className="mb-4 text-body font-semibold text-ink">Daily lineup slots</h3>
                 <LineupSlotFields value={draft} onChange={setDraft} />
               </div>
+              <h3 className="text-body font-semibold text-ink">Weekly rules &amp; goalie minimum</h3>
               <RulesFields showErrors={errors.length > 0} value={draft} onChange={setDraft} timingLabel="Default move timing" />
+              <p className="text-body-sm text-ink-2">You can update these settings later.</p>
               <ErrorList errors={errors} />
               <div>
                 <Button variant="primary" className="min-w-56" onClick={next}>
@@ -136,7 +139,7 @@ function SetupFlow() {
       />
       <p className="-mt-4 text-body text-ink-2">
         Add each player&apos;s name, NHL team and eligible positions. You can open the planner with a partial roster and
-        add the rest later.
+        add or edit players later.
       </p>
       <StepIndicator step={step} onSelect={setStep} />
       <RosterTable />
