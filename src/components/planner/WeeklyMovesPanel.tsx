@@ -11,10 +11,10 @@ import { rosterSummary } from "@/state/selectors";
 import { useStore } from "@/state/store";
 
 function Divider() {
-  return <div className="-mx-4 my-4 h-px bg-line" />;
+  return <div className="my-5 h-px bg-line" />;
 }
 
-/** The Weekly Planner's left rail: one operational panel, sections separated by dividers. */
+/** The Weekly Planner's left rail: one operational panel, sections separated by rules instead of nested cards. */
 export function WeeklyMovesPanel({
   weekStart,
   summary,
@@ -24,7 +24,6 @@ export function WeeklyMovesPanel({
 }: {
   weekStart: ISODate;
   summary: WeekSummary;
-  /** Broken planned moves (id → problem), from `moveProblems`. */
   problems: ReadonlyMap<string, string>;
   onPlan: () => void;
   onEdit: (t: PlannedTransaction) => void;
@@ -40,34 +39,34 @@ export function WeeklyMovesPanel({
   const goalieMin = settings.minGoalieAppearances;
   const goalieMet = summary.goalieStarts >= goalieMin;
   const name = (id?: string) => (id ? (state.players[id]?.name ?? "Unknown player") : "");
-  // Moves saved before a rule existed (or made stale by later changes) are flagged, never counted or shown as valid.
   const moveProblem = (t: PlannedTransaction) => problems.get(t.id);
 
   return (
-    <aside aria-label="Weekly moves" className="self-start rounded-panel border border-line bg-surface p-4">
+    <aside aria-label="Weekly moves" className="self-start border-t border-line pt-4">
       <h2 className="font-display text-card-title text-ink">Weekly Moves</h2>
-      <p className={`mt-3 text-body font-semibold tabular-nums ${over ? "text-warn" : "text-primary-strong"}`}>
-        {over ? `${used - limit} over the limit` : `${limit - used} ${limit - used === 1 ? "add" : "adds"} remaining`}
-      </p>
-      <p className="mt-0.5 text-caption text-ink-3 tabular-nums">
-        {used} of {limit} used · Resets {weekdayName(settings.weekStartsOn)}
-      </p>
+      <div className="mt-3 flex items-baseline justify-between gap-3">
+        <p className={`text-body font-semibold tabular-nums ${over ? "text-warn" : "text-primary-strong"}`}>
+          {over ? `${used - limit} over the limit` : `${limit - used} ${limit - used === 1 ? "add" : "adds"} remaining`}
+        </p>
+        <p className="text-caption text-ink-3 tabular-nums">{used} / {limit} used</p>
+      </div>
+      <p className="mt-0.5 text-caption text-ink-3">Resets {weekdayName(settings.weekStartsOn)}</p>
       <Button className="mt-4 w-full" onClick={onPlan}>
         <Plus aria-hidden /> Plan a move
       </Button>
 
       <div className="mt-4">
         {moves.length === 0 ? (
-          <div className="rounded-card bg-surface-muted px-4 py-3.5">
+          <div className="border-y border-line py-3">
             <p className="text-body-sm font-medium text-ink">No moves planned</p>
-            <p className="mt-1.5 text-body-sm text-ink-3">Plan an add or drop by effective date to see its effect on each day.</p>
+            <p className="mt-1 text-body-sm text-ink-3">Add a move by effective date to preview how it changes the week.</p>
           </div>
         ) : (
-          <ul className="flex flex-col gap-2">
+          <ul className="divide-y divide-line border-y border-line">
             {moves.map((t) => (
-              <li key={t.id} className="rounded-card border border-line px-3 py-2.5">
+              <li key={t.id} className="py-2.5">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-overline uppercase text-ink-2">
+                  <span className="text-caption font-medium text-ink-2">
                     {formatDayShort(t.effectiveDate)} {formatMonthDay(t.effectiveDate)}
                   </span>
                   <span className="flex">
@@ -75,7 +74,7 @@ export function WeeklyMovesPanel({
                       type="button"
                       onClick={() => onEdit(t)}
                       aria-label="Edit planned move"
-                      className="inline-flex size-11 items-center justify-center rounded-control text-ink-3 hover:bg-surface-muted hover:text-ink"
+                      className="inline-flex size-9 items-center justify-center rounded-control text-ink-3 hover:bg-surface-muted hover:text-ink"
                     >
                       <Pencil aria-hidden className="size-3.5" />
                     </button>
@@ -86,7 +85,7 @@ export function WeeklyMovesPanel({
                         toast("Planned move cancelled.", "info", { label: "Undo", onClick: () => dispatch({ type: "tx/restore", id: t.id }) });
                       }}
                       aria-label="Cancel planned move"
-                      className="inline-flex size-11 items-center justify-center rounded-control text-ink-3 hover:bg-danger-soft hover:text-danger"
+                      className="inline-flex size-9 items-center justify-center rounded-control text-ink-3 hover:bg-danger-soft hover:text-danger"
                     >
                       <X aria-hidden className="size-3.5" />
                     </button>
@@ -131,28 +130,20 @@ export function WeeklyMovesPanel({
       {goalieMin > 0 && state.roster.length > 0 && (
         <div className="mt-4 border-t border-line pt-4">
           <p className="text-body-sm font-semibold text-ink">Goalie appearances</p>
-          <p className="mt-1 text-body-sm font-medium text-ink">Minimum {goalieMin} per week</p>
-          <p className="mt-1 text-body-sm text-ink-2 tabular-nums">
-            {summary.goalieStarts} goalie {summary.goalieStarts === 1 ? "game" : "games"} available this week
-          </p>
-          <p className={`mt-0.5 flex items-center gap-1.5 text-caption ${goalieMet ? "text-success" : "text-warn-strong"}`}>
+          <p className="mt-1 text-body-sm text-ink-2">Minimum {goalieMin} per week · {summary.goalieStarts} available</p>
+          <p className={`mt-1 flex items-center gap-1.5 text-caption ${goalieMet ? "text-success" : "text-warn-strong"}`}>
             {goalieMet ? (
-              <>
-                <CircleCheck aria-hidden className="size-3.5" /> Enough games to reach the minimum
-              </>
+              <><CircleCheck aria-hidden className="size-3.5" /> Enough games to reach the minimum</>
             ) : (
-              `${goalieMin - summary.goalieStarts} short of the minimum on the current schedule`
+              `${goalieMin - summary.goalieStarts} short on the current schedule`
             )}
           </p>
-          <p className="mt-2 text-caption text-ink-3">
-            Goalie games show team availability only. Goalie games are not confirmed.
-          </p>
+          <p className="mt-1.5 text-caption text-ink-3">Team availability only; goalie starts are not confirmed.</p>
         </div>
       )}
 
-      <p className="mt-4 text-caption text-ink-3">
-        Players with a game fill open legal slots each day. IR+ never starts. Bundled NHL schedule ·{" "}
-        {formatWeekRange(weekStart)}.
+      <p className="mt-5 text-caption text-ink-3">
+        IR+ never starts · Bundled NHL schedule · {formatWeekRange(weekStart)}.
       </p>
     </aside>
   );

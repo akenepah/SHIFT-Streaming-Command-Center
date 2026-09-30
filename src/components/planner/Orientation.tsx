@@ -12,13 +12,22 @@ export function Orientation() {
     catch { return orientationDismissed(null, user?.user_metadata); }
   });
   if (dismissed) return null;
+
   const dismiss = () => {
     setDismissed(true);
     try { localStorage.setItem(orientationKey(user?.id), "dismissed"); } catch { /* Still dismissed for this visit. */ }
     if (user) void cloudClient()?.auth.updateUser({ data: { shiftPlannerOrientationDismissed: true } }).catch(() => { /* Local dismissal remains available offline. */ });
   };
-  return <section aria-label="Planner introduction" className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-card border border-primary-line bg-primary-soft px-4 py-3">
-    <div><h2 className="text-body font-semibold">Plan your week in 3 steps</h2><ol className="mt-1 list-inside list-decimal text-body-sm text-ink-2 sm:flex sm:flex-wrap sm:gap-x-5"><li>Find white Open Slots</li><li>Check Schedule Targets for teams that fit</li><li>Add a player or Plan a Move</li></ol></div>
-    <Button size="sm" onClick={dismiss}>Got it</Button>
-  </section>;
+
+  return (
+    <section aria-label="Planner introduction" className="mt-5 flex flex-wrap items-start justify-between gap-3 border-y border-line py-3">
+      <div className="max-w-4xl">
+        <h2 className="text-body font-semibold text-ink">Plan your week in three moves</h2>
+        <p className="mt-1 text-body-sm text-ink-2">
+          Find an open slot, check which NHL schedules fit it, then add a player or plan a move.
+        </p>
+      </div>
+      <Button variant="ghost" size="sm" onClick={dismiss}>Dismiss</Button>
+    </section>
+  );
 }
