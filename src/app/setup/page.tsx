@@ -24,20 +24,25 @@ const STEPS = ["League & lineup", "Add your roster"];
 
 function StepIndicator({ step, onSelect }: { step: number; onSelect: (i: number) => void }) {
   return (
-    <ol aria-label="Setup steps" className="flex flex-wrap gap-3">
+    <ol aria-label="Setup steps" className="flex flex-wrap items-center gap-2 text-body-sm">
       {STEPS.map((label, i) => (
-        <li key={label}>
+        <li key={label} className="flex items-center gap-2">
+          {i > 0 && <span aria-hidden className="h-px w-6 bg-line" />}
           <button
             type="button"
             aria-current={i === step ? "step" : undefined}
             onClick={() => onSelect(i)}
             disabled={i > step}
-            className={`flex h-11 min-w-0 items-center justify-center gap-2 rounded-control border px-5 text-body font-semibold ${
-              i === step ? "border-primary bg-primary text-on-primary" : "border-line bg-surface text-ink disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-ink-3"
+            className={`inline-flex min-h-10 items-center gap-2 border-b-2 px-1 font-medium transition-colors ${
+              i === step
+                ? "border-primary text-ink"
+                : i < step
+                  ? "border-transparent text-ink-2 hover:text-ink"
+                  : "border-transparent text-ink-3 disabled:cursor-not-allowed"
             }`}
           >
-            {i < step ? <Check aria-hidden className="size-4 text-success" /> : null}
-            <span className="tabular-nums">{i + 1}</span> {label}
+            {i < step ? <Check aria-hidden className="size-4 text-success" /> : <span className="tabular-nums text-ink-3">{i + 1}</span>}
+            {label}
             {i < step && <span className="sr-only">(complete)</span>}
           </button>
         </li>
@@ -52,11 +57,6 @@ export default function SetupPage() {
 
 function SetupFlow() {
   const { state, dispatch, creatingWorkspace, cancelNewWorkspace, workspaces } = useStore();
-  // "Add another team": a new, separate workspace. Cancel returns to the previous team; nothing was saved.
-  const cancelNewTeam = async () => {
-    await cancelNewWorkspace();
-    router.push("/");
-  };
   const router = useRouter();
   const toast = useToast();
   const params = useSearchParams();
@@ -65,6 +65,11 @@ function SetupFlow() {
   const [draft, setDraft] = useState(state.settings);
   const [errors, setErrors] = useState<string[]>([]);
   const [adding, setAdding] = useState(false);
+
+  const cancelNewTeam = async () => {
+    await cancelNewWorkspace();
+    router.push("/");
+  };
 
   const next = () => {
     const errs = validateSettings(draft);
@@ -91,22 +96,26 @@ function SetupFlow() {
           subtitle={creatingWorkspace ? "A separate team with its own league settings, roster and moves. Your other teams stay as they are." : "Set your roster rules once. Start planning your week."}
           actions={creatingWorkspace ? <Button onClick={() => void cancelNewTeam()}>Cancel</Button> : undefined}
         />
-        <div className="mt-6">
+        <div className="mt-7">
           <StepIndicator step={step} onSelect={setStep} />
         </div>
-        <div className="mt-6 layout-form-rail">
-          <section className="rounded-panel border border-line bg-surface p-6">
+        <div className="mt-8 layout-form-rail">
+          <section className="border-t border-line pt-6">
             <h2 className="font-display text-section-title text-ink">League &amp; lineup</h2>
-            <div className="mt-6 grid gap-6">
-              <h3 className="text-body font-semibold text-ink">League</h3>
-              <LeagueTeamFields showErrors={errors.length > 0} value={draft} onChange={setDraft} withSeason />
+            <div className="mt-6 grid gap-7">
               <div>
+                <h3 className="mb-4 text-body font-semibold text-ink">League</h3>
+                <LeagueTeamFields showErrors={errors.length > 0} value={draft} onChange={setDraft} withSeason />
+              </div>
+              <div className="border-t border-line pt-6">
                 <h3 className="mb-4 text-body font-semibold text-ink">Daily lineup slots</h3>
                 <LineupSlotFields value={draft} onChange={setDraft} />
               </div>
-              <h3 className="text-body font-semibold text-ink">Weekly rules &amp; goalie minimum</h3>
-              <RulesFields showErrors={errors.length > 0} value={draft} onChange={setDraft} timingLabel="Default move timing" />
-              <p className="text-body-sm text-ink-2">You can update these settings later.</p>
+              <div className="border-t border-line pt-6">
+                <h3 className="mb-4 text-body font-semibold text-ink">Weekly rules &amp; goalie minimum</h3>
+                <RulesFields showErrors={errors.length > 0} value={draft} onChange={setDraft} timingLabel="Default move timing" />
+              </div>
+              <p className="text-body-sm text-ink-3">You can change these settings later.</p>
               <ErrorList errors={errors} />
               <div>
                 <Button variant="primary" className="min-w-56" onClick={next}>
@@ -137,17 +146,16 @@ function SetupFlow() {
           </div>
         }
       />
-      <p className="-mt-4 text-body text-ink-2">
-        Add each player&apos;s name, NHL team and eligible positions. You can open the planner with a partial roster and
-        add or edit players later.
+      <p className="-mt-4 max-w-3xl text-body text-ink-2">
+        Add each player&apos;s name, NHL team and eligible positions. You can open the planner with a partial roster and add or edit players later.
       </p>
       <StepIndicator step={step} onSelect={setStep} />
       <RosterTable />
-      <div className="sticky bottom-0 flex flex-wrap items-center gap-3 border-t border-line bg-surface p-4">
+      <div className="sticky bottom-0 flex flex-wrap items-center gap-3 border-t border-line bg-surface/95 p-4 backdrop-blur-sm">
         <Button className="min-w-28" onClick={() => setStep(0)}>
           ← Back to League &amp; Lineup
         </Button>
-        <span className="ml-auto text-body-sm">{summary.regular} of {summary.regularCapacity} rostered</span>
+        <span className="ml-auto text-body-sm text-ink-2">{summary.regular} of {summary.regularCapacity} rostered</span>
         <Button variant="primary" className="min-w-56" onClick={finish}>
           Open Weekly Planner →
         </Button>
